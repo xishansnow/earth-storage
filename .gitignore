@@ -1,6 +1,4 @@
-/EarthStorage.iml
-/produce-spark/target/
-/indexing/target/
-/index-manager/target/
-/common/target/
-/.idea/
+**/target/*
+**/.idea/*
+**/*.iml
+**.bak
