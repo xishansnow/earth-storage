@@ -1,4 +1,4 @@
-package cn.edu.pku.coe.asic.indexing;
+package cn.edu.pku.coe.asic.earthStorage.indexing;
 
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeND;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
@@ -11,13 +11,12 @@ import java.io.PrintStream;
 import java.util.Iterator;
 
 /**
- * @description Partitioner for geohash grid system
- * @see 
- * @see 
+ * @description Partitioner for Geosot grid system.
+ * @see
+ * @see
  * @author Guoliang PU
  */
-public class GeohashPartitioner extends DggsPartitioner{
-
+public class GeosotPartitioner extends DggsPartitioner{
     @Override
     public void overlapPartitions(EnvelopeND mbr, IntArray matchedPartitions) {
 

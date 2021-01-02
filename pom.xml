@@ -1,86 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>cn.edu.pku.coe.asic</groupId>
-  <artifactId>EarthStorage</artifactId>
-  <packaging>pom</packaging>
-  <version>1.0-SNAPSHOT</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A Spark extension to provide big exploratory analytics of spatio-temporal data</description>
+    <url>http://shilang1220.github.io</url>
 
-  <modules>
-    <module>indexing</module>
-    <module>produce-spark</module>
-    <module>index-manager</module>
-    <module>common</module>
-  </modules>
+    <groupId>cn.edu.pku.coe.asic.storage</groupId>
+    <artifactId>EarthStorage</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
 
-  <name>EarthStorage</name>
-  <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
+    <licenses>
+        <license>
+            <name>Apache 2</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
-  </properties>
+    <organization>
+        <name>Sonatype</name>
+        <url>http://coe.pku.edu.cn</url>
+    </organization>
 
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
+    <modules>
+        <module>indexing</module>
+        <module>produce-spark</module>
+        <module>index-manager</module>
+        <module>common</module>
+        <module>curve-coding</module>
+        <module>eathStorageUI</module>
+    </modules>
 
+    <developers>
+        <developer>
+            <name>Guoliang PU</name>
+            <email>pgl@pku.edu.cn</email>
+            <organization>Peking University, Beijing, China</organization>
+            <organizationUrl>https://coe.pku.edu.cn</organizationUrl>
+        </developer>
+    </developers>
 
+    <!-- 定义公共属性，以确定不同依赖和插件的版本号      -->
+    <!-- 引用方式:  ${maven.compiler.source}   etc. -->
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <spark.version>3.0.0</spark.version>
+        <hadoop.version>2.7.4</hadoop.version>
+        <maven.assembly.plugin.version>3.1.0</maven.assembly.plugin.version>
+        <scala.version>2.12.10</scala.version>
+        <scala.compat.version>2.12</scala.compat.version>
+        <scala.maven.plugin.version>4.4.0</scala.maven.plugin.version>
+        <jackson.version>2.10.0</jackson.version>
+        <jts.version>1.17.1</jts.version>
+        <geotools.version>23.0</geotools.version>
+        <jetty.version>6.1.26</jetty.version>
+    </properties>
 
-  </dependencies>
+<!--  SCM configuration -->
+      <scm>
+        <connection>scm:git:https://github.com/shilang1220/EarthStorage.git</connection>
+        <developerConnection>scm:git:https://github.com/shilang1220/EarthStorage.git</developerConnection>
+        <url>scm:git:https://github.com/shilang1220</url>
+        <tag>beast-${project.version}</tag>
+      </scm>
 
-  <build>
-    <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
-      <plugins>
-        <!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle -->
-        <plugin>
-          <artifactId>maven-clean-plugin</artifactId>
-          <version>3.1.0</version>
-        </plugin>
-        <!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging -->
-        <plugin>
-          <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.0</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-install-plugin</artifactId>
-          <version>2.5.2</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8.2</version>
-        </plugin>
-        <!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle -->
-        <plugin>
-          <artifactId>maven-site-plugin</artifactId>
-          <version>3.7.1</version>
-        </plugin>
-        <plugin>
-          <artifactId>maven-project-info-reports-plugin</artifactId>
-          <version>3.0.0</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
+    <!--  本POM的部署参数声明                           -->
+    <distributionManagement>
+        <snapshotRepository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>oss</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <!--  公共依赖声明，用于依赖的统一版本管理，当子模块有特殊版本需求时，在自己的POM中定义所需版本依赖以覆盖传递   -->
+    <!--  使用方法： 子模块直接引用groupId和arcifactId引用该依赖，而忽略版本号，版本号由此处统一定义 -->
+    <!--  建议工程内各模块之间使用相同的version和groupId，version最好统一用{project.version}定义  -->
+    <!--  当插件在所有子模块中均需要可传递，则不需要此标签  -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.scala-sbt</groupId>
+                <artifactId>test-interface</artifactId>
+                <version>1.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--    本模块的依赖，可以被子模块传递 -->
+    <!--    注意：本标签与dependencyManagement不同，前着只定义依赖，不使用依赖，此处为真正使用的依赖  -->
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <!--    本POM的build定义，可传递    -->
+    <build>
+        <!--  本POM的插件声明，并非本模块正在使用的插件，主要用以统一子模块间的插件版本          -->
+        <!--  当子模块需要使用自己特定的插件版本时，在plugin中做有版本号的插件声明             -->
+        <!--  当插件在所有子模块中均需要可传递，则不需要此标签                              -->
+        <pluginManagement></pluginManagement>
+        <!--  本模块使用的插件,用以覆盖superPOM的相关插件定义，以设定自己指定的插件版本，可传递  -->
+        <!--  默认继承maven的superPOM插件（默认为clean,compiler,jar,resources,install,site,deploy七个插件      -->
+        <!--  公共插件定义，用于增强编译系统的某些方面的功能，可传递                         -->
+        <plugins>
+            <!-- 增加单元测试插件         -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                    <useFile>false</useFile>
+                    <disableXmlReport>true</disableXmlReport>
+                    <!-- If you have classpath issue like NoDefClassError,... -->           <!-- useManifestOnlyJar>false</useManifestOnlyJar -->
+                    <includes>
+                        <include>**/*Test.*</include>
+                        <include>**/*Suite.*</include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <!-- 增加源码打包插件         -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
+
+    <!--POM包含plugin，每个plugin包含多个goal                                               -->
+    <!--Maven默认自带clean,resources,compiler等插件，并在superPOM中做了默认插件定义             -->
+    <!--几乎所有地maven插件都可以在定义plugin时做参数配置，使该插件可按需配置    -->
+    <!--若干插件目标按一定顺序组合执行，就组装成了一个特定的生命阶段，即插件目标和生命阶段目标绑定（插件提供功能点，生命阶段组装这些功能点，生命周期组装这些生命阶段              -->
+    <!--可以使用 【mvn plugin:goal  参数】的形式，执行插件目标，也可使用【mvn 生命阶段】的形式，执行生命阶段目标 -->
+    <!--POM中的生命周期是由很多生命阶段顺序组合而成，例如：clean包含pre-clean，clean，post-clean三个阶段    -->
+    <!--maven默认三个生命周期clean，default（含编译、测试、打包、安装等），site      -->
+    <!--maven允许用户通过plugin插件自己定义生命周期                                           -->
+    <!--常见的生命周期插件有JAR,WAR,EJB等    -->
+    <!--大部分生命周期的某些生命阶段目标是一致的，因此往往采用相同插件的目标做绑定       -->
+    <!--例如:compile阶段与compiler:compile目标的绑定,test阶段与surefire：test目标便规定,install阶段与intall:install目标绑定-->
+
 </project>
+

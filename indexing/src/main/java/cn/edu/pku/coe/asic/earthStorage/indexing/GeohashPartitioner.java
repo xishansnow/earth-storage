@@ -1,10 +1,7 @@
-package cn.edu.pku.coe.asic.indexing;
+package cn.edu.pku.coe.asic.earthStorage.indexing;
 
-import edu.ucr.cs.bdlab.beast.common.BeastOptions;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeND;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
-import edu.ucr.cs.bdlab.beast.synopses.Summary;
 import edu.ucr.cs.bdlab.beast.util.IntArray;
 
 import java.io.IOException;
@@ -14,27 +11,12 @@ import java.io.PrintStream;
 import java.util.Iterator;
 
 /**
+ * @description Partitioner for geohash grid system
+ * @see 
+ * @see 
  * @author Guoliang PU
- * @description Partitioner for S2 grid system
- * @see
- * @see
  */
-public class S2DggsPartitioner extends DggsPartitioner{
-
-    @Override
-    public void construct(Summary summary, double[][] doubles, AbstractHistogram abstractHistogram, int i) {
-        super.construct(summary, doubles, abstractHistogram, i);
-    }
-
-    @Override
-    public void setup(BeastOptions conf, boolean disjoint) {
-        super.setup(conf, disjoint);
-    }
-
-    @Override
-    public void overlapPartitions(EnvelopeNDLite envelopeNDLite, IntArray intArray) {
-
-    }
+public class GeohashPartitioner extends DggsPartitioner{
 
     @Override
     public void overlapPartitions(EnvelopeND mbr, IntArray matchedPartitions) {
@@ -63,6 +45,11 @@ public class S2DggsPartitioner extends DggsPartitioner{
 
     @Override
     public void toWKT(PrintStream out) {
+
+    }
+
+    @Override
+    public void overlapPartitions(EnvelopeNDLite envelopeNDLite, IntArray intArray) {
 
     }
 

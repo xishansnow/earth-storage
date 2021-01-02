@@ -1,19 +1,41 @@
-package cn.edu.pku.coe.asic.indexing;
+package cn.edu.pku.coe.asic.earthStorage.indexing;
 
-import com.sun.org.apache.xalan.internal.res.XSLTErrorResources;
+import edu.ucr.cs.bdlab.beast.common.BeastOptions;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeND;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
+import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
+import edu.ucr.cs.bdlab.beast.synopses.Summary;
 import edu.ucr.cs.bdlab.beast.util.IntArray;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
 import java.io.PrintStream;
 import java.util.Iterator;
 
+/**
+ * @author Guoliang PU
+ * @description Partitioner for S2 grid system
+ * @see
+ * @see
+ */
+public class S2DggsPartitioner extends DggsPartitioner{
 
-public class HexPartitioner extends DggsPartitioner{
+    @Override
+    public void construct(Summary summary, double[][] doubles, AbstractHistogram abstractHistogram, int i) {
+        super.construct(summary, doubles, abstractHistogram, i);
+    }
+
+    @Override
+    public void setup(BeastOptions conf, boolean disjoint) {
+        super.setup(conf, disjoint);
+    }
+
+    @Override
+    public void overlapPartitions(EnvelopeNDLite envelopeNDLite, IntArray intArray) {
+
+    }
+
     @Override
     public void overlapPartitions(EnvelopeND mbr, IntArray matchedPartitions) {
 
@@ -45,11 +67,6 @@ public class HexPartitioner extends DggsPartitioner{
     }
 
     @Override
-    public void overlapPartitions(EnvelopeNDLite envelopeNDLite, IntArray intArray) {
-
-    }
-
-    @Override
     public int overlapPartition(EnvelopeNDLite envelopeNDLite) {
         return 0;
     }
@@ -69,12 +86,10 @@ public class HexPartitioner extends DggsPartitioner{
         return false;
     }
 
-
     @Override
     public int getCoordinateDimension() {
         return 0;
     }
-
 
     @Override
     public EnvelopeNDLite getEnvelope() {
