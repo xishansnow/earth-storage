@@ -61,13 +61,13 @@
         <jetty.version>6.1.26</jetty.version>
     </properties>
 
-<!--  SCM configuration -->
-      <scm>
+    <!--  SCM configuration, integrated by maven -->
+    <scm>
         <connection>scm:git:https://github.com/shilang1220/EarthStorage.git</connection>
         <developerConnection>scm:git:https://github.com/shilang1220/EarthStorage.git</developerConnection>
         <url>scm:git:https://github.com/shilang1220</url>
         <tag>beast-${project.version}</tag>
-      </scm>
+    </scm>
 
     <!--  本POM的部署参数声明                           -->
     <distributionManagement>
@@ -161,5 +161,41 @@
     <!--大部分生命周期的某些生命阶段目标是一致的，因此往往采用相同插件的目标做绑定       -->
     <!--例如:compile阶段与compiler:compile目标的绑定,test阶段与surefire：test目标便规定,install阶段与intall:install目标绑定-->
 
+
+    <!--maven采用profile来增加源代码构建的可移植性           -->
+    <!--可移植性包括：指定环境下的可移植性（约束特定编译环境）、组织内部的可移植性（需要组织内部特殊依赖项）、广泛可移植性（最高级别的可移植性）    -->
+    <!--应当根据构建需求，选择合适的可移植性，虽然广泛可移植性是大家都想达到的最高境界    -->
+    <!--由于profile中定义的元素（pom.xml支持的所有元素都可以）会覆盖pom.xml的默认设置，因此通常是pom.xml中的最后一个元素    --> <!--profile正是通过重新定义这些插件的某些行为，来实现灵活的移植适应性    -->
+    <!--profile一般根据编译环境不同而设计，如：开发阶段（参数、依赖项等均比较好解决）和生产阶段的编译环境（参数配置困难、缺乏依赖项等可能造成生产环境编译难度很大）可能不同，    -->
+    <!--profile也可以根据操作系统环境不同而设定，如：windows，linux，但由于主要区别在JAR构建，而JAR构建可区分操作系统，所以一般意义不大    -->
+    <!--如果没有定义profile元素，则直接使用默认元素配置             -->
+    <!--如果定义的profile没有做任何元素的重新定义，只是新增了部分元素，则直接使用“默认元素+新增元素”执行构建    -->
+    <!--如果定义的profile对部分元素做了重新定义，则使用“未修改元素+新定义元素”执行构建    -->
+    <!--一个profile可以用activation设置激活条件，当激活条件满足时使用profile进行构建，否则用缺省配置构建    -->
+
+    <!--本POM的profile定义，可传递    -->
+    <profiles>
+        <profile>
+            <id>development</id>
+            <properties>
+                <profiles.active>development</profiles.active>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <profiles.active>production</profiles.active>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profiles.active>test</profiles.active>
+            </properties>
+        </profile>
+    </profiles>
 </project>
 
