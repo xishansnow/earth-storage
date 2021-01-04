@@ -1,4 +1,4 @@
-package cn.edu.pku.coe.asic.earthStorage.indexing;
+package cn.edu.pku.coe.asic.earthstorage.indexing;
 
 import edu.ucr.cs.bdlab.beast.common.BeastOptions;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeND;
@@ -19,7 +19,7 @@ import java.util.Iterator;
  * @see
  * @see
  */
-public class S2DggsPartitioner extends DggsPartitioner{
+public class S2GeometryPartitioner extends DggsPartitioner{
 
     @Override
     public void construct(Summary summary, double[][] doubles, AbstractHistogram abstractHistogram, int i) {

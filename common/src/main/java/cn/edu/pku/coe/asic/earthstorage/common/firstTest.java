@@ -1,4 +1,4 @@
-package cn.edu.pku.coe.asic.earthStorage.common;
+package cn.edu.pku.coe.asic.earthstorage.common;
 
 /**
  *=============================================================================================

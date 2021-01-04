@@ -1,7 +1,9 @@
-package cn.edu.pku.coe.asic.earthStorage.indexing;
+package cn.edu.pku.coe.asic.earthstorage.indexing;
 
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeND;
 import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
+import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
+import edu.ucr.cs.bdlab.beast.synopses.Summary;
 import edu.ucr.cs.bdlab.beast.util.IntArray;
 
 import java.io.IOException;
@@ -10,11 +12,36 @@ import java.io.ObjectOutput;
 import java.io.PrintStream;
 import java.util.Iterator;
 
+/**
+ * @description Partitioner for geohash grid system
+ * @see 
+ * @see 
+ * @author Guoliang PU
+ */
+public class GeohashPartitioner extends DggsPartitioner{
 
-public class HexPartitioner extends DggsPartitioner{
     @Override
     public void overlapPartitions(EnvelopeND mbr, IntArray matchedPartitions) {
 
+    }
+
+    /**
+     * -----------------------------------------------------------------------------
+     * construct()        TODO
+     * -------------------------------------------------------------------------------
+     *
+     * @param summary
+     * @param sample
+     * @param histogram
+     * @param numPartitions
+     * @Return None
+     * @Exception None
+     * @Author Guoliang PU {pgl@pku.edu.cn}
+     * @Date 2021/1/1 17:46
+     */
+    @Override
+    public void construct(Summary summary, double[][] sample, AbstractHistogram histogram, int numPartitions) {
+        super.construct(summary, sample, histogram, numPartitions);
     }
 
     @Override
@@ -67,12 +94,10 @@ public class HexPartitioner extends DggsPartitioner{
         return false;
     }
 
-
     @Override
     public int getCoordinateDimension() {
         return 0;
     }
-
 
     @Override
     public EnvelopeNDLite getEnvelope() {

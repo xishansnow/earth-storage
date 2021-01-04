@@ -116,7 +116,7 @@
         <!--  默认继承maven的superPOM插件（默认为clean,compiler,jar,resources,install,site,deploy七个插件      -->
         <!--  公共插件定义，用于增强编译系统的某些方面的功能，可传递                         -->
         <plugins>
-            <!-- 增加单元测试插件         -->
+            <!-- 所有模块支持单元测试         -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -131,7 +131,7 @@
                     </includes>
                 </configuration>
             </plugin>
-            <!-- 增加源码打包插件         -->
+            <!-- 所有模块支持源码打包插件         -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -141,6 +141,24 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- 依赖包一起打包插件          -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <finalName>earthStorage-uber-spark-${project.version}</finalName>
+                    <outputDirectory>../target/</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -186,6 +204,15 @@
             <properties>
                 <profiles.active>production</profiles.active>
             </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>shade-maven-plugin</artifactId>
+                        <version>1.0-alpha-13</version>
+                    </plugin>
+                </plugins>
+            </build>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>

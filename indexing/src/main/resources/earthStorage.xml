@@ -40,10 +40,10 @@
         <Reader>edu.ucr.cs.bdlab.beast.indexing.RTreeFeatureReader</Reader>
     </Readers>
     <SpatialPartitioners>
-        <Partitioner>cn.edu.pku.coe.asic.earthStorage.indexing.S2DggsPartitioner</Partitioner>
-        <Partitioner>cn.edu.pku.coe.asic.earthStorage.indexing.GeohashPartitioner</Partitioner>
-        <Partitioner>cn.edu.pku.coe.asic.earthStorage.indexing.GeosotPartitioner</Partitioner>
-        <Partitioner>cn.edu.pku.coe.asic.earthStorage.indexing.HexPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.coe.asic.earthstorage.indexing.S2GeometryPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.coe.asic.earthstorage.indexing.GeohashPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.coe.asic.earthstorage.indexing.GeosotPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.coe.asic.earthstorage.indexing.HexPartitioner</Partitioner>
     </SpatialPartitioners>
 
 </earthStroage>

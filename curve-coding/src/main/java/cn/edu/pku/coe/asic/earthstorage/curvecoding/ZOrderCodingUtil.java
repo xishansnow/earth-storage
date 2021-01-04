@@ -1,9 +1,6 @@
-package cn.edu.pku.coe.asic.earthStorage.curveCoding;
+package cn.edu.pku.coe.asic.earthstorage.curvecoding;
 
 import com.google.common.primitives.UnsignedLong;
-import com.google.common.math.BigIntegerMath;
-
-import java.math.BigInteger;
 
 
 /**
