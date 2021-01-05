@@ -19,16 +19,13 @@ import java.io.PrintStream;
  *=============================================================================================
  * @Description    Command for creating spatial index of spatial dataset preferred.            
  */
-public class DggsIndex extends CLIOperation  {
+public class DggsIndex   {
 
-    @Override
+
     public void printUsage(PrintStream out) {
 
-        super.printUsage(out);
+
     }
 
-    @Override
-    public Object run(BeastOptions opts, String[] inputs, String[] outputs, SparkContext sc) throws IOException, IOException {
-        return null;
-    }
+
 }
