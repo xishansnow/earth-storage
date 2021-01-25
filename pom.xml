@@ -8,7 +8,7 @@
     <description>A Spark extension to provide big exploratory analytics of spatio-temporal data</description>
     <url>http://shilang1220.github.io</url>
 
-    <groupId>cn.edu.pku.coe.asic.storage</groupId>
+    <groupId>cn.edu.pku.asic.storage</groupId>
     <artifactId>EarthStorage</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -26,12 +26,15 @@
     </organization>
 
     <modules>
-        <module>indexing</module>
-        <module>produce-spark</module>
-        <module>index-manager</module>
         <module>common</module>
         <module>curve-coding</module>
-        <module>eathStorageUI</module>
+        <module>indexing</module>
+        <module>produce-spark</module>               <!--生成数据分区和索引-->
+        <module>index-manager</module>                  <!--索引数据管理包-->
+        <module>query-spark</module>                    <!--并行查询检索包-->
+        <module>analysis-spark</module>                 <!--并行分析包-->
+        <module>compute-spark</module>                  <!--并行计算包-->
+        <module>earthStorageUI</module>                  <!--管理界面包-->
     </modules>
 
     <developers>
@@ -95,6 +98,15 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>osgeo</id>
+            <name>OSGeo Snapshot Repository</name>
+            <url>https://repo.osgeo.org/repository/release/</url>
+        </repository>
+    </repositories>
+
+
     <!--    本模块的依赖，可以被子模块传递 -->
     <!--    注意：本标签与dependencyManagement不同，前着只定义依赖，不使用依赖，此处为真正使用的依赖  -->
     <dependencies>
@@ -111,11 +123,34 @@
         <!--  本POM的插件声明，并非本模块正在使用的插件，主要用以统一子模块间的插件版本          -->
         <!--  当子模块需要使用自己特定的插件版本时，在plugin中做有版本号的插件声明             -->
         <!--  当插件在所有子模块中均需要可传递，则不需要此标签                              -->
-        <pluginManagement></pluginManagement>
+
         <!--  本模块使用的插件,用以覆盖superPOM的相关插件定义，以设定自己指定的插件版本，可传递  -->
         <!--  默认继承maven的superPOM插件（默认为clean,compiler,jar,resources,install,site,deploy七个插件      -->
         <!--  公共插件定义，用于增强编译系统的某些方面的功能，可传递                         -->
         <plugins>
+            <!-- 支持对Scala的混合编译 -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala.maven.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <!-- 所有模块支持单元测试         -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>EarthStorage</artifactId>
-        <groupId>cn.edu.pku.coe.asic.storage</groupId>
+        <groupId>cn.edu.pku.asic.storage</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,9 +18,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>edu.ucr.cs.bdlab</groupId>
-            <artifactId>beast-spark</artifactId>
-            <version>0.9.0-SNAPSHOT</version>
+            <groupId>cn.edu.pku.asic.storage</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_2.12</artifactId>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

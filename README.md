@@ -21,4 +21,4 @@
             </dependencies>
 ''''
         In your code file, add codes to test if beast can be used: 
-        import edu.ucr.cs.bdlab.beast.common.BeastOptions;
+        import edu.ucr.cs.bdlab.beast.BeastOptions;
