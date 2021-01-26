@@ -15,10 +15,10 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.geolite.*;
-import edu.ucr.cs.bdlab.beast.io.FeatureReader;
-import edu.ucr.cs.bdlab.beast.io.SpatialFileRDD;
-import edu.ucr.cs.bdlab.beast.util.BitArray;
+import cn.edu.pku.asic.storage.common.geolite.*;
+import cn.edu.pku.asic.storage.common.io.FeatureReader;
+import cn.edu.pku.asic.storage.common.io.SpatialFileRDD;
+import cn.edu.pku.asic.storage.common.utils.BitArray;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;

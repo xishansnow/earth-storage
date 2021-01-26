@@ -84,7 +84,7 @@ public class IndexMasterFileCommitter extends FileOutputCommitter {
             }
             // Now, write the header
             int numDimensions = (numColumns - 7) / 3;
-            edu.ucr.cs.bdlab.beast.indexing.IndexRecordWriter.printMasterFileHeader(numDimensions, masterOut);
+            cn.edu.pku.asic.storage.indexing.IndexRecordWriter.printMasterFileHeader(numDimensions, masterOut);
             masterOut.println();
             headerWritten = true;
           }

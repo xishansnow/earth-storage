@@ -15,11 +15,11 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.geolite.*;
-import edu.ucr.cs.bdlab.beast.io.FeatureWriter;
-import edu.ucr.cs.bdlab.beast.util.BitArray;
-import edu.ucr.cs.bdlab.beast.util.CounterOutputStream;
-import edu.ucr.cs.bdlab.beast.util.OperationParam;
+import cn.edu.pku.asic.storage.common.geolite.*;
+import cn.edu.pku.asic.storage.common.io.FeatureWriter;
+import cn.edu.pku.asic.storage.common.utils.BitArray;
+import cn.edu.pku.asic.storage.common.utils.CounterOutputStream;
+import cn.edu.pku.asic.storage.common.utils.OperationParam;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -234,11 +234,11 @@ public class RTreeFeatureWriter extends FeatureWriter {
           break;
         case RSTree:
           m = M * 3 / 10;
-          rtree = new edu.ucr.cs.bdlab.beast.indexing.RStarTree(m, M);
+          rtree = new cn.edu.pku.asic.storage.indexing.RStarTree(m, M);
           break;
         case RRSTree:
           m = M * 2 / 10;
-          rtree = new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(m, M);
+          rtree = new cn.edu.pku.asic.storage.indexing.RRStarTree(m, M);
           break;
         default:
           throw new RuntimeException("Unsupported rtree type: " + this.rtreeType);

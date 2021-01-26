@@ -15,8 +15,8 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
 
 import java.io.Externalizable;
 import java.io.IOException;
@@ -26,9 +26,9 @@ import java.io.ObjectOutput;
 /**
  * A class that stores an auxiliary data structure used to search through
  * the partitions created using the functions
- * {@link edu.ucr.cs.bdlab.beast.indexing.RStarTree#partitionPoints(double[][], int, int, boolean, double, AuxiliarySearchStructure)}
+ * {@link cn.edu.pku.asic.storage.indexing.RStarTree#partitionPoints(double[][], int, int, boolean, double, AuxiliarySearchStructure)}
  * and
- * {@link edu.ucr.cs.bdlab.beast.indexing.RRStarTree#partitionPoints(double[][], int, int, boolean, double, AuxiliarySearchStructure)}
+ * {@link cn.edu.pku.asic.storage.indexing.RRStarTree#partitionPoints(double[][], int, int, boolean, double, AuxiliarySearchStructure)}
  */
 public class AuxiliarySearchStructure implements Externalizable {
   /**The first split to consider*/

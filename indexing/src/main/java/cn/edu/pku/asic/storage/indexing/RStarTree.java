@@ -15,8 +15,8 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.util.IndexedSortable;

@@ -15,13 +15,13 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.cg.SpatialPartitioner;
-import edu.ucr.cs.bdlab.beast.common.BeastOptions;
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.geolite.GeometryHelper;
-import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
-import edu.ucr.cs.bdlab.beast.synopses.Summary;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
+import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
+import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
+import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
+import cn.edu.pku.asic.storage.common.synopses.Summary;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

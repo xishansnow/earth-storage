@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.geolite.IFeature;
+import cn.edu.pku.asic.storage.common.geolite.IFeature;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.OutputCommitter;
 import org.apache.hadoop.mapreduce.RecordWriter;
@@ -36,12 +36,12 @@ public class IndexOutputFormat extends FileOutputFormat<Integer, IFeature> {
   @Override
   public RecordWriter<Integer, IFeature> getRecordWriter(TaskAttemptContext task) throws IOException {
     Path file = getDefaultWorkFile(task, "").getParent();
-    return new edu.ucr.cs.bdlab.beast.indexing.IndexRecordWriter(task, file);
+    return new cn.edu.pku.asic.storage.indexing.IndexRecordWriter(task, file);
   }
 
   @Override
   public synchronized OutputCommitter getOutputCommitter(TaskAttemptContext task) throws IOException {
     Path jobOutputPath = getOutputPath(task);
-    return new edu.ucr.cs.bdlab.beast.indexing.IndexMasterFileCommitter(jobOutputPath, task);
+    return new cn.edu.pku.asic.storage.indexing.IndexMasterFileCommitter(jobOutputPath, task);
   }
 }

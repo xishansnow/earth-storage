@@ -15,8 +15,8 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
 import org.apache.hadoop.util.QuickSort;
 
 import java.util.Comparator;
@@ -37,7 +37,7 @@ import java.util.Comparator;
  *
  * Notice that this implementation is closer to the original R-tree rather than
  * the R*-tree and this is why it extends directly from the
- * {@link RTreeGuttman} class rather than the {@link edu.ucr.cs.bdlab.beast.indexing.RStarTree}.
+ * {@link RTreeGuttman} class rather than the {@link cn.edu.pku.asic.storage.indexing.RStarTree}.
  */
 public class RRStarTree extends RTreeGuttman {
 
@@ -357,7 +357,7 @@ public class RRStarTree extends RTreeGuttman {
     // of the different distributions
 
     // Sort by all dimensions by both min and max
-    edu.ucr.cs.bdlab.beast.indexing.RStarTree.MultiIndexedSortable sorter = new edu.ucr.cs.bdlab.beast.indexing.RStarTree.MultiIndexedSortable() {
+    cn.edu.pku.asic.storage.indexing.RStarTree.MultiIndexedSortable sorter = new cn.edu.pku.asic.storage.indexing.RStarTree.MultiIndexedSortable() {
       @Override
       public int compare(int i, int j) {
         double diff;
@@ -581,7 +581,7 @@ public class RRStarTree extends RTreeGuttman {
     // Try all possible splits and choose the one with the best value
 
     // Sort by all dimensions by both min and max
-    edu.ucr.cs.bdlab.beast.indexing.RStarTree.MultiIndexedSortable sorter = new edu.ucr.cs.bdlab.beast.indexing.RStarTree.MultiIndexedSortable() {
+    cn.edu.pku.asic.storage.indexing.RStarTree.MultiIndexedSortable sorter = new cn.edu.pku.asic.storage.indexing.RStarTree.MultiIndexedSortable() {
       @Override
       public int compare(int i, int j) {
         double diff;
@@ -721,8 +721,8 @@ public class RRStarTree extends RTreeGuttman {
 
   /**
    * Partitions the given set of points using the improved RR*-tree split algorithm.
-   * Calls the function{@link edu.ucr.cs.bdlab.beast.indexing.RStarTree#partitionPoints(double[][], int, int, boolean, AuxiliarySearchStructure,
-   * double, edu.ucr.cs.bdlab.beast.indexing.RStarTree.MinimizationFunction)}
+   * Calls the function{@link cn.edu.pku.asic.storage.indexing.RStarTree#partitionPoints(double[][], int, int, boolean, AuxiliarySearchStructure,
+   * double, cn.edu.pku.asic.storage.indexing.RStarTree.MinimizationFunction)}
    * with the last parameter as {@code MinimizationFunction.PERIMETER}
    * @param coords the coordinates of the points to partition
    * @param minPartitionSize
@@ -733,7 +733,7 @@ public class RRStarTree extends RTreeGuttman {
    */
   static EnvelopeNDLite[] partitionPoints(double[][] coords, int minPartitionSize, int maxPartitionSize,
                                           boolean expandToInf, double fractionMinSplitSize, AuxiliarySearchStructure aux) {
-    return edu.ucr.cs.bdlab.beast.indexing.RStarTree.partitionPoints(coords, minPartitionSize, maxPartitionSize,
-        expandToInf, aux, fractionMinSplitSize, edu.ucr.cs.bdlab.beast.indexing.RStarTree.MinimizationFunction.PERIMETER);
+    return cn.edu.pku.asic.storage.indexing.RStarTree.partitionPoints(coords, minPartitionSize, maxPartitionSize,
+        expandToInf, aux, fractionMinSplitSize, cn.edu.pku.asic.storage.indexing.RStarTree.MinimizationFunction.PERIMETER);
   }
 }

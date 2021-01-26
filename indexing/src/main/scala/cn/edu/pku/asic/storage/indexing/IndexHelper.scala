@@ -24,7 +24,7 @@ import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, IFeature, PointND
 import cn.edu.pku.asic.storage.common.io.SpatialOutputFormat
 import cn.edu.pku.asic.storage.common.synopses._
 import cn.edu.pku.asic.storage.common.utils.{IntArray, OperationHelper, OperationParam}
-import cn.edu.pku.asic.storage.common.cg.Cell
+import cn.edu.pku.asic.storage.indexing.CellPartitioner
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.util.StringUtils
@@ -219,7 +219,8 @@ object IndexHelper extends Logging {
    * @param balancedPartitioning set to true if balanced partitioning is desired
    * @return the three computed summaries with nulls for non-computed ones
    */
-  private[beast] def summarizeDataset(features: SpatialRDD, partitionerClass: Class[_ <: SpatialPartitioner],
+//  private[beast] def summarizeDataset(features: SpatialRDD, partitionerClass: Class[_ <: SpatialPartitioner],
+  private def summarizeDataset(features: SpatialRDD, partitionerClass: Class[_ <: SpatialPartitioner],
                                       summarySize: Long, sizeFunction: IFeature=>Int, balancedPartitioning: Boolean)
       : (UniformHistogram, Array[Array[Double]], Summary) = {
     lazy val sc: SparkContext = features.sparkContext
@@ -293,7 +294,8 @@ object IndexHelper extends Logging {
    * @param spatialPartitioner
    * @return
    */
-  private[beast] def _assignFeaturesToPartitions(features: SpatialRDD, spatialPartitioner: SpatialPartitioner): PartitionedSpatialRDD = {
+//  private[beast] def _assignFeaturesToPartitions(features: SpatialRDD, spatialPartitioner: SpatialPartitioner): PartitionedSpatialRDD = {
+  private def _assignFeaturesToPartitions(features: SpatialRDD, spatialPartitioner: SpatialPartitioner): PartitionedSpatialRDD = {
     val featuresToPartitions: SpatialRDD = runDuplicateAvoidance(features)
     val mbr: EnvelopeNDLite = new EnvelopeNDLite(spatialPartitioner.getCoordinateDimension)
     if (!spatialPartitioner.isDisjoint) {
@@ -348,7 +350,8 @@ object IndexHelper extends Logging {
    * @param features the set of features to remove the duplicates from.
    * @return a set of features with all duplicates removed.
    */
-  private[beast] def runDuplicateAvoidance(features: SpatialRDD): SpatialRDD = {
+//  private[beast] def runDuplicateAvoidance(features: SpatialRDD): SpatialRDD = {
+  private def runDuplicateAvoidance(features: SpatialRDD): SpatialRDD = {
     val partitioner = features.partitioner
     if (partitioner.isEmpty || !partitioner.get.isInstanceOf[SparkSpatialPartitioner])
       return features

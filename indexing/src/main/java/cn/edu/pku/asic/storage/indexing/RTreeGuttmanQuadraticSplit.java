@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.util.IntArray;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
 
 /**
  * R-Tree with quadratic split

@@ -15,13 +15,13 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.cg.SpatialJoinAlgorithms;
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.geolite.GeometryHelper;
-import edu.ucr.cs.bdlab.beast.geolite.IFeature;
-import edu.ucr.cs.bdlab.beast.util.BitArray;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
-import edu.ucr.cs.bdlab.beast.util.LongArray;
+import cn.edu.pku.asic.storage.common.cg.SpatialJoinAlgorithms;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
+import cn.edu.pku.asic.storage.common.geolite.IFeature;
+import cn.edu.pku.asic.storage.common.utils.BitArray;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
+import cn.edu.pku.asic.storage.common.utils.LongArray;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -31,8 +31,8 @@ import java.io.*;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import static edu.ucr.cs.bdlab.beast.cg.SpatialJoinAlgorithms.getMBRs;
-import static edu.ucr.cs.bdlab.beast.cg.SpatialJoinAlgorithms.getMBRs2;
+import static cn.edu.pku.asic.storage.common.cg.SpatialJoinAlgorithms.getMBRs;
+import static cn.edu.pku.asic.storage.common.cg.SpatialJoinAlgorithms.getMBRs2;
 
 /**
  * A partial implementation for the original Antonin Guttman R-tree as described
@@ -1605,7 +1605,7 @@ public class RTreeGuttman implements Closeable {
     // The ranges that might need to be split
     int numDimensions = coords.length;
     int numPoints = coords[0].length;
-    assert edu.ucr.cs.bdlab.beast.indexing.RStarTree.isValid(numPoints, minPartitionSize, maxPartitionSize);
+    assert cn.edu.pku.asic.storage.indexing.RStarTree.isValid(numPoints, minPartitionSize, maxPartitionSize);
     Stack<Range> rangesToSplit = new Stack<Range>();
     rangesToSplit.push(new Range(0, numPoints));
 
@@ -1726,8 +1726,8 @@ public class RTreeGuttman implements Closeable {
         // Ensure that the two partitions are valid
         int separator = i;
         int diff = r.end - separator > separator - r.start?+1 : -1;
-        while (!edu.ucr.cs.bdlab.beast.indexing.RStarTree.isValid(separator - r.start, minPartitionSize, maxPartitionSize) ||
-            !edu.ucr.cs.bdlab.beast.indexing.RStarTree.isValid(r.end - separator, minPartitionSize, maxPartitionSize)) {
+        while (!cn.edu.pku.asic.storage.indexing.RStarTree.isValid(separator - r.start, minPartitionSize, maxPartitionSize) ||
+            !cn.edu.pku.asic.storage.indexing.RStarTree.isValid(r.end - separator, minPartitionSize, maxPartitionSize)) {
           separator += diff;
         }
 
@@ -1749,9 +1749,9 @@ public class RTreeGuttman implements Closeable {
     assert GeometryHelper.getCoordinateDimension(s.get(0)) == 2 : "S should be 2D geometries";
     double[][] coordsR = getMBRs(r);
     double[][] coordsS = getMBRs(s);
-    RTreeGuttman rtree1 = new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(10, 40);
+    RTreeGuttman rtree1 = new cn.edu.pku.asic.storage.indexing.RRStarTree(10, 40);
     rtree1.initializeFromRects(coordsR[0], coordsR[1], coordsR[2], coordsR[3]);
-    RTreeGuttman rtree2 = new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(10, 40);
+    RTreeGuttman rtree2 = new cn.edu.pku.asic.storage.indexing.RRStarTree(10, 40);
     rtree2.initializeFromRects(coordsS[0], coordsS[1], coordsS[2], coordsS[3]);
     double[] refPoint = new double[2];
     return RTreeGuttman.spatialJoin(rtree1, rtree2, (i,j) -> {
@@ -1772,9 +1772,9 @@ public class RTreeGuttman implements Closeable {
     long t1 = System.nanoTime();
     double[][] coordsR = getMBRs2(r);
     double[][] coordsS = getMBRs2(s);
-    RTreeGuttman rtree1 = new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(10, 40);
+    RTreeGuttman rtree1 = new cn.edu.pku.asic.storage.indexing.RRStarTree(10, 40);
     rtree1.initializeFromRects(coordsR[0], coordsR[1], coordsR[2], coordsR[3]);
-    RTreeGuttman rtree2 = new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(10, 40);
+    RTreeGuttman rtree2 = new cn.edu.pku.asic.storage.indexing.RRStarTree(10, 40);
     rtree2.initializeFromRects(coordsS[0], coordsS[1], coordsS[2], coordsS[3]);
     long t2 = System.nanoTime();
     double[] refPoint = new double[2];

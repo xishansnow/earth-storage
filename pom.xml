@@ -27,14 +27,14 @@
 
     <modules>
         <module>common</module>
-        <module>curve-coding</module>
+<!--        <module>curve-coding</module>-->
         <module>indexing</module>
-        <module>produce-spark</module>               <!--生成数据分区和索引-->
-        <module>index-manager</module>                  <!--索引数据管理包-->
-        <module>query-spark</module>                    <!--并行查询检索包-->
-        <module>analysis-spark</module>                 <!--并行分析包-->
-        <module>compute-spark</module>                  <!--并行计算包-->
-        <module>earthStorageUI</module>                  <!--管理界面包-->
+<!--        <module>produce-spark</module>               &lt;!&ndash;生成数据分区和索引&ndash;&gt;-->
+<!--        <module>index-manager</module>                  &lt;!&ndash;索引数据管理包&ndash;&gt;-->
+<!--        <module>query-spark</module>                    &lt;!&ndash;并行查询检索包&ndash;&gt;-->
+<!--        <module>analysis-spark</module>                 &lt;!&ndash;并行分析包&ndash;&gt;-->
+<!--        <module>compute-spark</module>                  &lt;!&ndash;并行计算包&ndash;&gt;-->
+<!--        <module>earthStorageUI</module>                  &lt;!&ndash;管理界面包&ndash;&gt;-->
     </modules>
 
     <developers>
@@ -98,13 +98,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <repositories>
-        <repository>
-            <id>osgeo</id>
-            <name>OSGeo Snapshot Repository</name>
-            <url>https://repo.osgeo.org/repository/release/</url>
-        </repository>
-    </repositories>
+
 
 
     <!--    本模块的依赖，可以被子模块传递 -->
@@ -151,6 +145,18 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- the Maven compiler plugin will compile Java source files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
             <!-- 所有模块支持单元测试         -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -181,23 +187,23 @@
                 </executions>
             </plugin>
             <!-- 依赖包一起打包插件          -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <finalName>earthStorage-uber-spark-${project.version}</finalName>
-                    <outputDirectory>../target/</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-shade-plugin</artifactId>-->
+<!--                <version>3.1.1</version>-->
+<!--                <configuration>-->
+<!--                    <finalName>earthStorage-uber-spark-${project.version}</finalName>-->
+<!--                    <outputDirectory>../target/</outputDirectory>-->
+<!--                </configuration>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
 
     </build>

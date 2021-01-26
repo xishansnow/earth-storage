@@ -8,13 +8,13 @@
 *************************************************************************/
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.cg.SpatialPartitioner;
-import edu.ucr.cs.bdlab.beast.common.BeastOptions;
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
-import edu.ucr.cs.bdlab.beast.synopses.Summary;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
-import edu.ucr.cs.bdlab.beast.util.OperationParam;
+import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
+import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
+import cn.edu.pku.asic.storage.common.synopses.Summary;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
+import cn.edu.pku.asic.storage.common.utils.OperationParam;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -120,7 +120,7 @@ public abstract class AbstractRTreeBBPartitioner implements SpatialPartitioner {
       description = "Loads a sample points into an R*-tree and use its leaf nodes as partition boundaries")
   public static class RStarTreeBBPartitioner extends AbstractRTreeBBPartitioner {
     public RTreeGuttman createRTree(int m, int M) {
-      return new edu.ucr.cs.bdlab.beast.indexing.RStarTree(m, M);
+      return new cn.edu.pku.asic.storage.indexing.RStarTree(m, M);
     }
   }
 
@@ -130,7 +130,7 @@ public abstract class AbstractRTreeBBPartitioner implements SpatialPartitioner {
       description = "Loads a sample points into an RR*-tree and use its leaf nodes as partition boundaries")
   public static class RRStarTreeBBPartitioner extends AbstractRTreeBBPartitioner {
     public RTreeGuttman createRTree(int m, int M) {
-      return new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(m, M);
+      return new cn.edu.pku.asic.storage.indexing.RRStarTree(m, M);
     }
   }
 

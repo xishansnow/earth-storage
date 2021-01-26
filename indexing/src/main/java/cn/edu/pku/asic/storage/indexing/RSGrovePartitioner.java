@@ -15,15 +15,15 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.cg.SpatialPartitioner;
-import edu.ucr.cs.bdlab.beast.common.BeastOptions;
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeND;
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.geolite.GeometryHelper;
-import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
-import edu.ucr.cs.bdlab.beast.synopses.Summary;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
-import edu.ucr.cs.bdlab.beast.util.OperationParam;
+import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
+import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeND;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
+import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
+import cn.edu.pku.asic.storage.common.synopses.Summary;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
+import cn.edu.pku.asic.storage.common.utils.OperationParam;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -34,7 +34,7 @@ import java.util.Random;
 
 /**
  * An implementation of the R*-Grove partitioner. This partitioner uses the method
- * {@link edu.ucr.cs.bdlab.beast.indexing.RStarTree#partitionPoints(double[][], int, int, boolean, double, AuxiliarySearchStructure)}
+ * {@link cn.edu.pku.asic.storage.indexing.RStarTree#partitionPoints(double[][], int, int, boolean, double, AuxiliarySearchStructure)}
  * to partition a sample of points into rectangles.
  * @author Ahmed Eldawy
  *
@@ -200,11 +200,11 @@ public class RSGrovePartitioner implements SpatialPartitioner {
   }
 
   protected EnvelopeNDLite[] partitionPoints(double[][] coords, int max, int min) {
-    return edu.ucr.cs.bdlab.beast.indexing.RStarTree.partitionPoints(coords, min, max, true, fractionMinSplitSize, aux);
+    return cn.edu.pku.asic.storage.indexing.RStarTree.partitionPoints(coords, min, max, true, fractionMinSplitSize, aux);
   }
 
   protected EnvelopeNDLite[] partitionWeightedPoints(double[][] coords, long[] weights, long max, long min) {
-    return edu.ucr.cs.bdlab.beast.indexing.RStarTree.partitionWeightedPoints(coords, weights, min, max, true, fractionMinSplitSize, aux);
+    return cn.edu.pku.asic.storage.indexing.RStarTree.partitionWeightedPoints(coords, weights, min, max, true, fractionMinSplitSize, aux);
   }
   @Override
   public void writeExternal(ObjectOutput out) throws IOException {

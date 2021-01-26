@@ -15,12 +15,12 @@
  */
 package cn.edu.pku.asic.storage.indexing;
 
-import edu.ucr.cs.bdlab.beast.cg.SpatialPartitioner;
-import edu.ucr.cs.bdlab.beast.geolite.EnvelopeNDLite;
-import edu.ucr.cs.bdlab.beast.geolite.GeometryHelper;
-import edu.ucr.cs.bdlab.beast.synopses.AbstractHistogram;
-import edu.ucr.cs.bdlab.beast.synopses.Summary;
-import edu.ucr.cs.bdlab.beast.util.IntArray;
+import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
+import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
+import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
+import cn.edu.pku.asic.storage.common.synopses.Summary;
+import cn.edu.pku.asic.storage.common.utils.IntArray;
 
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * A partitioner that partitions a file according to an existing set of cells (MBBs). It internally builds an in-memory
- * {@link edu.ucr.cs.bdlab.beast.indexing.RRStarTree} for the partitions to speed up the search.
+ * {@link cn.edu.pku.asic.storage.indexing.RRStarTree} for the partitions to speed up the search.
  * @author Ahmed Eldawy
  *
  */
@@ -119,7 +119,7 @@ public class CellPartitioner implements SpatialPartitioner {
     }
 
     // The RR*-tree paper recommends setting m = 0.2 M
-    partitions = new edu.ucr.cs.bdlab.beast.indexing.RRStarTree(RTreeDegree / 5, RTreeDegree);
+    partitions = new cn.edu.pku.asic.storage.indexing.RRStarTree(RTreeDegree / 5, RTreeDegree);
     partitions.initializeHollowRTree(x1s, y1s, x2s, y2s);
     disjoint = null;
   }
