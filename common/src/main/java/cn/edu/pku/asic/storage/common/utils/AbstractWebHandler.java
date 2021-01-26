@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.utils;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.cli.WebMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -122,7 +122,7 @@ public abstract class AbstractWebHandler {
    * @param sc the spark context
    * @param opts the user options
    */
-  public void setup(SparkContext sc, BeastOptions opts) {
+  public void setup(SparkContext sc, AppOptions opts) {
     this.startTimestamp = System.currentTimeMillis();
     this.conf = opts.loadIntoHadoopConf(sc.hadoopConfiguration());
   }

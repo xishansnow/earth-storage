@@ -1,7 +1,7 @@
 package cn.edu.pku.asic.storage.indexing;
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
 import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
@@ -52,7 +52,7 @@ public class KDTreePartitioner implements SpatialPartitioner {
   protected final EnvelopeNDLite envelope = new EnvelopeNDLite();
 
   @Override
-  public void setup(BeastOptions context, boolean disjoint) {
+  public void setup(AppOptions context, boolean disjoint) {
     this.disjoint = disjoint;
   }
 

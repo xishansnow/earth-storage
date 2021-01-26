@@ -32,7 +32,7 @@ import javax.xml.stream.{XMLInputFactory, XMLStreamConstants, XMLStreamReader}
   noSplit = true)
 class GPXReader extends FeatureReader with Logging {
 
-  /**The underlying XML parser*/
+  /** The underlying XML parser */
   var xmlReader: XMLStreamReader = _
 
   /** The returned feature */
@@ -41,25 +41,25 @@ class GPXReader extends FeatureReader with Logging {
   /** Cache the file path to report errors */
   var filePath: Path = _
 
-  /**The start offset of the split*/
+  /** The start offset of the split */
   var start: Long = 0
 
-  /**The end offset of the split*/
+  /** The end offset of the split */
   var splitEnd: Long = 0
 
-  /**A flag that is raised when the end-of-split is reached*/
+  /** A flag that is raised when the end-of-split is reached */
   var eos: Boolean = _
 
-  /**The track name currently being read*/
+  /** The track name currently being read */
   var currentTrackName: String = _
 
-  /**The track number currently being read*/
+  /** The track number currently being read */
   var currentTrackNumber: Int = _
 
-  /**The index of the track wihin the GPS file*/
+  /** The index of the track wihin the GPS file */
   var currentTrackIndex: Int = _
 
-  /**The segment number currently being read (starts at zero)*/
+  /** The segment number currently being read (starts at zero) */
   var currentSegmentNumber: Int = _
 
   override def initialize(inputSplit: InputSplit, conf: Configuration): Unit = {
@@ -82,6 +82,7 @@ class GPXReader extends FeatureReader with Logging {
 
   /**
    * Returns the current file position
+   *
    * @return the current position of the file
    */
   def getFilePosition: Long = start + xmlReader.getLocation.getCharacterOffset

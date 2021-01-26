@@ -9,7 +9,7 @@
 package cn.edu.pku.asic.storage.indexing;
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
 import cn.edu.pku.asic.storage.common.synopses.Summary;
@@ -46,7 +46,7 @@ public abstract class AbstractRTreeBBPartitioner implements SpatialPartitioner {
   protected final EnvelopeNDLite mbrPoints = new EnvelopeNDLite();
 
   @Override
-  public void setup(BeastOptions conf, boolean disjoint) {
+  public void setup(AppOptions conf, boolean disjoint) {
     mMRatio = conf.getFloat(MMRatio, 0.3f);
     if (disjoint)
       throw new RuntimeException("Black-box partitinoer does not support disjoint partitions");
@@ -95,7 +95,7 @@ public abstract class AbstractRTreeBBPartitioner implements SpatialPartitioner {
     SplitMethod splitMethod;
 
     @Override
-    public void setup(BeastOptions conf, boolean disjoint) {
+    public void setup(AppOptions conf, boolean disjoint) {
       super.setup(conf, disjoint);
       if (conf.getString("split", "linear").equalsIgnoreCase("linear")) {
         this.splitMethod = SplitMethod.LinearSplit;

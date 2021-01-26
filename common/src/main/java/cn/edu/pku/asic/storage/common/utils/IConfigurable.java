@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.utils;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 
 import java.util.Stack;
 
@@ -30,7 +30,7 @@ public interface IConfigurable {
    * an exception of it cannot run.
    * @param opts the user-defined options to initialize to
    */
-  default void setup(BeastOptions opts) {}
+  default void setup(AppOptions opts) {}
 
   /**
    * Add any dependent classes to inherit their parameters based on the user options.
@@ -39,5 +39,5 @@ public interface IConfigurable {
    * @param opts the user-provided options for this class.
    * @param classes the list of classes to add
    */
-  default void addDependentClasses(BeastOptions opts, Stack<Class<?>> classes) {}
+  default void addDependentClasses(AppOptions opts, Stack<Class<?>> classes) {}
 }

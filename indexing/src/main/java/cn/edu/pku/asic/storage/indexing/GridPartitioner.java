@@ -16,7 +16,7 @@
 package cn.edu.pku.asic.storage.indexing;
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
 import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
@@ -75,7 +75,7 @@ public class GridPartitioner implements SpatialPartitioner {
   }
 
   @Override
-  public void setup(BeastOptions conf, boolean disjoint) {
+  public void setup(AppOptions conf, boolean disjoint) {
     this.disjointPartitions = disjoint;
   }
 

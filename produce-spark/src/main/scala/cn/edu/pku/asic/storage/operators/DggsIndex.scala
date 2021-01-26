@@ -1,7 +1,7 @@
 package cn.edu.pku.asic.storage.operators
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner
-import cn.edu.pku.asic.storage.common.cli.{BeastOptions, CLIOperation}
+import cn.edu.pku.asic.storage.common.cli.{AppOptions, CLIOperation}
 import cn.edu.pku.asic.storage.indexing.indexing.{RGrovePartitioner, RSGrovePartitioner}
 import cn.edu.pku.asic.storage.common.io.{SpatialFileRDD, SpatialOutputFormat}
 import cn.edu.pku.asic.storage.common.utils.OperationMetadata
@@ -32,12 +32,12 @@ object DggsIndex extends CLIOperation with Logging{
   }
 
 
-  override def addDependentClasses(opts: BeastOptions, classes: util.Stack[Class[_]]): Unit = {
+  override def addDependentClasses(opts: AppOptions, classes: util.Stack[Class[_]]): Unit = {
 
 
   }
 
-  override def setup(opts: BeastOptions): Unit = {
+  override def setup(opts: AppOptions): Unit = {
     super.setup(opts)
   }
 }

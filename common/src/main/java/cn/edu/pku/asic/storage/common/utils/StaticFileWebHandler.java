@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.utils;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.cli.WebMethod;
 import org.apache.spark.SparkContext;
 
@@ -40,7 +40,7 @@ public class StaticFileWebHandler extends cn.edu.pku.asic.storage.common.utils.A
   public static final String EnableStaticFileHandling = "enableStaticFileHandling";
 
   @Override
-  public void setup(SparkContext sc, BeastOptions opts) {
+  public void setup(SparkContext sc, AppOptions opts) {
     super.setup(sc, opts);
     this.enabled = opts.getBoolean(EnableStaticFileHandling, false);
   }

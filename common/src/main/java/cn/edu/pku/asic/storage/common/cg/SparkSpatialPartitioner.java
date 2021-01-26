@@ -9,6 +9,9 @@ import java.io.ObjectOutput;
 
 /**
  * A wrapper around a {@link SpatialPartitioner} to make it a Spark partitioner.
+ * 基于Spark分区类的一个包装类，内部为一个SpatialPartitioner对象
+ * 该类利用SpatialPartitioner提供的各种功能，实现Partitioner的numPartitions接口和getPartition接口
+ * 实现Externalizable的readExternal和writeExternal接口
  */
 public class SparkSpatialPartitioner extends Partitioner implements Externalizable {
 

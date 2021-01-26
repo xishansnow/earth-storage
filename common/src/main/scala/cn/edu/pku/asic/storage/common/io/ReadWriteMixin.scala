@@ -17,7 +17,7 @@ package cn.edu.pku.asic.storage.common.io
 
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{PartitionedSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartitioner}
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.generator.{DistributionType, RandomSpatialRDD}
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite
 import org.apache.spark.SparkContext
@@ -41,12 +41,12 @@ trait ReadWriteMixin {
      * @param filename the name of the file or directory of files
      * @return the [[SpatialRDD]] that contains the records
      */
-    def spatialFile(filename: String, format: String = null, opts: BeastOptions = new BeastOptions): SpatialRDD = {
-      val readOpts: BeastOptions = new BeastOptions(opts)
+    def spatialFile(filename: String, format: String = null, opts: AppOptions = new AppOptions): SpatialRDD = {
+      val readOpts: AppOptions = new AppOptions(opts)
       if (format == null) {
         // Try to auto-detect it
         val detectedOptions = SpatialFileRDD.autodetectInputFormat(filename,
-          readOpts.mergeWith(new BeastOptions(sc.hadoopConfiguration)))
+          readOpts.mergeWith(new AppOptions(sc.hadoopConfiguration)))
         if (detectedOptions == null)
           throw new RuntimeException(s"Cannot autodetect the format of the file '$filename'")
         readOpts.mergeWith(detectedOptions._2)
@@ -62,7 +62,7 @@ trait ReadWriteMixin {
      * @param opts the use options that can be used to determine how to load the file
      * @return the loaded file as a [[SpatialRDD]]
      */
-    def spatialFile(filename: String, opts: BeastOptions): SpatialRDD =
+    def spatialFile(filename: String, opts: AppOptions): SpatialRDD =
       spatialFile(filename, opts.getString(SpatialFileRDD.InputFormat), opts)
 
     /**
@@ -72,7 +72,7 @@ trait ReadWriteMixin {
      * @return an RDD of features
      */
     def shapefile(filename: String) : SpatialRDD =
-      SpatialReader.readInput(sc, new BeastOptions(), filename, "shapefile")
+      SpatialReader.readInput(sc, new AppOptions(), filename, "shapefile")
 
     /**
      * Reads data from a Shapefile
@@ -80,7 +80,7 @@ trait ReadWriteMixin {
      * @return an RDD of features
      */
     def geojsonFile(filename: String) : SpatialRDD =
-      SpatialReader.readInput(sc, new BeastOptions(), filename, "geojson")
+      SpatialReader.readInput(sc, new AppOptions(), filename, "geojson")
 
     /**
      * Reads points from a CSV file given the names of the columns that contain the x and y coordinates
@@ -94,7 +94,7 @@ trait ReadWriteMixin {
      */
     def readCSVPoint(filename: String, xColumn: Any = 0, yColumn: Any = 1, delimiter: Char = ',',
                      skipHeader: Boolean = false): SpatialRDD = {
-      val opts = new BeastOptions()
+      val opts = new AppOptions()
       opts.set(CSVFeatureReader.FieldSeparator, delimiter.toString)
       if (xColumn.isInstanceOf[String] || yColumn.isInstanceOf[String])
         opts.setBoolean(CSVFeatureReader.SkipHeader, true)
@@ -115,7 +115,7 @@ trait ReadWriteMixin {
      */
     def readWKTFile(filename: String, wktColumn: Any, delimiter: Char = '\t',
                     skipHeader: Boolean = false): SpatialRDD = {
-      val opts = new BeastOptions()
+      val opts = new AppOptions()
       opts.set(CSVFeatureReader.FieldSeparator, delimiter.toString)
       if (wktColumn.isInstanceOf[String])
         opts.setBoolean(CSVFeatureReader.SkipHeader, true)
@@ -136,7 +136,7 @@ trait ReadWriteMixin {
      */
     def generateSpatialData(distribution: DistributionType, cardinality: Long,
                             numPartitions: Int = 0,
-                            opts: BeastOptions = new BeastOptions) : SpatialRDD =
+                            opts: AppOptions = new AppOptions) : SpatialRDD =
       new RandomSpatialRDD(sc, distribution, cardinality, numPartitions, opts)
   }
 
@@ -176,14 +176,14 @@ trait ReadWriteMixin {
      * @param filename the output filename
      */
     def saveAsShapefile(filename: String): Unit =
-      SpatialWriter.saveFeatures(rdd, "shapefile", filename, new BeastOptions())
+      SpatialWriter.saveFeatures(rdd, "shapefile", filename, new AppOptions())
 
     /**
      * Save features in GeoJSON format
      * @param filename the output filename
      */
     def saveAsGeoJSON(filename: String): Unit =
-      SpatialWriter.saveFeatures(rdd, "geojson", filename, new BeastOptions())
+      SpatialWriter.saveFeatures(rdd, "geojson", filename, new AppOptions())
 
     /**
      * Save features to a CSV or text-delimited file. This method should be used only for point features.
@@ -195,7 +195,7 @@ trait ReadWriteMixin {
      */
     def saveAsCSVPoints(filename: String, xColumn: Int = 0, yColumn: Int = 1,
                         delimiter: Char = ',', header: Boolean = true): Unit = {
-      val opts = new BeastOptions()
+      val opts = new AppOptions()
       opts.setBoolean(CSVFeatureWriter.WriteHeader, header)
       opts.set(CSVFeatureWriter.FieldSeparator, delimiter.toString)
       SpatialWriter.saveFeatures(rdd, s"point($xColumn,$yColumn)", filename, opts)
@@ -209,7 +209,7 @@ trait ReadWriteMixin {
      * @param header whether to write a header line or not, true by default
      */
     def saveAsWKTFile(filename: String, wktColumn: Int, delimiter: Char = '\t', header: Boolean = true): Unit = {
-      val opts = new BeastOptions()
+      val opts = new AppOptions()
       opts.setBoolean(CSVFeatureWriter.WriteHeader, header)
       opts.set(CSVFeatureWriter.FieldSeparator, delimiter.toString)
       SpatialWriter.saveFeatures(rdd, s"wkt($wktColumn)", filename, opts)
@@ -220,7 +220,7 @@ trait ReadWriteMixin {
      * @param filename the name of the output file
      */
     def saveAsKML(filename: String): Unit =
-      SpatialWriter.saveFeatures(rdd, "kml", filename, new BeastOptions)
+      SpatialWriter.saveFeatures(rdd, "kml", filename, new AppOptions)
 
     /**
      * Write this RDD as a spatial file with the given format and additional options
@@ -228,7 +228,7 @@ trait ReadWriteMixin {
      * @param oformat the output file format (short name)
      * @param opts additional user options
      */
-    def writeSpatialFile(filename: String, oformat: String, opts: BeastOptions = new BeastOptions): Unit =
+    def writeSpatialFile(filename: String, oformat: String, opts: AppOptions = new AppOptions): Unit =
       SpatialWriter.saveFeatures(rdd, oformat, filename, opts)
 
     /**

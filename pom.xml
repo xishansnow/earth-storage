@@ -27,14 +27,14 @@
 
     <modules>
         <module>common</module>
-<!--        <module>curve-coding</module>-->
+<!--        <module>sfc-curve</module>-->
         <module>indexing</module>
 <!--        <module>produce-spark</module>               &lt;!&ndash;生成数据分区和索引&ndash;&gt;-->
 <!--        <module>index-manager</module>                  &lt;!&ndash;索引数据管理包&ndash;&gt;-->
 <!--        <module>query-spark</module>                    &lt;!&ndash;并行查询检索包&ndash;&gt;-->
 <!--        <module>analysis-spark</module>                 &lt;!&ndash;并行分析包&ndash;&gt;-->
 <!--        <module>compute-spark</module>                  &lt;!&ndash;并行计算包&ndash;&gt;-->
-<!--        <module>earthStorageUI</module>                  &lt;!&ndash;管理界面包&ndash;&gt;-->
+<!--        <module>earth-storage-ui</module>                  &lt;!&ndash;管理界面包&ndash;&gt;-->
     </modules>
 
     <developers>

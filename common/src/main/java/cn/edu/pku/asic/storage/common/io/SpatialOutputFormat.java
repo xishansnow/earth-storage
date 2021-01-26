@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.io;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.utils.IConfigurable;
 import cn.edu.pku.asic.storage.common.utils.OperationException;
 import cn.edu.pku.asic.storage.common.utils.OperationParam;
@@ -157,18 +157,18 @@ public class SpatialOutputFormat extends FileOutputFormat implements IConfigurab
    * @param parameterClasses (output) the dependent classes will be added to this list
    */
   @Override
-  public void addDependentClasses(BeastOptions opts, Stack<Class<?>> parameterClasses) {
+  public void addDependentClasses(AppOptions opts, Stack<Class<?>> parameterClasses) {
     if (opts == null)
       return;
     String oFormat = opts.getString(OutputFormat, opts.getString(SpatialFileRDD.InputFormat()));
     if (oFormat == null)
       return;
     if (oFormat.equals("*auto*")) {
-      Tuple2<Class<? extends FeatureReader>, BeastOptions> detected =
-          SpatialFileRDD.autodetectInputFormat(null, new BeastOptions());
+      Tuple2<Class<? extends FeatureReader>, AppOptions> detected =
+          SpatialFileRDD.autodetectInputFormat(null, new AppOptions());
       if (detected == null)
         throw new OperationException("Failed to auto-detect input format");
-      BeastOptions detectedOptions = detected._2;
+      AppOptions detectedOptions = detected._2;
       // If an input format is detected, use it also as an output format
       opts.mergeWith(detectedOptions);
       opts.set(OutputFormat, oFormat = opts.getString(SpatialFileRDD.InputFormat()));

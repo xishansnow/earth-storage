@@ -27,17 +27,17 @@ import java.util.Properties
 /**
  * Configurable options for Beast operations. A set of key-value pairs, both are Strings.
  */
-class BeastOptions(loadDefaults: Boolean = true)
+class AppOptions(loadDefaults: Boolean = true)
   extends scala.collection.mutable.HashMap[String, String] with Serializable {
 
   if (loadDefaults)
-    this.mergeWith(BeastOptions.defaultOptions)
+    this.mergeWith(AppOptions.defaultOptions)
 
   /**
    * Copy constructor
    * @param bo
    */
-  def this(bo: BeastOptions) {
+  def this(bo: AppOptions) {
     this(false)
     for (entry <- bo)
       this.put(entry._1, entry._2)
@@ -69,7 +69,7 @@ class BeastOptions(loadDefaults: Boolean = true)
    * @param value value
    * @return
    */
-  def set(key: String, value: String): BeastOptions = {
+  def set(key: String, value: String): AppOptions = {
     this.put(key, value)
     this
   }
@@ -92,7 +92,7 @@ class BeastOptions(loadDefaults: Boolean = true)
    * @param value
    * @return
    */
-  def setInt(key: String, value: Int): BeastOptions = this.set(key, value.toString)
+  def setInt(key: String, value: Int): AppOptions = this.set(key, value.toString)
 
   /**
    * Get a key value as long
@@ -108,7 +108,7 @@ class BeastOptions(loadDefaults: Boolean = true)
    * @param value
    * @return
    */
-  def setLong(key: String, value: Long): BeastOptions = this.set(key, value.toString)
+  def setLong(key: String, value: Long): AppOptions = this.set(key, value.toString)
 
   def getDouble(key: String, defaultValue: Double): Double = super.getOrElse(key, defaultValue.toString).toDouble
   def getFloat(key: String, defaultValue: Float): Float = super.getOrElse(key, defaultValue.toString).toFloat
@@ -127,7 +127,7 @@ class BeastOptions(loadDefaults: Boolean = true)
    * @param value
    * @return
    */
-  def setBoolean(key: String, value: Boolean): BeastOptions = this.set(key, value.toString)
+  def setBoolean(key: String, value: Boolean): AppOptions = this.set(key, value.toString)
 
   /**
    * Get value of a key as a size, e.g., "1m" for 1 mega byte
@@ -154,9 +154,9 @@ class BeastOptions(loadDefaults: Boolean = true)
    * @param index the index to retain
    * @return a new options with the given index retained
    */
-  def retainIndex(index: Int): BeastOptions = {
+  def retainIndex(index: Int): AppOptions = {
     val suffix = s"[$index]"
-    val newOpts = new BeastOptions(false)
+    val newOpts = new AppOptions(false)
     this.foreach(kv => {
       if (kv._1.indexOf('[') == -1)
         newOpts.put(kv._1, kv._2)
@@ -188,7 +188,7 @@ class BeastOptions(loadDefaults: Boolean = true)
    * @param path the path to write to
    * @return the UserOptions instance that was read from the file.
    */
-  def loadFromTextFile(fs: FileSystem, path: Path): BeastOptions = {
+  def loadFromTextFile(fs: FileSystem, path: Path): AppOptions = {
     val in = fs.open(path)
     try {
       loadFromTextFile(in)
@@ -197,9 +197,9 @@ class BeastOptions(loadDefaults: Boolean = true)
 
   /**
    * Load all the options from the given properties file and add it to this options
-   * @param in the input stream to read the BeastOptions from
+   * @param in the input stream to read the AppOptions from
    */
-  def loadFromTextFile(in: InputStream): BeastOptions = {
+  def loadFromTextFile(in: InputStream): AppOptions = {
     val r = new InputStreamReader(in)
     val p = new Properties
     p.load(r)
@@ -264,7 +264,7 @@ class BeastOptions(loadDefaults: Boolean = true)
     hadoopConf
   }
 
-  def mergeWith(options: Iterable[(String, String)]): BeastOptions = {
+  def mergeWith(options: Iterable[(String, String)]): AppOptions = {
     for (entry <- options)
       this.put(entry._1, entry._2)
     this
@@ -289,15 +289,15 @@ class BeastOptions(loadDefaults: Boolean = true)
   }
 }
 
-object BeastOptions {
-  implicit def fromMap(map: Iterable[(String, Any)]): BeastOptions = {
-    val bo = new BeastOptions()
+object AppOptions {
+  implicit def fromMap(map: Iterable[(String, Any)]): AppOptions = {
+    val bo = new AppOptions()
     for (entry <- map)
       bo.put(entry._1, entry._2.toString)
     bo
   }
 
-  implicit def fromPair(entry: (String, Any)): BeastOptions = new BeastOptions().set(entry._1, entry._2.toString)
+  implicit def fromPair(entry: (String, Any)): AppOptions = new AppOptions().set(entry._1, entry._2.toString)
 
   /**
    * Create from a list of strings similar to command-line arguments which can have one of the following formats:
@@ -307,8 +307,8 @@ object BeastOptions {
    * @param args
    * @return
    */
-  def fromStrings(args: Iterable[String]): BeastOptions = {
-    val options = new BeastOptions()
+  def fromStrings(args: Iterable[String]): AppOptions = {
+    val options = new AppOptions()
     val optionName = "((\\w+)(\\[\\d+\\])?)"
     val booleanTrueRegex = raw"-$optionName".r
     val booleanFalseRegex = raw"-no-$optionName".r
@@ -321,10 +321,10 @@ object BeastOptions {
     options
   }
 
-  def fromStringArray(args: Array[String]): BeastOptions = fromStrings(args.toIterable)
+  def fromStringArray(args: Array[String]): AppOptions = fromStrings(args.toIterable)
 
-  lazy val defaultOptions: BeastOptions = {
-    val opts = new BeastOptions(false)
+  lazy val defaultOptions: AppOptions = {
+    val opts = new AppOptions(false)
     // Load defaults from beast.properties files
     val configFiles: java.util.Enumeration[URL] = getClass().getClassLoader.getResources("beast.properties")
     while (configFiles.hasMoreElements) {

@@ -16,7 +16,7 @@
 package cn.edu.pku.asic.storage.common.io
 
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes._
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite._
 import org.apache.hadoop.io.Text
 import org.apache.spark.SparkContext
@@ -201,7 +201,7 @@ object SpatialReader extends Logging {
     textFile.map(new RDDPointParser(fieldSeparator, Array(xCol, yCol, zCol, mCol)))
 
   /**Java shortcut*/
-  def readInput(sc: JavaSparkContext, opts: BeastOptions, filename: String, iFormat: String): JavaSpatialRDD =
+  def readInput(sc: JavaSparkContext, opts: AppOptions, filename: String, iFormat: String): JavaSpatialRDD =
     JavaRDD.fromRDD(readInput(sc.sc, opts, filename, iFormat))
 
   /**
@@ -213,8 +213,8 @@ object SpatialReader extends Logging {
     * @param iFormat  use this input format to load the file and ignore the input format in the given user options.
     * @return an RDD that contains the loaded features
     */
-  def readInput(sc: SparkContext, opts: BeastOptions, filename: String, iFormat: String) : SpatialRDD =
-   new SpatialFileRDD(sc, filename, new BeastOptions(opts).set(SpatialFileRDD.InputFormat, iFormat))
+  def readInput(sc: SparkContext, opts: AppOptions, filename: String, iFormat: String) : SpatialRDD =
+   new SpatialFileRDD(sc, filename, new AppOptions(opts).set(SpatialFileRDD.InputFormat, iFormat))
 
   /**
    * Converts a SpatialRDD to a dataframe

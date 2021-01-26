@@ -1,6 +1,6 @@
 package cn.edu.pku.asic.storage.common.io;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.GeometryReader;
 import cn.edu.pku.asic.storage.common.geolite.IFeature;
 import cn.edu.pku.asic.storage.common.utils.FileUtil;
@@ -100,7 +100,7 @@ public abstract class FeatureReader implements Iterable<IFeature>, Iterator<IFea
     isClosed = false;
   }
 
-  public void initialize(SpatialFileRDD.FilePartition partition, BeastOptions opts) throws IOException, InterruptedException {
+  public void initialize(SpatialFileRDD.FilePartition partition, AppOptions opts) throws IOException, InterruptedException {
     FileSplit fileSplit = new FileSplit(new Path(partition.path()), partition.offset(), partition.length(),
         partition.locations());
     this.initialize(fileSplit, opts.loadIntoHadoopConf(new Configuration()));
@@ -186,7 +186,7 @@ public abstract class FeatureReader implements Iterable<IFeature>, Iterator<IFea
    * @param input the input file name
    * @return the options that need to be added to open the input file or {@code null} if the input is not detected
    */
-  public BeastOptions autoDetect(Configuration conf, String input) {
+  public AppOptions autoDetect(Configuration conf, String input) {
     Metadata metadata = this.getMetadata();
     boolean detected = false;
     try {
@@ -206,7 +206,7 @@ public abstract class FeatureReader implements Iterable<IFeature>, Iterator<IFea
       detected = FileUtil.extensionMatches(input, metadata.extension());
     }
     if (detected)
-      return new BeastOptions(false).set(SpatialFileRDD.InputFormat(), metadata.shortName());
+      return new AppOptions(false).set(SpatialFileRDD.InputFormat(), metadata.shortName());
     return null;
   }
 

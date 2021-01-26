@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.io;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.*;
 import cn.edu.pku.asic.storage.common.utils.OperationParam;
 import cn.edu.pku.asic.storage.common.utils.StringUtil;
@@ -49,6 +49,7 @@ import java.util.*;
     shortName = "csv",
     extension = ".csv"
 )
+
 public class CSVFeatureReader extends FeatureReader {
   private static final Log LOG = LogFactory.getLog(CSVFeatureReader.class);
 
@@ -518,7 +519,7 @@ public class CSVFeatureReader extends FeatureReader {
   }
 
   @Override
-  public BeastOptions autoDetect(Configuration conf, String input) {
+  public AppOptions autoDetect(Configuration conf, String input) {
     // Detect by reading the first few lines of the input;
     try {
       Path inputPath = new Path(input);
@@ -597,7 +598,7 @@ public class CSVFeatureReader extends FeatureReader {
               detectedFormat = String.format("point(%d,%d)", longitudeColumn, latitudeColumn);
             }
             if (detectedFormat != null) {
-              BeastOptions opts = new BeastOptions(false)
+              AppOptions opts = new AppOptions(false)
                   .set(SpatialFileRDD.InputFormat(), detectedFormat)
                   .set(FieldSeparator, Character.toString(candidateSeparator));
               if (useHeaderLine)

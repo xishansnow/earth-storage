@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.utils
 
-import cn.edu.pku.asic.storage.common.cli.{BeastOptions, CLIOperation}
+import cn.edu.pku.asic.storage.common.cli.{AppOptions, CLIOperation}
 import org.apache.spark.internal.Logging
 import org.w3c.dom.Node
 import org.xml.sax.SAXException
@@ -40,7 +40,7 @@ object OperationHelper extends Logging {
   case class ParsedCommandLineOptions(operation: Operation,
                                       inputs: Array[String],
                                       outputs: Array[String],
-                                      options: BeastOptions,
+                                      options: AppOptions,
                                       declaredParameters: Array[String])
 
   val configurations = new java.util.HashMap[String, java.util.Map[String, java.util.List[String]]]
@@ -168,7 +168,7 @@ object OperationHelper extends Logging {
     (retClass, klassObj)
   }
 
-  def getDependentClasses(operation: Operation, opts: BeastOptions): Array[Class[_]] = {
+  def getDependentClasses(operation: Operation, opts: AppOptions): Array[Class[_]] = {
     val classesToCheck = new java.util.Stack[Class[_]]()
     classesToCheck.push(operation.klass)
     var classesToReturn = Seq[Class[_]]()
@@ -205,7 +205,7 @@ object OperationHelper extends Logging {
    *             as a dependent class
    * @return an array of parameters that are allowed
    */
-  def getOperationParams(operation: Operation, opts: BeastOptions): Array[OperationParamInfo] = {
+  def getOperationParams(operation: Operation, opts: AppOptions): Array[OperationParamInfo] = {
     var paramInfo = List[OperationParamInfo]()
     for (kklass <- getDependentClasses(operation, opts)) {
       val (klass: Class[_], klassObj: Object) = getClassAndObject(kklass)
@@ -255,7 +255,7 @@ object OperationHelper extends Logging {
     // Treat all the remaining ones as options or input/output paths
     var inout = Seq[String]()
     var declaredParameters = Seq[String]()
-    val options = new BeastOptions()
+    val options = new AppOptions()
     val optionName = "((\\w[\\w\\-]*)(\\[\\d+\\])?)"
     val booleanTrueRegex = raw"-$optionName".r
     val booleanFalseRegex = raw"-no-$optionName".r
@@ -330,7 +330,7 @@ object OperationHelper extends Logging {
    * @param operation the operation to print the usage to
    * @param out the print stream to write to
    */
-  def printOperationUsage(operation: Operation, options: BeastOptions, out: PrintStream): Unit = {
+  def printOperationUsage(operation: Operation, options: AppOptions, out: PrintStream): Unit = {
     out.println("****************************************************")
     out.printf("Usage: %s", operation.metadata.shortName)
     val inputArity = parseArity(operation.metadata.inputArity)

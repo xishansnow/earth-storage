@@ -1,7 +1,7 @@
 package cn.edu.pku.asic.storage.indexing;
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
 import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
@@ -50,7 +50,7 @@ public class RGrovePartitioner implements SpatialPartitioner {
   protected final EnvelopeNDLite inputMBR = new EnvelopeNDLite();
 
   @Override
-  public void setup(BeastOptions conf, boolean disjoint) {
+  public void setup(AppOptions conf, boolean disjoint) {
     if (disjoint)
       throw new RuntimeException("Disjoint partitions are not supported by the R-Grove partitioner");
     this.mMRatio = conf.getFloat(MMRatio, 0.95f);

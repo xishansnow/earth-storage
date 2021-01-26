@@ -16,7 +16,7 @@
 package cn.edu.pku.asic.storage.common.io
 
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes._
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, IFeature}
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
@@ -29,7 +29,7 @@ object SpatialWriter extends Logging {
 
 
   /**Java shortcut*/
-  def saveFeatures(features: JavaSpatialRDD,  oFormat: String, outPath: String, opts: BeastOptions): Unit =
+  def saveFeatures(features: JavaSpatialRDD,  oFormat: String, outPath: String, opts: AppOptions): Unit =
     saveFeatures(features.rdd, oFormat, outPath, opts)
 
   /**
@@ -39,7 +39,7 @@ object SpatialWriter extends Logging {
     * @param outPath the path to write the output to
     * @param opts user options to configure the writer
     */
-  def saveFeatures(features: SpatialRDD,  oFormat: String, outPath: String, opts: BeastOptions): Unit = {
+  def saveFeatures(features: SpatialRDD,  oFormat: String, outPath: String, opts: AppOptions): Unit = {
     val featuresAsPairs = features.map((null, _))
     val hadoopConf = opts.loadIntoHadoopConf(new Configuration(features.sparkContext.hadoopConfiguration))
     SpatialOutputFormat.setOutputFormat(hadoopConf, oFormat)

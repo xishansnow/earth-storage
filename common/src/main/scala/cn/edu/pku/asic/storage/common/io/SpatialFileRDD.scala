@@ -17,7 +17,7 @@ package cn.edu.pku.asic.storage.common.io
 
 import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartition}
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.SpatialRDD
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, EnvelopeNDLite, GeometryHelper, GeometryType, IFeature}
 //import cn.edu.pku.asic.storage.indexing.indexing.CellPartitioner
 import cn.edu.pku.asic.storage.common.io.SpatialFileRDD.SpatialFilePartition
@@ -43,7 +43,7 @@ import scala.collection.mutable
  * A SpatialRDD that is backed by a file. Each partition points to part of a file and contains spatial information
  * about that file if a master file exists.
  */
-class SpatialFileRDD(@transient sc: SparkContext, path: String, opts: BeastOptions = new BeastOptions())
+class SpatialFileRDD(@transient sc: SparkContext, path: String, opts: AppOptions = new AppOptions())
   extends SpatialRDD(sc, Seq()) with Logging {
 
   /**The feature reader class that will be used to read this file*/
@@ -192,7 +192,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @param opts the user-provided options for this class.
    * @param parameterClasses
    */
-  override def addDependentClasses(opts: BeastOptions, parameterClasses: util.Stack[Class[_]]): Unit = {
+  override def addDependentClasses(opts: AppOptions, parameterClasses: util.Stack[Class[_]]): Unit = {
     super.addDependentClasses(opts, parameterClasses)
     if (opts == null) return
     val featureReaderClass = getFeatureReaderClass(null, opts)
@@ -202,7 +202,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
 
   /**
    * Tries to auto-detect the input format from the given path. If an input could be detected, the corresponding
-   * parameters for that input are set in BeastOptions and returned. If the input format could not be detected,
+   * parameters for that input are set in AppOptions and returned. If the input format could not be detected,
    * a `null` is returned. The given set of options are assumed to be correct (given by user) and this function
    * does not try to override them. Any options that is not present in the given options can be overriden by the
    * auto-detect function.
@@ -211,11 +211,11 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @return the detected feature reader class and the options that can be used to set that reader or `null` if
    *         the input could not be detected
    */
-  def autodetectInputFormat(path: String, opts: BeastOptions): (Class[_ <: FeatureReader], BeastOptions) = {
+  def autodetectInputFormat(path: String, opts: AppOptions): (Class[_ <: FeatureReader], AppOptions) = {
     // Iterate over all input formats and run the auto-detect function for each of them
     val t1: Long = System.nanoTime()
     val allReaders: Iterator[Class[_ <: FeatureReader]] = FeatureReader.featureReaders.values().iterator().asScala
-    var detectedOpts: BeastOptions = null
+    var detectedOpts: AppOptions = null
     var readerClass: Class[_ <: FeatureReader] = null
     while (detectedOpts == null && allReaders.hasNext) {
       readerClass = allReaders.next()
@@ -268,7 +268,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @param partitionInfo information about the spatial attributes of the partition or `null` if unknown
    * @param _partitions (output) the created partitions are added to this list
    */
-  private def addPartitions(opts: BeastOptions, fileSystem: FileSystem, fileStatus: FileStatus,
+  private def addPartitions(opts: AppOptions, fileSystem: FileSystem, fileStatus: FileStatus,
                             start: Long, length: Long, noSplit: Boolean,
                             partitionInfo: IFeature,
                             _partitions: mutable.ArrayBuffer[FilePartition]): Unit = {
@@ -304,7 +304,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * Create all partitions in this RDD for the given input file
    * @return
    */
-  def createPartitions(path: String, opts: BeastOptions, conf: Configuration): Array[FilePartition] = {
+  def createPartitions(path: String, opts: AppOptions, conf: Configuration): Array[FilePartition] = {
     val pathsToInspect = mutable.ArrayBuffer[String](path)
     val recursive: Boolean = opts.getBoolean(Recursive, false)
     val hadoopConf: Configuration = opts.loadIntoHadoopConf(new Configuration(conf))
@@ -348,7 +348,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
           val numDimensions: Int = (headerParts.length - headerParts.indexOf("xmin")) / 2
           // Reader the master file
           val masterFileReader = new CSVFeatureReader
-          val masterFileOpts = new BeastOptions(opts)
+          val masterFileOpts = new AppOptions(opts)
             .setBoolean(CSVFeatureReader.SkipHeader, true)
             .set(SpatialFileRDD.InputFormat, s"envelopek($numDimensions,xmin)")
             .set(CSVFeatureReader.FieldSeparator, "\t")
@@ -381,7 +381,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
   /**
    * The class of the feature reader to use with this RDD. All partitions use the same feature reader.
    */
-  def getFeatureReaderClass(path: String, opts: BeastOptions): Class[_ <: FeatureReader] = {
+  def getFeatureReaderClass(path: String, opts: AppOptions): Class[_ <: FeatureReader] = {
     val iformat: String = opts.getString(SpatialFileRDD.InputFormat)
     var ifClass: Class[_ <: FeatureReader] = null
     if (iformat == null || iformat.equals("*auto*")) {
@@ -424,7 +424,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @return an iterator to the features
    */
   def readPartition(partition: FilePartition, featureReaderClass: Class[_ <: FeatureReader],
-                    applyDuplicateAvoidance: Boolean, opts: BeastOptions): Iterator[IFeature] = {
+                    applyDuplicateAvoidance: Boolean, opts: AppOptions): Iterator[IFeature] = {
     val featureReader = featureReaderClass.newInstance()
     featureReader.initialize(partition, opts)
     logInfo(s"Processing partition ${partition.path} [${partition.offset},${partition.offset+partition.length})")
@@ -463,7 +463,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @return
    */
   def readPartitionJ(partition: FilePartition, featureReaderClass: Class[_ <: FeatureReader],
-                     opts: BeastOptions): java.util.Iterator[IFeature] =
+                     opts: AppOptions): java.util.Iterator[IFeature] =
     readPartition(partition, featureReaderClass, true, opts).asJava
 
   /**
@@ -474,10 +474,10 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @param opts additional options for reading the file
    * @return an iterator to features in the given path
    */
-  def readLocal(path: String, iformat: String, opts: BeastOptions, conf: Configuration): Iterator[IFeature] = {
+  def readLocal(path: String, iformat: String, opts: AppOptions, conf: Configuration): Iterator[IFeature] = {
     val beastOpts =
-      if (opts != null) new BeastOptions(opts).set(SpatialFileRDD.InputFormat, iformat)
-      else new BeastOptions(SpatialFileRDD.InputFormat -> iformat)
+      if (opts != null) new AppOptions(opts).set(SpatialFileRDD.InputFormat, iformat)
+      else new AppOptions(SpatialFileRDD.InputFormat -> iformat)
     val readerClass = getFeatureReaderClass(path, beastOpts)
     val partitions = createPartitions(path, beastOpts, conf)
     new Iterator[IFeature] {
@@ -510,7 +510,7 @@ object SpatialFileRDD extends IConfigurable with Logging {
    * @param conf configuration used to create the file system to read the input
    * @return an iterator to features in the given path
    */
-  def readLocalJ(path: String, format: String, opts: BeastOptions, conf: Configuration): java.util.Iterator[IFeature] =
+  def readLocalJ(path: String, format: String, opts: AppOptions, conf: Configuration): java.util.Iterator[IFeature] =
     readLocal(path, format, opts, conf).asJava
 
   /**

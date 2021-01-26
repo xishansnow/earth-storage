@@ -22,9 +22,9 @@ import java.io.IOException
 
 trait JCLIOperation extends CLIOperation {
 
-  override def run(opts: BeastOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any =
+  override def run(opts: AppOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any =
     run(opts, inputs, outputs, JavaSparkContext.fromSparkContext(sc))
 
   @throws(classOf[IOException])
-  def run(opts: BeastOptions, inputs: Array[String], outputs: Array[String], sc: JavaSparkContext): Any
+  def run(opts: AppOptions, inputs: Array[String], outputs: Array[String], sc: JavaSparkContext): Any
 }

@@ -16,7 +16,7 @@
 package cn.edu.pku.asic.storage.indexing;
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeND;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
@@ -113,7 +113,7 @@ public class ZCurvePartitioner implements SpatialPartitioner {
   }
 
   @Override
-  public void setup(BeastOptions conf, boolean disjoint) {
+  public void setup(AppOptions conf, boolean disjoint) {
     if (disjoint)
       throw new RuntimeException("Z-Cruve partitioner does not support disjoint partitions");
   }

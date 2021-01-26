@@ -1,10 +1,5 @@
 package cn.edu.pku.asic.storage.operations;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
-import cn.edu.pku.asic.storage.common.cli.CLIOperation;
-import org.apache.spark.SparkContext;
-
-import java.io.IOException;
 import java.io.PrintStream;
 
 /**

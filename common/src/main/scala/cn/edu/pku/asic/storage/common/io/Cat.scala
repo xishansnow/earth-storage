@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.io
 
-import cn.edu.pku.asic.storage.common.cli.{BeastOptions, CLIOperation}
+import cn.edu.pku.asic.storage.common.cli.{AppOptions, CLIOperation}
 import cn.edu.pku.asic.storage.common.io.ReadWriteMixin._
 import cn.edu.pku.asic.storage.common.utils.{OperationMetadata, OperationParam}
 import org.apache.spark.SparkContext
@@ -34,7 +34,7 @@ object Cat extends CLIOperation with Logging {
   @OperationParam(description = "Number of partitions in the output", defaultValue = "Same as input")
   val NumPartitions = "numpartitions"
 
-  override def run(opts: BeastOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any = {
+  override def run(opts: AppOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any = {
     // Read the input features and create pairs to be able to use Hadoop output format
     var features = sc.spatialFile(inputs(0), opts)
     // Store to the output

@@ -17,7 +17,7 @@ package cn.edu.pku.asic.storage.indexing
 
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{PartitionedSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartitioner}
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import IndexHelper.NumPartitions
 
 /**
@@ -42,7 +42,7 @@ trait IndexMixin {
      * @return a new RDD that is partitioned using the given partitioner class
      */
     def partitionBy(partitionerKlass: Class[_ <: SpatialPartitioner], numPartitions: Int = rdd.getNumPartitions,
-                    opts: BeastOptions = new BeastOptions()): PartitionedSpatialRDD = {
+                    opts: AppOptions = new AppOptions()): PartitionedSpatialRDD = {
       val partitioner = IndexHelper.createPartitioner(rdd, partitionerKlass,
         NumPartitions(IndexHelper.Fixed, numPartitions),
         _ => 1,

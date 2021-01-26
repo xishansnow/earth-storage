@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.generator
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, IFeature}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{Partition, SparkContext, TaskContext}
@@ -39,7 +39,7 @@ object ParcelDistribution extends DistributionType
  */
 case class RandomSpatialPartition(index: Int, cardinality: Long,
                                   dimensions: Int, seed: Long,
-                                  opts: BeastOptions) extends Partition
+                                  opts: AppOptions) extends Partition
 /**
  * A SpatialRDD that contains randomly generated geometries. Each geometry is wrapped in a feature with no
  * additional attributes.
@@ -51,7 +51,7 @@ case class RandomSpatialPartition(index: Int, cardinality: Long,
  */
 class RandomSpatialRDD(sc: SparkContext, distribution: DistributionType, cardinality: Long,
                        numPartitions: Int = 0,
-                       opts: BeastOptions = new BeastOptions())
+                       opts: AppOptions = new AppOptions())
   extends RDD[IFeature](sc, Seq()) {
   val _partitions: Array[Partition] = {
     val numRecordsPerPartition = opts.getLong(SpatialGenerator.RecordsPerPartition, 1000000)
@@ -75,7 +75,7 @@ class RandomSpatialRDD(sc: SparkContext, distribution: DistributionType, cardina
       // Generate the partitions using the parcel generator but set dithering to zero since dithering should
       // only be applied on the final records and not the partitions
       val partitionBoxes = new ParcelGenerator(RandomSpatialPartition(0, finalNumPartitions,
-        dimensions, seed, new BeastOptions(opts).setInt("dither", 0)))
+        dimensions, seed, new AppOptions(opts).setInt("dither", 0)))
       var recordsRemaining = cardinality
       partitionBoxes.zipWithIndex.map(pi => {
         val (partition, iPartition) = pi
@@ -84,7 +84,7 @@ class RandomSpatialRDD(sc: SparkContext, distribution: DistributionType, cardina
         // Adjust the affine matrix of this partition so that it will generate records within the partition boundaries
         // There is no need to change the other parameters (dither and split range) since they are ratios
         val partitionBox = partition.getGeometry.asInstanceOf[EnvelopeND]
-        val partitionOpts = new BeastOptions(opts)
+        val partitionOpts = new AppOptions(opts)
           .set(SpatialGenerator.AffineMatrix,
             Array(partitionBox.getSideLength(0), 0, 0, partitionBox.getSideLength(1),
               partitionBox.getMinCoord(0), partitionBox.getMinCoord(1))

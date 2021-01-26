@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.utils;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.cli.JCLIOperation;
 import cn.edu.pku.asic.storage.common.cli.WebMethod;
 import org.apache.commons.logging.Log;
@@ -66,7 +66,7 @@ public class BeastServer extends AbstractHandler implements JCLIOperation {
   protected int port;
 
   /**User options given at the application startup*/
-  private BeastOptions opts;
+  private AppOptions opts;
 
   /**A hashmap for keeping one instance of web handlers that were instantiated*/
   protected final Map<Class<? extends cn.edu.pku.asic.storage.common.utils.AbstractWebHandler>, cn.edu.pku.asic.storage.common.utils.AbstractWebHandler> webHandlers = new HashMap<>();
@@ -112,7 +112,7 @@ public class BeastServer extends AbstractHandler implements JCLIOperation {
   /**Spark context to pass to web handlers*/
   protected JavaSparkContext sc;
 
-  @Override public void setup(BeastOptions opts) {
+  @Override public void setup(AppOptions opts) {
     this.opts = opts;
     this.port = opts.getInt(Port, 8890);
 
@@ -330,7 +330,7 @@ public class BeastServer extends AbstractHandler implements JCLIOperation {
     * @return an optional result of this operation
     */
   @Override
-  public Object run(BeastOptions opts, String[] inputs, String[] outputs, JavaSparkContext sc) {
+  public Object run(AppOptions opts, String[] inputs, String[] outputs, JavaSparkContext sc) {
     try {
       this.sc = sc;
       // Since the threads are not typically CPU bound, we create more threads than the available processors
@@ -352,7 +352,7 @@ public class BeastServer extends AbstractHandler implements JCLIOperation {
   }
 
   @Override
-  public void addDependentClasses(BeastOptions opts, Stack<Class<?>> classes) {
+  public void addDependentClasses(AppOptions opts, Stack<Class<?>> classes) {
     List<String> handlerClassNames = OperationHelper.readConfigurationXML("beast.xml").get("WebHandlers");
     if (handlerClassNames == null)
       return;

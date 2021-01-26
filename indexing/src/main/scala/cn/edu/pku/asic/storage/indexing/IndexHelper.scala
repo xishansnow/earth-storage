@@ -15,16 +15,13 @@
  */
 package cn.edu.pku.asic.storage.indexing
 
-import java.io.{IOException, ObjectInputStream, ObjectOutputStream}
-
-import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartitioner}
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{JavaPartitionedSpatialRDD, JavaSpatialRDD, PartitionedSpatialRDD, SpatialRDD}
-import cn.edu.pku.asic.storage.common.cli.BeastOptions
+import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartitioner}
+import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, IFeature, PointND}
 import cn.edu.pku.asic.storage.common.io.SpatialOutputFormat
 import cn.edu.pku.asic.storage.common.synopses._
 import cn.edu.pku.asic.storage.common.utils.{IntArray, OperationHelper, OperationParam}
-import cn.edu.pku.asic.storage.indexing.CellPartitioner
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.util.StringUtils
@@ -32,6 +29,8 @@ import org.apache.spark.SparkContext
 import org.apache.spark.api.java.JavaPairRDD
 import org.apache.spark.internal.Logging
 import org.apache.spark.rdd.RDD
+
+import java.io.{IOException, ObjectInputStream, ObjectOutputStream}
 /**
  * A helper object for creating indexes and partitioning [[SpatialRDD]]s
  */
@@ -136,7 +135,7 @@ object IndexHelper extends Logging {
                         partitionerClass: Class[_ <: SpatialPartitioner],
                         numPartitions: NumPartitions,
                         sizeFunction: IFeature=>Int,
-                        opts: BeastOptions
+                        opts: AppOptions
                        ): SpatialPartitioner = {
     // The size of the synopsis (summary) that will be created
     val synopsisSize = opts.getSizeAsBytes(SynopsisSize, "10m")
@@ -199,7 +198,7 @@ object IndexHelper extends Logging {
                         pcriterion: String,
                         pvalue: Long,
                         sizeFunction: org.apache.spark.api.java.function.Function[IFeature, Int],
-                        opts: BeastOptions
+                        opts: AppOptions
                        ): SpatialPartitioner = {
     val pc = pcriterion match {
       case "fixed" => Fixed
@@ -397,7 +396,7 @@ object IndexHelper extends Logging {
    * @param opts             any user options to use while creating the partitioner
    */
   def partitionFeatures(features: SpatialRDD, partitionerClass: Class[_ <: SpatialPartitioner],
-                        sizeFunction: IFeature=>Int, opts: BeastOptions): PartitionedSpatialRDD = {
+                        sizeFunction: IFeature=>Int, opts: AppOptions): PartitionedSpatialRDD = {
     val pInfo = parsePartitionCriterion(opts.getString(IndexHelper.PartitionCriterionThreshold, "Size(128m)"))
     val spatialPartitioner = createPartitioner(features, partitionerClass, pInfo, sizeFunction, opts)
     partitionFeatures(features, spatialPartitioner)
@@ -413,7 +412,7 @@ object IndexHelper extends Logging {
    * @param opts             any user options to use while creating the partitioner
    */
   def partitionFeatures(features: JavaSpatialRDD, partitionerClass: Class[_ <: SpatialPartitioner],
-                        sizeFunction: org.apache.spark.api.java.function.Function[IFeature, Int], opts: BeastOptions)
+                        sizeFunction: org.apache.spark.api.java.function.Function[IFeature, Int], opts: AppOptions)
       : JavaPartitionedSpatialRDD = {
     val pInfo = parsePartitionCriterion(opts.getString(IndexHelper.PartitionCriterionThreshold, "Size(128m)"))
     val spatialPartitioner = createPartitioner(features.rdd, partitionerClass, pInfo, f => sizeFunction.call(f), opts)
@@ -516,7 +515,7 @@ object IndexHelper extends Logging {
    * @param path path to the output file to be written
    * @param opts any additional user options
    */
-  def saveIndex(partitionedFeatures: JavaPartitionedSpatialRDD, path: String, opts: BeastOptions): Unit = {
+  def saveIndex(partitionedFeatures: JavaPartitionedSpatialRDD, path: String, opts: AppOptions): Unit = {
     // Could not call the Scala method because the input key is Integer while the scala method expects Int
     // Mapping the input features would not work because the spatial partitioner will be lost
     if (partitionedFeatures.rdd.partitioner.isEmpty)
@@ -542,7 +541,7 @@ object IndexHelper extends Logging {
     * @param path path to the output file to be written
     * @param opts any additional user options
     */
-  def saveIndex(partitionedFeatures: RDD[(Int, IFeature)], path: String, opts: BeastOptions): Unit = {
+  def saveIndex(partitionedFeatures: RDD[(Int, IFeature)], path: String, opts: AppOptions): Unit = {
     if (partitionedFeatures.partitioner.isEmpty)
       throw new RuntimeException("Cannot save non-partitioned features")
         if (!partitionedFeatures.partitioner.get.isInstanceOf[SparkSpatialPartitioner])

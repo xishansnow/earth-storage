@@ -35,7 +35,7 @@ trait CLIOperation extends IConfigurable {
    * @return an optional result of this operation
    */
   @throws(classOf[IOException])
-  def run(opts: BeastOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any
+  def run(opts: AppOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any
 
   /**
    * Print the usage of this class (if any)

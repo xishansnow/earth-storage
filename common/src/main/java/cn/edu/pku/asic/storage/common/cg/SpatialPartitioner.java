@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.cg;
 
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeND;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.synopses.AbstractHistogram;
@@ -40,6 +40,10 @@ import java.util.Iterator;
 public interface SpatialPartitioner extends Externalizable, Iterable<EnvelopeNDLite> {
   Log LOG = LogFactory.getLog(SpatialPartitioner.class);
 
+  /**
+   * Annotates the subclass of SpatialPartitioner, to describe it's basic feature(such as disjointSupport or not, text description etc.)
+   * 用于标注SpatialPartitioner子类的基本特征
+   */
   @Target(ElementType.TYPE)
   @Retention(RetentionPolicy.RUNTIME)
   @interface Metadata {
@@ -65,6 +69,7 @@ public interface SpatialPartitioner extends Externalizable, Iterable<EnvelopeNDL
   /**
    * Annotates the required parameters of the {@link #construct(Summary, double[][], AbstractHistogram, int)}
    * function in implementation of this interface.
+   * 用于标注函参是否必须提供的注解类，当增加该注解时，使用者必须提供该参数的对象实例
    */
   @Target(ElementType.PARAMETER)
   @Retention(RetentionPolicy.RUNTIME)
@@ -73,6 +78,8 @@ public interface SpatialPartitioner extends Externalizable, Iterable<EnvelopeNDL
   /**
    * Annotates the parameters of the {@link #construct(Summary, double[][], AbstractHistogram, int)}
    * function that can be used but are not required.
+   * 用于标注哪些函参是可选，但如果提供更好
+   * 既无Required注解，也无Preferred注解的函参，可有可无，不影响调用
    */
   @Target(ElementType.PARAMETER)
   @Retention(RetentionPolicy.RUNTIME)
@@ -83,7 +90,7 @@ public interface SpatialPartitioner extends Externalizable, Iterable<EnvelopeNDL
    * @param conf the environment configuration
    * @param disjoint set to true to produce disjoint partitions with probable replication of some features
    */
-  default void setup(BeastOptions conf, boolean disjoint) {}
+  default void setup(AppOptions conf, boolean disjoint) {}
 
 
   /**

@@ -16,7 +16,7 @@
 
 import cn.edu.pku.asic.storage.common.cg.HCurveSortable;
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner;
-import cn.edu.pku.asic.storage.common.cli.BeastOptions;
+import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeND;
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite;
 import cn.edu.pku.asic.storage.common.geolite.GeometryHelper;
@@ -56,7 +56,7 @@ public class HCurvePartitioner implements SpatialPartitioner {
   protected HCurveSortable hCurveSorter;
 
   @Override
-  public void setup(BeastOptions conf, boolean disjoint) {
+  public void setup(AppOptions conf, boolean disjoint) {
     if (disjoint)
       throw new RuntimeException("H-Cruve partitioner does not support disjoint partitions");
   }
