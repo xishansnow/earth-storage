@@ -1,4 +1,4 @@
-package cn.edu.pku.asic.storage.curvecoding;
+package cn.edu.pku.asic.storage.dggs;
 
 import com.google.common.primitives.UnsignedLong;
 

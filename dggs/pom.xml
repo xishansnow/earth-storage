@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>curve-coding</artifactId>
+    <artifactId>dggs</artifactId>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -21,6 +21,17 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>28.0-jre</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.sgr</groupId>
+            <artifactId>s2-geometry-library-java</artifactId>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 
