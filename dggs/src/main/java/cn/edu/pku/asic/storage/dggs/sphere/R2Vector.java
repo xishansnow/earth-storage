@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
  * R2Vector represents a vector in the two-dimensional space. It defines the

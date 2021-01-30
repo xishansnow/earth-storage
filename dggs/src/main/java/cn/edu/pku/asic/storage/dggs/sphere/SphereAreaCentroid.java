@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 import javax.annotation.Nullable;
 
@@ -27,12 +27,12 @@ import javax.annotation.Nullable;
  *
  * @author dbentley@google.com (Daniel Bentley)
  */
-public final class S2AreaCentroid {
+public final class SphereAreaCentroid {
 
   private final double area;
-  private final S2Point centroid;
+  private final SpherePoint centroid;
 
-  public S2AreaCentroid(double area, @Nullable S2Point centroid) {
+  public SphereAreaCentroid(double area, @Nullable SpherePoint centroid) {
     this.area = area;
     this.centroid = centroid;
   }
@@ -41,7 +41,7 @@ public final class S2AreaCentroid {
     return area;
   }
 
-  @Nullable public S2Point getCentroid() {
+  @Nullable public SpherePoint getCentroid() {
     return centroid;
   }
 }

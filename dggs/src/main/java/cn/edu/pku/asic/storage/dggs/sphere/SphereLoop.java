@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
-import cn.edu.pku.asic.storage.dggs.s2geometry.S2EdgeUtil.EdgeCrosser;
+import cn.edu.pku.asic.storage.dggs.sphere.SphereEdgeUtil.EdgeCrosser;
 
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- *
+ * 球面环类
  * An S2Loop represents a simple spherical polygon. It consists of a single
  * chain of vertices where the first vertex is implicitly connected to the last.
  * All loops are defined to have a CCW orientation, i.e. the interior of the
@@ -48,8 +48,8 @@ import java.util.logging.Logger;
  *
  */
 
-public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
-  private static final Logger log = Logger.getLogger(S2Loop.class.getCanonicalName());
+public final strictfp class SphereLoop implements SphereRegion, Comparable<SphereLoop> {
+  private static final Logger log = Logger.getLogger(SphereLoop.class.getCanonicalName());
 
   /**
    * Max angle that intersections can be off by and yet still be considered
@@ -58,9 +58,9 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
   public static final double MAX_INTERSECTION_ERROR = 1e-15;
 
   /** Maps each S2Point to its order in the loop, from 1 to numVertices. */
-  private Map<S2Point, Integer> vertexToIndex;
+  private Map<SpherePoint, Integer> vertexToIndex;
 
-  private final S2Point[] vertices;
+  private final SpherePoint[] vertices;
   private final int numVertices;
 
   /**
@@ -69,7 +69,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    */
   private int firstLogicalVertex;
 
-  private S2LatLngRect bound;
+  private SphereLatLngRect bound;
   private boolean originInside;
   private int depth;
 
@@ -80,10 +80,10 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    *
    * @param vertices
    */
-  public S2Loop(final List<S2Point> vertices) {
+  public SphereLoop(final List<SpherePoint> vertices) {
     this.numVertices = vertices.size();
-    this.vertices = new S2Point[numVertices];
-    this.bound = S2LatLngRect.full();
+    this.vertices = new SpherePoint[numVertices];
+    this.bound = SphereLatLngRect.full();
     this.depth = 0;
 
     // if (debugMode) {
@@ -102,7 +102,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
   /**
    * Copy constructor.
    */
-  public S2Loop(S2Loop src) {
+  public SphereLoop(SphereLoop src) {
     this.numVertices = src.numVertices();
     this.vertices = src.vertices.clone();
     this.vertexToIndex = src.vertexToIndex;
@@ -151,7 +151,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * For convenience, we make two entire copies of the vertex list available:
    * vertex(n..2*n-1) is mapped to vertex(0..n-1), where n == numVertices().
    */
-  public S2Point vertex(int i) {
+  public SpherePoint vertex(int i) {
     try {
       return vertices[i >= vertices.length ? i - vertices.length : i];
     } catch (ArrayIndexOutOfBoundsException e) {
@@ -163,7 +163,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * Comparator (needed by Comparable interface)
    */
   @Override
-  public int compareTo(S2Loop other) {
+  public int compareTo(SphereLoop other) {
     if (numVertices() != other.numVertices()) {
       return this.numVertices() - other.numVertices();
     }
@@ -202,7 +202,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
   public boolean isNormalized() {
     // We allow a bit of error so that exact hemispheres are
     // considered normalized.
-    return getArea() <= 2 * S2.M_PI + 1e-14;
+    return getArea() <= 2 * Sphere.M_PI + 1e-14;
   }
 
   /**
@@ -222,15 +222,15 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
   public void invert() {
     int last = numVertices() - 1;
     for (int i = (last - 1) / 2; i >= 0; --i) {
-      S2Point t = vertices[i];
+      SpherePoint t = vertices[i];
       vertices[i] = vertices[last - i];
       vertices[last - i] = t;
     }
     vertexToIndex = null;
     originInside ^= true;
-    if (bound.lat().lo() > -S2.M_PI_2 && bound.lat().hi() < S2.M_PI_2) {
+    if (bound.lat().lo() > -Sphere.M_PI_2 && bound.lat().hi() < Sphere.M_PI_2) {
       // The complement of this loop contains both poles.
-      bound = S2LatLngRect.full();
+      bound = SphereLatLngRect.full();
     } else {
       initBound();
     }
@@ -240,11 +240,11 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
   /**
    * Helper method to get area and optionally centroid.
    */
-  private S2AreaCentroid getAreaCentroid(boolean doCentroid) {
-    S2Point centroid = null;
+  private SphereAreaCentroid getAreaCentroid(boolean doCentroid) {
+    SpherePoint centroid = null;
     // Don't crash even if loop is not well-defined.
     if (numVertices() < 3) {
-      return new S2AreaCentroid(0D, centroid);
+      return new SphereAreaCentroid(0D, centroid);
     }
 
     // The triangle area calculation becomes numerically unstable as the length
@@ -263,22 +263,22 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
     // exactly the right direction). Note that the approximate point resolution
     // using the E7 or S2CellId representation is only about 1cm.
 
-    S2Point origin = vertex(0);
+    SpherePoint origin = vertex(0);
     int axis = (origin.largestAbsComponent() + 1) % 3;
-    double slightlyDisplaced = origin.get(axis) + S2.M_E * 1e-10;
+    double slightlyDisplaced = origin.get(axis) + Sphere.M_E * 1e-10;
     origin =
-        new S2Point((axis == 0) ? slightlyDisplaced : origin.x,
+        new SpherePoint((axis == 0) ? slightlyDisplaced : origin.x,
             (axis == 1) ? slightlyDisplaced : origin.y, (axis == 2) ? slightlyDisplaced : origin.z);
-    origin = S2Point.normalize(origin);
+    origin = SpherePoint.normalize(origin);
 
     double areaSum = 0;
-    S2Point centroidSum = new S2Point(0, 0, 0);
+    SpherePoint centroidSum = new SpherePoint(0, 0, 0);
     for (int i = 1; i <= numVertices(); ++i) {
-      areaSum += S2.signedArea(origin, vertex(i - 1), vertex(i));
+      areaSum += Sphere.signedArea(origin, vertex(i - 1), vertex(i));
       if (doCentroid) {
         // The true centroid is already premultiplied by the triangle area.
-        S2Point trueCentroid = S2.trueCentroid(origin, vertex(i - 1), vertex(i));
-        centroidSum = S2Point.add(centroidSum, trueCentroid);
+        SpherePoint trueCentroid = Sphere.trueCentroid(origin, vertex(i - 1), vertex(i));
+        centroidSum = SpherePoint.add(centroidSum, trueCentroid);
       }
     }
     // The calculated area at this point should be between -4*Pi and 4*Pi,
@@ -293,14 +293,14 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
       // of position over the region to the right of the loop. This is the same
       // as the integral of position over the region to the left of the loop,
       // since the integral of position over the entire sphere is (0, 0, 0).
-      areaSum += 4 * S2.M_PI;
+      areaSum += 4 * Sphere.M_PI;
     }
     // The loop's sign() does not affect the return result and should be taken
     // into account by the caller.
     if (doCentroid) {
       centroid = centroidSum;
     }
-    return new S2AreaCentroid(areaSum, centroid);
+    return new SphereAreaCentroid(areaSum, centroid);
   }
 
   /**
@@ -309,7 +309,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * the loop multiplied by the area of the loop (see S2.java for details on
    * centroids). Note that the centroid may not be contained by the loop.
    */
-  public S2AreaCentroid getAreaAndCentroid() {
+  public SphereAreaCentroid getAreaAndCentroid() {
     return getAreaCentroid(true);
   }
 
@@ -323,10 +323,10 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
 
   /**
    * Return the true centroid of the polygon multiplied by the area of the
-   * polygon (see {@link S2} for details on centroids). Note that the centroid
+   * polygon (see {@link Sphere} for details on centroids). Note that the centroid
    * may not be contained by the polygon.
    */
-  public S2Point getCentroid() {
+  public SpherePoint getCentroid() {
     return getAreaCentroid(true).getCentroid();
   }
 
@@ -347,7 +347,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * Return true if the region contained by this loop is a superset of the
    * region contained by the given other loop.
    */
-  public boolean contains(S2Loop b) {
+  public boolean contains(SphereLoop b) {
     // For this loop A to contains the given loop B, all of the following must
     // be true:
     //
@@ -377,7 +377,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
 
     // Now check whether there are any edge crossings, and also check the loop
     // relationship at any shared vertices.
-    if (checkEdgeCrossings(b, new S2EdgeUtil.WedgeContains()) <= 0) {
+    if (checkEdgeCrossings(b, new SphereEdgeUtil.WedgeContains()) <= 0) {
       return false;
     }
 
@@ -397,7 +397,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * Return true if the region contained by this loop intersects the region
    * contained by the given other loop.
    */
-  public boolean intersects(S2Loop b) {
+  public boolean intersects(SphereLoop b) {
     // a->Intersects(b) if and only if !a->Complement()->Contains(b).
     // This code is similar to Contains(), but is optimized for the case
     // where both loops enclose less than half of the sphere.
@@ -422,7 +422,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
 
     // Now check whether there are any edge crossings, and also check the loop
     // relationship at any shared vertices.
-    if (checkEdgeCrossings(b, new S2EdgeUtil.WedgeIntersects()) < 0) {
+    if (checkEdgeCrossings(b, new SphereEdgeUtil.WedgeIntersects()) < 0) {
       return true;
     }
 
@@ -446,7 +446,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * contains() is much cheaper since it does not need to check whether the
    * boundaries of the two loops cross.
    */
-  public boolean containsNested(S2Loop b) {
+  public boolean containsNested(SphereLoop b) {
     if (!bound.contains(b.getRectBound())) {
       return false;
     }
@@ -460,7 +460,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
     }
     // Check whether the edge order around b->vertex(1) is compatible with
     // A containin B.
-    return (new S2EdgeUtil.WedgeContains()).test(
+    return (new SphereEdgeUtil.WedgeContains()).test(
         vertex(m - 1), vertex(m), vertex(m + 1), b.vertex(0), b.vertex(2)) > 0;
   }
 
@@ -471,7 +471,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * do not contain each other's boundaries. This method is used for testing
    * whether multi-loop polygons contain each other.
    */
-  public int containsOrCrosses(S2Loop b) {
+  public int containsOrCrosses(SphereLoop b) {
     // There can be containment or crossing only if the bounds intersect.
     if (!bound.intersects(b.getRectBound())) {
       return 0;
@@ -481,7 +481,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
     // relationship at any shared vertices. Note that unlike Contains() or
     // Intersects(), we can't do a point containment test as a shortcut because
     // we need to detect whether there are any edge crossings.
-    int result = checkEdgeCrossings(b, new S2EdgeUtil.WedgeContainsOrCrosses());
+    int result = checkEdgeCrossings(b, new SphereEdgeUtil.WedgeContainsOrCrosses());
 
     // If there was an edge crossing or a shared vertex, we know the result
     // already. (This is true even if the result is 1, but since we don't
@@ -513,7 +513,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * more than maxError. Note: This method mostly useful only for testing
    * purposes.
    */
-  boolean boundaryApproxEquals(S2Loop b, double maxError) {
+  boolean boundaryApproxEquals(SphereLoop b, double maxError) {
     if (numVertices() != b.numVertices()) {
       return false;
     }
@@ -521,7 +521,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
     int iThis = firstLogicalVertex;
     int iOther = b.firstLogicalVertex;
     for (int i = 0; i < maxVertices; ++i, ++iThis, ++iOther) {
-      if (!S2.approxEquals(vertex(iThis), b.vertex(iOther), maxError)) {
+      if (!Sphere.approxEquals(vertex(iThis), b.vertex(iOther), maxError)) {
         return false;
       }
     }
@@ -532,27 +532,27 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
 
   /** Return a bounding spherical cap. */
   @Override
-  public S2Cap getCapBound() {
+  public SphereCap getCapBound() {
     return bound.getCapBound();
   }
 
 
   /** Return a bounding latitude-longitude rectangle. */
   @Override
-  public S2LatLngRect getRectBound() {
+  public SphereLatLngRect getRectBound() {
     return bound;
   }
 
   /**
    * The point 'p' does not need to be normalized.
    */
-  public boolean contains(S2Point p) {
+  public boolean contains(SpherePoint p) {
     if (!bound.contains(p)) {
       return false;
     }
 
     boolean inside = originInside;
-    S2Point origin = S2.origin();
+    SpherePoint origin = Sphere.origin();
     EdgeCrosser crosser = new EdgeCrosser(origin, p,
         vertices[numVertices - 1]);
 
@@ -584,15 +584,15 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * angle formed between P, the origin and the nearest point on the loop to P.
    * This angle in radians is equivalent to the arclength along the unit sphere.
    */
-  public S1Angle getDistance(S2Point p) {
-    S2Point normalized = S2Point.normalize(p);
+  public S1Angle getDistance(SpherePoint p) {
+    SpherePoint normalized = SpherePoint.normalize(p);
 
     // The furthest point from p on the sphere is its antipode, which is an
     // angle of PI radians. This is an upper bound on the angle.
     S1Angle minDistance = S1Angle.radians(Math.PI);
     for (int i = 0; i < numVertices(); i++) {
       minDistance =
-          S1Angle.min(minDistance, S2EdgeUtil.getDistance(normalized, vertex(i), vertex(i + 1)));
+          S1Angle.min(minDistance, SphereEdgeUtil.getDistance(normalized, vertex(i), vertex(i + 1)));
     }
     return minDistance;
   }
@@ -606,14 +606,14 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
 
     // All vertices must be unit length.
     for (int i = 0; i < numVertices; ++i) {
-      if (!S2.isUnitLength(vertex(i))) {
+      if (!Sphere.isUnitLength(vertex(i))) {
         log.info("Vertex " + i + " is not unit length");
         return false;
       }
     }
 
     // Loops are not allowed to have any duplicate vertices.
-    HashMap<S2Point, Integer> vmap = Maps.newHashMap();
+    HashMap<SpherePoint, Integer> vmap = Maps.newHashMap();
     for (int i = 0; i < numVertices; ++i) {
       Integer previousVertexIndex = vmap.put(vertex(i), i);
       if (previousVertexIndex != null) {
@@ -689,8 +689,8 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * @return true if the given loop is valid. Creates an instance of S2Loop and
    *         defers this call to {@link #isValid()}.
    */
-  public static boolean isValid(List<S2Point> vertices) {
-    return new S2Loop(vertices).isValid();
+  public static boolean isValid(List<SpherePoint> vertices) {
+    return new SphereLoop(vertices).isValid();
   }
 
   @Override
@@ -699,7 +699,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
 
     builder.append(vertices.length).append(" points. [");
 
-    for (S2Point v : vertices) {
+    for (SpherePoint v : vertices) {
       builder.append(v.toString()).append(" ");
     }
     builder.append("]");
@@ -726,7 +726,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
     // The test below is written so that B is inside if C=R but not if A=R.
 
     originInside = false; // Initialize before calling Contains().
-    boolean v1Inside = S2.orderedCCW(S2.ortho(vertex(1)), vertex(0), vertex(2), vertex(1));
+    boolean v1Inside = Sphere.orderedCCW(Sphere.ortho(vertex(1)), vertex(0), vertex(2), vertex(1));
     if (v1Inside != contains(vertex(1))) {
       originInside = true;
     }
@@ -739,23 +739,23 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
     // candy-cane stripe). Second, the loop may include one or both poles.
     // Note that a small clockwise loop near the equator contains both poles.
 
-    S2EdgeUtil.RectBounder bounder = new S2EdgeUtil.RectBounder();
+    SphereEdgeUtil.RectBounder bounder = new SphereEdgeUtil.RectBounder();
     for (int i = 0; i <= numVertices(); ++i) {
       bounder.addPoint(vertex(i));
     }
-    S2LatLngRect b = bounder.getBound();
+    SphereLatLngRect b = bounder.getBound();
     // Note that we need to initialize bound with a temporary value since
     // contains() does a bounding rectangle check before doing anything else.
-    bound = S2LatLngRect.full();
-    if (contains(new S2Point(0, 0, 1))) {
-      b = new S2LatLngRect(new R1Interval(b.lat().lo(), S2.M_PI_2), S1Interval.full());
+    bound = SphereLatLngRect.full();
+    if (contains(new SpherePoint(0, 0, 1))) {
+      b = new SphereLatLngRect(new R1Interval(b.lat().lo(), Sphere.M_PI_2), S1Interval.full());
     }
     // If a loop contains the south pole, then either it wraps entirely
     // around the sphere (full longitude range), or it also contains the
     // north pole in which case b.lng().isFull() due to the test above.
 
-    if (b.lng().isFull() && contains(new S2Point(0, 0, -1))) {
-      b = new S2LatLngRect(new R1Interval(-S2.M_PI_2, b.lat().hi()), b.lng());
+    if (b.lng().isFull() && contains(new SpherePoint(0, 0, -1))) {
+      b = new SphereLatLngRect(new R1Interval(-Sphere.M_PI_2, b.lat().hi()), b.lng());
     }
     bound = b;
   }
@@ -764,9 +764,9 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * Return the index of a vertex at point "p", or -1 if not found. The return
    * value is in the range 1..num_vertices_ if found.
    */
-  private int findVertex(S2Point p) {
+  private int findVertex(SpherePoint p) {
     if (vertexToIndex == null) {
-      vertexToIndex = new HashMap<S2Point, Integer>();
+      vertexToIndex = new HashMap<SpherePoint, Integer>();
       for (int i = 1; i <= numVertices; i++) {
         vertexToIndex.put(vertex(i), i);
       }
@@ -791,7 +791,7 @@ public final strictfp class S2Loop implements S2Region, Comparable<S2Loop> {
    * (returning immediately if any wedge returns -1). Returns +1 if there are no
    * intersections and no shared vertices.
    */
-  private int checkEdgeCrossings(S2Loop b, S2EdgeUtil.WedgeRelation relation) {
+  private int checkEdgeCrossings(SphereLoop b, SphereEdgeUtil.WedgeRelation relation) {
 //    DataEdgeIterator it = getEdgeIterator(b.numVertices);
     int result = 1;
     // since 'this' usually has many more vertices than 'b', use the index on

@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
  * An R1Interval represents a closed, bounded interval on the real line. It is
  * capable of representing the empty interval (containing no points) and
  * zero-length intervals (containing a single point).
- * Usually used to represent latitude.
  */
 
 public final strictfp class R1Interval {

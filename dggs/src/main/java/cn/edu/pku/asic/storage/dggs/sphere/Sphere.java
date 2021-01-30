@@ -13,205 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
-import cn.edu.pku.asic.storage.dggs.sphere.*;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+/*  球面上的常数和球面几何计算函数 */
 
-public final strictfp class S2 extends Sphere {
+public strictfp class Sphere {
 
-  // Together these flags define a cell orientation. If SWAP_MASK
-  // is true, then canonical traversal order is flipped around the
-  // diagonal (i.e. i and j are swapped with each other). If
-  // INVERT_MASK is true, then the traversal order is rotated by 180
-  // degrees (i.e. the bits of i and j are inverted, or equivalently,
-  // the axis directions are reversed).
-  public static final int SWAP_MASK = 0x01;
-  public static final int INVERT_MASK = 0x02;
+  // Declare some frequently used constants
+  public static final double M_PI = Math.PI;
+  public static final double M_1_PI = 1.0 / Math.PI;
+  public static final double M_PI_2 = Math.PI / 2.0;
+  public static final double M_PI_4 = Math.PI / 4.0;
+  public static final double M_SQRT2 = Math.sqrt(2);
+  public static final double M_E = Math.E;
 
-  // Number of bits in the mantissa of a double.
-  private static final int EXPONENT_SHIFT = 52;
-  // Mask to extract the exponent from a double.
-  private static final long EXPONENT_MASK = 0x7ff0000000000000L;
-
-  /**
-   * If v is non-zero, return an integer {@code exp} such that
-   * {@code (0.5 <= |v|*2^(-exp) < 1)}. If v is zero, return 0.
-   *
-   * <p>Note that this arguably a bad definition of exponent because it makes
-   * {@code exp(9) == 4}. In decimal this would be like saying that the
-   * exponent of 1234 is 4, when in scientific 'exponent' notation 1234 is
-   * {@code 1.234 x 10^3}.
-   *
-   * TODO(dbeaumont): Replace this with "DoubleUtils.getExponent(v) - 1" ?
-   */
-  @VisibleForTesting
-  static int exp(double v) {
-    if (v == 0) {
-      return 0;
-    }
-    long bits = Double.doubleToLongBits(v);
-    return (int) ((EXPONENT_MASK & bits) >> EXPONENT_SHIFT) - 1022;
-  }
-
-  /** Mapping Hilbert traversal order to orientation adjustment mask. */
-  private static final int[] POS_TO_ORIENTATION =
-      {SWAP_MASK, 0, 0, INVERT_MASK + SWAP_MASK};
-
-  /**
-   * Returns an XOR bit mask indicating how the orientation of a child subcell
-   * is related to the orientation of its parent cell. The returned value can
-   * be XOR'd with the parent cell's orientation to give the orientation of
-   * the child cell.
-   *
-   * @param position the position of the subcell in the Hilbert traversal, in
-   *     the range [0,3].
-   * @return a bit mask containing some combination of {@link #SWAP_MASK} and
-   *     {@link #INVERT_MASK}.
-   * @throws IllegalArgumentException if position is out of bounds.
-   */
-  public static int posToOrientation(int position) {
-    Preconditions.checkArgument(0 <= position && position < 4);
-    return POS_TO_ORIENTATION[position];
-  }
-
-  /** Mapping from cell orientation + Hilbert traversal to IJ-index. */
-  private static final int[][] POS_TO_IJ = {
-      // 0 1 2 3
-      {0, 1, 3, 2}, // canonical order: (0,0), (0,1), (1,1), (1,0)
-      {0, 2, 3, 1}, // axes swapped: (0,0), (1,0), (1,1), (0,1)
-      {3, 2, 0, 1}, // bits inverted: (1,1), (1,0), (0,0), (0,1)
-      {3, 1, 0, 2}, // swapped & inverted: (1,1), (0,1), (0,0), (1,0)
-  };
-
-  /**
-   * Return the IJ-index of the subcell at the given position in the Hilbert
-   * curve traversal with the given orientation. This is the inverse of
-   * {@link #ijToPos}.
-   *
-   * @param orientation the subcell orientation, in the range [0,3].
-   * @param position the position of the subcell in the Hilbert traversal, in
-   *     the range [0,3].
-   * @return the IJ-index where {@code 0->(0,0), 1->(0,1), 2->(1,0), 3->(1,1)}.
-   * @throws IllegalArgumentException if either parameter is out of bounds.
-   */
-  public static int posToIJ(int orientation, int position) {
-    Preconditions.checkArgument(0 <= orientation && orientation < 4);
-    Preconditions.checkArgument(0 <= position && position < 4);
-    return POS_TO_IJ[orientation][position];
-  }
-
-  /** Mapping from Hilbert traversal order + cell orientation to IJ-index. */
-  private static final int IJ_TO_POS[][] = {
-      // (0,0) (0,1) (1,0) (1,1)
-      {0, 1, 3, 2}, // canonical order
-      {0, 3, 1, 2}, // axes swapped
-      {2, 3, 1, 0}, // bits inverted
-      {2, 1, 3, 0}, // swapped & inverted
-  };
-
-  /**
-   * Returns the order in which a specified subcell is visited by the Hilbert
-   * curve. This is the inverse of {@link #posToIJ}.
-   *
-   * @param orientation the subcell orientation, in the range [0,3].
-   * @param ijIndex the subcell index where
-   *     {@code 0->(0,0), 1->(0,1), 2->(1,0), 3->(1,1)}.
-   * @return the position of the subcell in the Hilbert traversal, in the range
-   *     [0,3].
-   * @throws IllegalArgumentException if either parameter is out of bounds.
-   */
-  public static final int ijToPos(int orientation, int ijIndex) {
-    Preconditions.checkArgument(0 <= orientation && orientation < 4);
-    Preconditions.checkArgument(0 <= ijIndex && ijIndex < 4);
-    return IJ_TO_POS[orientation][ijIndex];
-  }
-
-  /**
-   * Defines an area or a length cell metric.
-   */
-  public static class Metric {
-
-    private final double deriv;
-    private final int dim;
-
-    /**
-     * Defines a cell metric of the given dimension (1 == length, 2 == area).
-     */
-    public Metric(int dim, double deriv) {
-      this.deriv = deriv;
-      this.dim = dim;
-    }
-
-    /**
-     * The "deriv" value of a metric is a derivative, and must be multiplied by
-     * a length or area in (s,t)-space to get a useful value.
-     */
-    public double deriv() {
-      return deriv;
-    }
-
-    /** Return the value of a metric for cells at the given level. */
-    public double getValue(int level) {
-      return StrictMath.scalb(deriv, dim * (1 - level));
-    }
-
-    /**
-     * Return the level at which the metric has approximately the given value.
-     * For example, S2::kAvgEdge.GetClosestLevel(0.1) returns the level at which
-     * the average cell edge length is approximately 0.1. The return value is
-     * always a valid level.
-     */
-    public int getClosestLevel(double value) {
-      return getMinLevel(M_SQRT2 * value);
-    }
-
-    /**
-     * Return the minimum level such that the metric is at most the given value,
-     * or S2CellId::kMaxLevel if there is no such level. For example,
-     * S2::kMaxDiag.GetMinLevel(0.1) returns the minimum level such that all
-     * cell diagonal lengths are 0.1 or smaller. The return value is always a
-     * valid level.
-     */
-    public int getMinLevel(double value) {
-      if (value <= 0) {
-        return S2CellId.MAX_LEVEL;
-      }
-
-      // This code is equivalent to computing a floating-point "level"
-      // value and rounding up.
-      int exponent = exp(value / ((1 << dim) * deriv));
-      int level = Math.max(0,
-          Math.min(S2CellId.MAX_LEVEL, -((exponent - 1) >> (dim - 1))));
-      // assert (level == S2CellId.MAX_LEVEL || getValue(level) <= value);
-      // assert (level == 0 || getValue(level - 1) > value);
-      return level;
-    }
-
-    /**
-     * Return the maximum level such that the metric is at least the given
-     * value, or zero if there is no such level. For example,
-     * S2.kMinWidth.GetMaxLevel(0.1) returns the maximum level such that all
-     * cells have a minimum width of 0.1 or larger. The return value is always a
-     * valid level.
-     */
-    public int getMaxLevel(double value) {
-      if (value <= 0) {
-        return S2CellId.MAX_LEVEL;
-      }
-
-      // This code is equivalent to computing a floating-point "level"
-      // value and rounding down.
-      int exponent = exp((1 << dim) * deriv / value);
-      int level = Math.max(0,
-          Math.min(S2CellId.MAX_LEVEL, ((exponent - 1) >> (dim - 1))));
-      // assert (level == 0 || getValue(level) >= value);
-      // assert (level == S2CellId.MAX_LEVEL || getValue(level + 1) < value);
-      return level;
-    }
-
-  }
 
   /**
    * Return a unique "origin" on the sphere for operations that need a fixed
@@ -294,7 +109,7 @@ public final strictfp class S2 extends Sphere {
    * = -Ortho(a) for all a.
    */
   public static SpherePoint ortho(SpherePoint a) {
-    // The current implementation in SpherePoint has the property we need,
+    // The current implementation in S2Point has the property we need,
     // i.e. Ortho(-a) = -Ortho(a) for all a.
     return a.ortho();
   }
@@ -780,8 +595,8 @@ public final strictfp class S2 extends Sphere {
   public static boolean approxEquals(double a, double b) {
     return approxEquals(a, b, 1e-15);
   }
-
-  // Don't instantiate
-  private S2() {
-  }
+//
+//  // Don't instantiate
+//  private Sphere() {
+//  }
 }

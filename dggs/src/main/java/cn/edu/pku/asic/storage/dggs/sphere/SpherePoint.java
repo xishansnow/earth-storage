@@ -13,36 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
+ * （单位）球面上的点
  * An S2Point represents a point on the unit sphere as a 3D vector. Usually
  * points are normalized to be unit length, but some methods do not require
  * this.
  *
  */
-public strictfp class S2Point implements Comparable<S2Point> {
+public strictfp class SpherePoint implements Comparable<SpherePoint> {
   // coordinates of the points
-  final double x;
-  final double y;
-  final double z;
+  final public double x;
+  final public double y;
+  final public double z;
 
-  public S2Point() {
+  public SpherePoint() {
     x = y = z = 0;
   }
 
-  public S2Point(double x, double y, double z) {
+  public SpherePoint(double x, double y, double z) {
     this.x = x;
     this.y = y;
     this.z = z;
   }
 
-  public static S2Point minus(S2Point p1, S2Point p2) {
+  public static SpherePoint minus(SpherePoint p1, SpherePoint p2) {
     return sub(p1, p2);
   }
 
-  public static S2Point neg(S2Point p) {
-    return new S2Point(-p.x, -p.y, -p.z);
+  public static SpherePoint neg(SpherePoint p) {
+    return new SpherePoint(-p.x, -p.y, -p.z);
   }
 
   public double norm2() {
@@ -53,48 +54,48 @@ public strictfp class S2Point implements Comparable<S2Point> {
     return Math.sqrt(norm2());
   }
 
-  public static S2Point crossProd(final S2Point p1, final S2Point p2) {
-    return new S2Point(
+  public static SpherePoint crossProd(final SpherePoint p1, final SpherePoint p2) {
+    return new SpherePoint(
         p1.y * p2.z - p1.z * p2.y, p1.z * p2.x - p1.x * p2.z, p1.x * p2.y - p1.y * p2.x);
   }
 
-  public static S2Point add(final S2Point p1, final S2Point p2) {
-    return new S2Point(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
+  public static SpherePoint add(final SpherePoint p1, final SpherePoint p2) {
+    return new SpherePoint(p1.x + p2.x, p1.y + p2.y, p1.z + p2.z);
   }
 
-  public static S2Point sub(final S2Point p1, final S2Point p2) {
-    return new S2Point(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
+  public static SpherePoint sub(final SpherePoint p1, final SpherePoint p2) {
+    return new SpherePoint(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
   }
 
-  public double dotProd(S2Point that) {
+  public double dotProd(SpherePoint that) {
     return this.x * that.x + this.y * that.y + this.z * that.z;
   }
 
-  public static S2Point mul(final S2Point p, double m) {
-    return new S2Point(m * p.x, m * p.y, m * p.z);
+  public static SpherePoint mul(final SpherePoint p, double m) {
+    return new SpherePoint(m * p.x, m * p.y, m * p.z);
   }
 
-  public static S2Point div(final S2Point p, double m) {
-    return new S2Point(p.x / m, p.y / m, p.z / m);
+  public static SpherePoint div(final SpherePoint p, double m) {
+    return new SpherePoint(p.x / m, p.y / m, p.z / m);
   }
 
   /** return a vector orthogonal to this one */
-  public S2Point ortho() {
+  public SpherePoint ortho() {
     int k = largestAbsComponent();
-    S2Point temp;
+    SpherePoint temp;
     if (k == 1) {
-      temp = new S2Point(1, 0, 0);
+      temp = new SpherePoint(1, 0, 0);
     } else if (k == 2) {
-      temp = new S2Point(0, 1, 0);
+      temp = new SpherePoint(0, 1, 0);
     } else {
-      temp = new S2Point(0, 0, 1);
+      temp = new SpherePoint(0, 0, 1);
     }
-    return S2Point.normalize(crossProd(this, temp));
+    return SpherePoint.normalize(crossProd(this, temp));
   }
 
   /** Return the index of the largest component fabs */
   public int largestAbsComponent() {
-    S2Point temp = fabs(this);
+    SpherePoint temp = fabs(this);
     if (temp.x > temp.y) {
       if (temp.x > temp.z) {
         return 0;
@@ -110,16 +111,16 @@ public strictfp class S2Point implements Comparable<S2Point> {
     }
   }
 
-  public static S2Point fabs(S2Point p) {
-    return new S2Point(Math.abs(p.x), Math.abs(p.y), Math.abs(p.z));
+  public static SpherePoint fabs(SpherePoint p) {
+    return new SpherePoint(Math.abs(p.x), Math.abs(p.y), Math.abs(p.z));
   }
 
-  public static S2Point normalize(S2Point p) {
+  public static SpherePoint normalize(SpherePoint p) {
     double norm = p.norm();
     if (norm != 0) {
       norm = 1.0 / norm;
     }
-    return S2Point.mul(p, norm);
+    return SpherePoint.mul(p, norm);
   }
 
   public double get(int axis) {
@@ -127,7 +128,7 @@ public strictfp class S2Point implements Comparable<S2Point> {
   }
 
   /** Return the angle between two vectors in radians */
-  public double angle(S2Point va) {
+  public double angle(SpherePoint va) {
     return Math.atan2(crossProd(this, va).norm(), this.dotProd(va));
   }
 
@@ -135,21 +136,21 @@ public strictfp class S2Point implements Comparable<S2Point> {
    * Compare two vectors, return true if all their components are within a
    * difference of margin.
    */
-  boolean aequal(S2Point that, double margin) {
+  boolean aequal(SpherePoint that, double margin) {
     return (Math.abs(x - that.x) < margin) && (Math.abs(y - that.y) < margin)
         && (Math.abs(z - that.z) < margin);
   }
 
   @Override
   public boolean equals(Object that) {
-    if (!(that instanceof S2Point)) {
+    if (!(that instanceof SpherePoint)) {
       return false;
     }
-    S2Point thatPoint = (S2Point) that;
+    SpherePoint thatPoint = (SpherePoint) that;
     return this.x == thatPoint.x && this.y == thatPoint.y && this.z == thatPoint.z;
   }
 
-  public boolean lessThan(S2Point vb) {
+  public boolean lessThan(SpherePoint vb) {
     if (x < vb.x) {
       return true;
     }
@@ -170,7 +171,7 @@ public strictfp class S2Point implements Comparable<S2Point> {
 
   // Required for Comparable
   @Override
-  public int compareTo(S2Point other) {
+  public int compareTo(SpherePoint other) {
     return (lessThan(other) ? -1 : (equals(other) ? 0 : 1));
   }
 
@@ -180,9 +181,9 @@ public strictfp class S2Point implements Comparable<S2Point> {
   }
 
   public String toDegreesString() {
-    S2LatLng s2LatLng = new S2LatLng(this);
-    return "(" + Double.toString(s2LatLng.latDegrees()) + ", "
-        + Double.toString(s2LatLng.lngDegrees()) + ")";
+    SphereLatLng sphereLatLng = new SphereLatLng(this);
+    return "(" + Double.toString(sphereLatLng.latDegrees()) + ", "
+        + Double.toString(sphereLatLng.lngDegrees()) + ")";
   }
 
   /**

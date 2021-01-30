@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
+
+/**
+ * 角度类
+ * 1-dim Angle class to express longitude and latitude.
+ * internal unit is radians.
+ */
 
 public final strictfp class S1Angle implements Comparable<S1Angle> {
 
@@ -56,7 +62,7 @@ public final strictfp class S1Angle implements Comparable<S1Angle> {
    * between these points on the unit sphere. The points do not need to be
    * normalized.
    */
-  public S1Angle(S2Point x, S2Point y) {
+  public S1Angle(SpherePoint x, SpherePoint y) {
     this.radians = x.angle(y);
   }
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 import com.google.common.collect.*;
 
@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
+ * 基于球面有向边，组装球面多边形的工具类
  * This is a simple class for assembling polygons out of edges. It requires that
  * no two edges cross. It can handle both directed and undirected edges, and
  * optionally it can also remove duplicate edge pairs (consisting of two
@@ -48,8 +49,8 @@ import java.util.logging.Logger;
  * collection of directed edges and then assembling them into loops.
  *
  */
-public strictfp class S2PolygonBuilder {
-  private static final Logger log = Logger.getLogger(S2PolygonBuilder.class.getCanonicalName());
+public strictfp class SpherePolygonBuilder {
+  private static final Logger log = Logger.getLogger(SpherePolygonBuilder.class.getCanonicalName());
 
   private Options options;
 
@@ -57,18 +58,18 @@ public strictfp class S2PolygonBuilder {
    * The current set of edges, grouped by origin. The set of destination
    * vertices is a multiset so that the same edge can be present more than once.
    */
-  private Map<S2Point, Multiset<S2Point>> edges;
+  private Map<SpherePoint, Multiset<SpherePoint>> edges;
 
   /**
    * Default constructor for well-behaved polygons. Uses the DIRECTED_XOR
    * options.
    */
-  public S2PolygonBuilder() {
+  public SpherePolygonBuilder() {
     this(Options.DIRECTED_XOR);
 
   }
 
-  public S2PolygonBuilder(Options options) {
+  public SpherePolygonBuilder(Options options) {
     this.options = options;
     this.edges = Maps.newHashMap();
   }
@@ -214,7 +215,7 @@ public strictfp class S2PolygonBuilder {
    * not allowed to cross each other. Also note that as a convenience, edges
    * where v0 == v1 are ignored.
    */
-  public void addEdge(S2Point v0, S2Point v1) {
+  public void addEdge(SpherePoint v0, SpherePoint v1) {
     // If xor_edges is true, we look for an existing edge in the opposite
     // direction. We either delete that edge or insert a new one.
 
@@ -223,7 +224,7 @@ public strictfp class S2PolygonBuilder {
     }
 
     if (options.getXorEdges()) {
-      Multiset<S2Point> candidates = edges.get(v1);
+      Multiset<SpherePoint> candidates = edges.get(v1);
       if (candidates != null && candidates.count(v0) > 0) {
         eraseEdge(v1, v0);
         return;
@@ -231,13 +232,13 @@ public strictfp class S2PolygonBuilder {
     }
 
     if (edges.get(v0) == null) {
-      edges.put(v0, HashMultiset.<S2Point>create());
+      edges.put(v0, HashMultiset.<SpherePoint>create());
     }
 
     edges.get(v0).add(v1);
     if (options.getUndirectedEdges()) {
       if (edges.get(v1) == null) {
-        edges.put(v1, HashMultiset.<S2Point>create());
+        edges.put(v1, HashMultiset.<SpherePoint>create());
       }
       edges.get(v1).add(v0);
     }
@@ -251,7 +252,7 @@ public strictfp class S2PolygonBuilder {
    *
    * This method does not take ownership of the loop.
    */
-  public void addLoop(S2Loop loop) {
+  public void addLoop(SphereLoop loop) {
     int sign = loop.sign();
     for (int i = loop.numVertices(); i > 0; --i) {
       // Vertex indices need to be in the range [0, 2*num_vertices()-1].
@@ -264,7 +265,7 @@ public strictfp class S2PolygonBuilder {
    * opposite orientations as described for AddLoop(). This method does not take
    * ownership of the polygon.
    */
-  public void addPolygon(S2Polygon polygon) {
+  public void addPolygon(SpherePolygon polygon) {
     for (int i = 0; i < polygon.numLoops(); ++i) {
       addLoop(polygon.loop(i));
     }
@@ -284,12 +285,12 @@ public strictfp class S2PolygonBuilder {
    *
    * This method resets the S2PolygonBuilder state so that it can be reused.
    */
-  public boolean assembleLoops(List<S2Loop> loops, List<S2Edge> unusedEdges) {
+  public boolean assembleLoops(List<SphereLoop> loops, List<SphereEdge> unusedEdges) {
     if (options.getMergeDistance().radians() > 0) {
 //      mergeVertices();
     }
 
-    List<S2Edge> dummyUnusedEdges = Lists.newArrayList();
+    List<SphereEdge> dummyUnusedEdges = Lists.newArrayList();
     if (unusedEdges == null) {
       unusedEdges = dummyUnusedEdges;
     }
@@ -300,12 +301,12 @@ public strictfp class S2PolygonBuilder {
 
     unusedEdges.clear();
     while (!edges.isEmpty()) {
-      Map.Entry<S2Point, Multiset<S2Point>> edge = edges.entrySet().iterator().next();
+      Map.Entry<SpherePoint, Multiset<SpherePoint>> edge = edges.entrySet().iterator().next();
 
-      S2Point v0 = edge.getKey();
-      S2Point v1 = edge.getValue().iterator().next();
+      SpherePoint v0 = edge.getKey();
+      SpherePoint v1 = edge.getValue().iterator().next();
 
-      S2Loop loop = assembleLoop(v0, v1, unusedEdges);
+      SphereLoop loop = assembleLoop(v0, v1, unusedEdges);
       if (loop == null) {
         continue;
       }
@@ -341,8 +342,8 @@ public strictfp class S2PolygonBuilder {
    * assembled, the output S2Polygon would represent the land area (irrespective
    * of the input edge or loop orientations).
    */
-  public boolean assemblePolygon(S2Polygon polygon, List<S2Edge> unusedEdges) {
-    List<S2Loop> loops = Lists.newArrayList();
+  public boolean assemblePolygon(SpherePolygon polygon, List<SphereEdge> unusedEdges) {
+    List<SphereLoop> loops = Lists.newArrayList();
     boolean success = assembleLoops(loops, unusedEdges);
 
     // If edges are undirected, then all loops are already CCW. Otherwise we
@@ -352,9 +353,9 @@ public strictfp class S2PolygonBuilder {
         loops.get(i).normalize();
       }
     }
-    if (options.getValidate() && !S2Polygon.isValid(loops)) {
+    if (options.getValidate() && !SpherePolygon.isValid(loops)) {
       if (unusedEdges != null) {
-        for (S2Loop loop : loops) {
+        for (SphereLoop loop : loops) {
           rejectLoop(loop, loop.numVertices(), unusedEdges);
         }
       }
@@ -367,9 +368,9 @@ public strictfp class S2PolygonBuilder {
   /**
    * Convenience method for when you don't care about unused edges.
    */
-  public S2Polygon assemblePolygon() {
-    S2Polygon polygon = new S2Polygon();
-    List<S2Edge> unusedEdges = Lists.newArrayList();
+  public SpherePolygon assemblePolygon() {
+    SpherePolygon polygon = new SpherePolygon();
+    List<SphereEdge> unusedEdges = Lists.newArrayList();
 
     assemblePolygon(polygon, unusedEdges);
 
@@ -378,27 +379,27 @@ public strictfp class S2PolygonBuilder {
 
   // Debugging functions:
 
-  protected void dumpEdges(S2Point v0) {
+  protected void dumpEdges(SpherePoint v0) {
     log.info(v0.toString());
-    Multiset<S2Point> vset = edges.get(v0);
+    Multiset<SpherePoint> vset = edges.get(v0);
     if (vset != null) {
-      for (S2Point v : vset) {
+      for (SpherePoint v : vset) {
         log.info("    " + v.toString());
       }
     }
   }
 
   protected void dump() {
-    for (S2Point v : edges.keySet()) {
+    for (SpherePoint v : edges.keySet()) {
       dumpEdges(v);
     }
   }
 
-  private void eraseEdge(S2Point v0, S2Point v1) {
+  private void eraseEdge(SpherePoint v0, SpherePoint v1) {
     // Note that there may be more than one copy of an edge if we are not XORing
     // them, so a VertexSet is a multiset.
 
-    Multiset<S2Point> vset = edges.get(v0);
+    Multiset<SpherePoint> vset = edges.get(v0);
     // assert (vset.count(v1) > 0);
     vset.remove(v1);
     if (vset.isEmpty()) {
@@ -415,13 +416,13 @@ public strictfp class S2PolygonBuilder {
     }
   }
 
-  private void eraseLoop(List<S2Point> v, int n) {
+  private void eraseLoop(List<SpherePoint> v, int n) {
     for (int i = n - 1, j = 0; j < n; i = j++) {
       eraseEdge(v.get(i), v.get(j));
     }
   }
 
-  private void eraseLoop(S2Loop v, int n) {
+  private void eraseLoop(SphereLoop v, int n) {
     for (int i = n - 1, j = 0; j < n; i = j++) {
       eraseEdge(v.vertex(i), v.vertex(j));
     }
@@ -433,13 +434,13 @@ public strictfp class S2PolygonBuilder {
    * seen before *except* for the first vertex (v0). This ensures that only CCW
    * loops are constructed when possible.
    */
-  private S2Loop assembleLoop(S2Point v0, S2Point v1, List<S2Edge> unusedEdges) {
+  private SphereLoop assembleLoop(SpherePoint v0, SpherePoint v1, List<SphereEdge> unusedEdges) {
 
     // The path so far.
-    List<S2Point> path = Lists.newArrayList();
+    List<SpherePoint> path = Lists.newArrayList();
 
     // Maps a vertex to its index in "path".
-    Map<S2Point, Integer> index = Maps.newHashMap();
+    Map<SpherePoint, Integer> index = Maps.newHashMap();
     path.add(v0);
     path.add(v1);
 
@@ -450,16 +451,16 @@ public strictfp class S2PolygonBuilder {
       v0 = path.get(path.size() - 2);
       v1 = path.get(path.size() - 1);
 
-      S2Point v2 = null;
+      SpherePoint v2 = null;
       boolean v2Found = false;
-      Multiset<S2Point> vset = edges.get(v1);
+      Multiset<SpherePoint> vset = edges.get(v1);
       if (vset != null) {
-        for (S2Point v : vset) {
+        for (SpherePoint v : vset) {
           // We prefer the leftmost outgoing edge, ignoring any reverse edges.
           if (v.equals(v0)) {
             continue;
           }
-          if (!v2Found || S2.orderedCCW(v0, v2, v, v1)) {
+          if (!v2Found || Sphere.orderedCCW(v0, v2, v, v1)) {
             v2 = v;
           }
           v2Found = true;
@@ -467,7 +468,7 @@ public strictfp class S2PolygonBuilder {
       }
       if (!v2Found) {
         // We've hit a dead end. Remove this edge and backtrack.
-        unusedEdges.add(new S2Edge(v0, v1));
+        unusedEdges.add(new SphereEdge(v0, v1));
         eraseEdge(v0, v1);
         index.remove(v1);
         path.remove(path.size() - 1);
@@ -480,51 +481,51 @@ public strictfp class S2PolygonBuilder {
         // are not part of the loop.
         path = path.subList(index.get(v2), path.size());
 
-        if (options.getValidate() && !S2Loop.isValid(path)) {
+        if (options.getValidate() && !SphereLoop.isValid(path)) {
           // We've constructed a loop that crosses itself, which can only happen
           // if there is bad input data. Throw away the whole loop.
           rejectLoop(path, path.size(), unusedEdges);
           eraseLoop(path, path.size());
           return null;
         }
-        return new S2Loop(path);
+        return new SphereLoop(path);
       }
     }
     return null;
   }
 
   /** Erases all edges of the given loop and marks them as unused. */
-  private void rejectLoop(S2Loop v, int n, List<S2Edge> unusedEdges) {
+  private void rejectLoop(SphereLoop v, int n, List<SphereEdge> unusedEdges) {
     for (int i = n - 1, j = 0; j < n; i = j++) {
-      unusedEdges.add(new S2Edge(v.vertex(i), v.vertex(j)));
+      unusedEdges.add(new SphereEdge(v.vertex(i), v.vertex(j)));
     }
   }
 
   /** Erases all edges of the given loop and marks them as unused. */
-  private void rejectLoop(List<S2Point> v, int n, List<S2Edge> unusedEdges) {
+  private void rejectLoop(List<SpherePoint> v, int n, List<SphereEdge> unusedEdges) {
     for (int i = n - 1, j = 0; j < n; i = j++) {
-      unusedEdges.add(new S2Edge(v.get(i), v.get(j)));
+      unusedEdges.add(new SphereEdge(v.get(i), v.get(j)));
     }
   }
 
   /** Moves a set of vertices from old to new positions. */
-  private void moveVertices(Map<S2Point, S2Point> mergeMap) {
+  private void moveVertices(Map<SpherePoint, SpherePoint> mergeMap) {
     if (mergeMap.isEmpty()) {
       return;
     }
 
     // We need to copy the set of edges affected by the move, since
     // this.edges_could be reallocated when we start modifying it.
-    List<S2Edge> edgesCopy = Lists.newArrayList();
-    for (Map.Entry<S2Point, Multiset<S2Point>> edge : this.edges.entrySet()) {
-      S2Point v0 = edge.getKey();
-      Multiset<S2Point> vset = edge.getValue();
-      for (S2Point v1 : vset) {
+    List<SphereEdge> edgesCopy = Lists.newArrayList();
+    for (Map.Entry<SpherePoint, Multiset<SpherePoint>> edge : this.edges.entrySet()) {
+      SpherePoint v0 = edge.getKey();
+      Multiset<SpherePoint> vset = edge.getValue();
+      for (SpherePoint v1 : vset) {
         if (mergeMap.get(v0) != null || mergeMap.get(v1) != null) {
 
           // We only need to modify one copy of each undirected edge.
           if (!options.getUndirectedEdges() || v0.lessThan(v1)) {
-            edgesCopy.add(new S2Edge(v0, v1));
+            edgesCopy.add(new SphereEdge(v0, v1));
           }
         }
       }
@@ -534,8 +535,8 @@ public strictfp class S2PolygonBuilder {
     // automatically take care of any XORing that needs to be done, because
     // EraseEdge also erases the sibiling of undirected edges.
     for (int i = 0; i < edgesCopy.size(); ++i) {
-      S2Point v0 = edgesCopy.get(i).getStart();
-      S2Point v1 = edgesCopy.get(i).getEnd();
+      SpherePoint v0 = edgesCopy.get(i).getStart();
+      SpherePoint v1 = edgesCopy.get(i).getEnd();
       eraseEdge(v0, v1);
       if (mergeMap.get(v0) != null) {
         v0 = mergeMap.get(v0);
@@ -551,10 +552,10 @@ public strictfp class S2PolygonBuilder {
    * An S2Point that can be marked. Used in PointIndex.
    */
   private class MarkedS2Point {
-    private S2Point point;
+    private SpherePoint point;
     private boolean mark;
 
-    public MarkedS2Point(S2Point point) {
+    public MarkedS2Point(SpherePoint point) {
       this.point = point;
       this.mark = false;
     }
@@ -563,7 +564,7 @@ public strictfp class S2PolygonBuilder {
       return mark;
     }
 
-    public S2Point getPoint() {
+    public SpherePoint getPoint() {
       return point;
     }
 

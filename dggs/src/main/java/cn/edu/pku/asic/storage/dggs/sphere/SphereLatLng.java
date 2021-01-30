@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
+ * 球面经纬度类
  * This class represents a point on the unit sphere as a pair of
  * latitude-longitude coordinates. Like the rest of the "geometry" package, the
  * intent is to represent spherical geometry as a mathematical abstraction, so
@@ -23,7 +24,11 @@ package cn.edu.pku.asic.storage.dggs.s2geometry;
  * easting/northing conversions) should be put elsewhere.
  *
  */
-public strictfp class S2LatLng {
+public strictfp class SphereLatLng {
+
+  /**---------------------------------------------------------------------
+   * Global Function and Constants
+   ----------------------------------------------------------------------*/
 
   /**
    * Approximate "effective" radius of the Earth in meters.
@@ -31,45 +36,53 @@ public strictfp class S2LatLng {
   public static final double EARTH_RADIUS_METERS = 6367000.0;
 
   /** The center point the lat/lng coordinate system. */
-  public static final S2LatLng CENTER = new S2LatLng(0.0, 0.0);
+  public static final SphereLatLng CENTER = new SphereLatLng(0.0, 0.0);
 
-  private final double latRadians;
-  private final double lngRadians;
-
-  public static S2LatLng fromRadians(double latRadians, double lngRadians) {
-    return new S2LatLng(latRadians, lngRadians);
+  /** global function: generate S2LatLng from two radians angles */
+  public static SphereLatLng fromRadians(double latRadians, double lngRadians) {
+    return new SphereLatLng(latRadians, lngRadians);
   }
 
-  public static S2LatLng fromDegrees(double latDegrees, double lngDegrees) {
-    return new S2LatLng(S1Angle.degrees(latDegrees), S1Angle.degrees(lngDegrees));
+  /** global function: generate S2LatLng from two degree angles */
+  public static SphereLatLng fromDegrees(double latDegrees, double lngDegrees) {
+    return new SphereLatLng(S1Angle.degrees(latDegrees), S1Angle.degrees(lngDegrees));
   }
-
-  public static S2LatLng fromE5(long latE5, long lngE5) {
-    return new S2LatLng(S1Angle.e5(latE5), S1Angle.e5(lngE5));
+  /** global function: generate S2LatLng from E5 precision degree angles*/
+  public static SphereLatLng fromE5(long latE5, long lngE5) {
+    return new SphereLatLng(S1Angle.e5(latE5), S1Angle.e5(lngE5));
   }
-
-  public static S2LatLng fromE6(long latE6, long lngE6) {
-    return new S2LatLng(S1Angle.e6(latE6), S1Angle.e6(lngE6));
+  /** global function: generate S2LatLng from E6 precision degree angles*/
+  public static SphereLatLng fromE6(long latE6, long lngE6) {
+    return new SphereLatLng(S1Angle.e6(latE6), S1Angle.e6(lngE6));
   }
-
-  public static S2LatLng fromE7(long latE7, long lngE7) {
-    return new S2LatLng(S1Angle.e7(latE7), S1Angle.e7(lngE7));
+  /** global function: generate S2LatLng from E7 precision degree angles*/
+  public static SphereLatLng fromE7(long latE7, long lngE7) {
+    return new SphereLatLng(S1Angle.e7(latE7), S1Angle.e7(lngE7));
   }
-
-  public static S1Angle latitude(S2Point p) {
+  /** global function: generate latitude（in radians) from point coordinate in 3-dimensions*/
+  public static S1Angle latitude(SpherePoint p) {
     // We use atan2 rather than asin because the input vector is not necessarily
     // unit length, and atan2 is much more accurate than asin near the poles.
     return S1Angle.radians(
         Math.atan2(p.get(2), Math.sqrt(p.get(0) * p.get(0) + p.get(1) * p.get(1))));
   }
-
-  public static S1Angle longitude(S2Point p) {
+  /** global function: generate longitude（in radians) from point coordinate in 3-dimensions*/
+  public static S1Angle longitude(SpherePoint p) {
     // Note that atan2(0, 0) is defined to be zero.
     return S1Angle.radians(Math.atan2(p.get(1), p.get(0)));
   }
 
+
+  /**---------------------------------------------------------------------
+   * Member Functions and Variables
+   ----------------------------------------------------------------------*/
+
+  /** latitude and longitude in radians */
+  private final double latRadians;
+  private final double lngRadians;
+
   /** This is internal to avoid ambiguity about which units are expected. */
-  private S2LatLng(double latRadians, double lngRadians) {
+  private SphereLatLng(double latRadians, double lngRadians) {
     this.latRadians = latRadians;
     this.lngRadians = lngRadians;
   }
@@ -80,7 +93,7 @@ public strictfp class S2LatLng {
    *
    * TODO(dbeaumont): Make this a static factory method (fromLatLng() ?).
    */
-  public S2LatLng(S1Angle lat, S1Angle lng) {
+  public SphereLatLng(S1Angle lat, S1Angle lng) {
     this(lat.radians(), lng.radians());
   }
 
@@ -89,7 +102,7 @@ public strictfp class S2LatLng {
    *
    * TODO(dbeaumont): Remove the default constructor (just use CENTER).
    */
-  public S2LatLng() {
+  public SphereLatLng() {
     this(0, 0);
   }
 
@@ -98,7 +111,7 @@ public strictfp class S2LatLng {
    *
    * TODO(dbeaumont): Make this a static factory method (fromPoint() ?).
    */
-  public S2LatLng(S2Point p) {
+  public SphereLatLng(SpherePoint p) {
     this(Math.atan2(p.z, Math.sqrt(p.x * p.x + p.y * p.y)), Math.atan2(p.y, p.x));
     // The latitude and longitude are already normalized. We use atan2 to
     // compute the latitude because the input vector is not necessarily unit
@@ -141,7 +154,7 @@ public strictfp class S2LatLng {
    * longitude is between -180 and 180 degrees inclusive.
    */
   public boolean isValid() {
-    return Math.abs(lat().radians()) <= S2.M_PI_2 && Math.abs(lng().radians()) <= S2.M_PI;
+    return Math.abs(lat().radians()) <= Sphere.M_PI_2 && Math.abs(lng().radians()) <= Sphere.M_PI;
   }
 
   /**
@@ -154,11 +167,11 @@ public strictfp class S2LatLng {
    * <p>If the current point is valid then the returned point will have the same
    * coordinates.
    */
-  public S2LatLng normalized() {
+  public SphereLatLng normalized() {
     // drem(x, 2 * S2.M_PI) reduces its argument to the range
     // [-S2.M_PI, S2.M_PI] inclusive, which is what we want here.
-    return new S2LatLng(Math.max(-S2.M_PI_2, Math.min(S2.M_PI_2, lat().radians())),
-        Math.IEEEremainder(lng().radians(), 2 * S2.M_PI));
+    return new SphereLatLng(Math.max(-Sphere.M_PI_2, Math.min(Sphere.M_PI_2, lat().radians())),
+        Math.IEEEremainder(lng().radians(), 2 * Sphere.M_PI));
   }
 
   // Clamps the latitude to the range [-90, 90] degrees, and adds or subtracts
@@ -166,18 +179,18 @@ public strictfp class S2LatLng {
   // the range [-180, 180].
 
   /** Convert an S2LatLng to the equivalent unit-length vector (S2Point). */
-  public S2Point toPoint() {
+  public SpherePoint toPoint() {
     double phi = lat().radians();
     double theta = lng().radians();
     double cosphi = Math.cos(phi);
-    return new S2Point(Math.cos(theta) * cosphi, Math.sin(theta) * cosphi, Math.sin(phi));
+    return new SpherePoint(Math.cos(theta) * cosphi, Math.sin(theta) * cosphi, Math.sin(phi));
   }
 
   /**
    * Return the distance (measured along the surface of the sphere) to the given
    * point.
    */
-  public S1Angle getDistance(final S2LatLng o) {
+  public S1Angle getDistance(final SphereLatLng o) {
     // This implements the Haversine formula, which is numerically stable for
     // small distances but only gets about 8 digits of precision for very large
     // distances (e.g. antipodal points). Note that 8 digits is still accurate
@@ -207,7 +220,7 @@ public strictfp class S2LatLng {
   /**
    * Returns the surface distance to the given point assuming a constant radius.
    */
-  public double getDistance(final S2LatLng o, double radius) {
+  public double getDistance(final SphereLatLng o, double radius) {
     // TODO(dbeaumont): Maybe check that radius >= 0 ?
     return getDistance(o).radians() * radius;
   }
@@ -216,7 +229,7 @@ public strictfp class S2LatLng {
    * Returns the surface distance to the given point assuming the default Earth
    * radius of {@link #EARTH_RADIUS_METERS}.
    */
-  public double getEarthDistance(final S2LatLng o) {
+  public double getEarthDistance(final SphereLatLng o) {
     return getDistance(o, EARTH_RADIUS_METERS);
   }
 
@@ -224,31 +237,31 @@ public strictfp class S2LatLng {
    * Adds the given point to this point.
    * Note that there is no guarantee that the new point will be <em>valid</em>.
    */
-  public S2LatLng add(final S2LatLng o) {
-    return new S2LatLng(latRadians + o.latRadians, lngRadians + o.lngRadians);
+  public SphereLatLng add(final SphereLatLng o) {
+    return new SphereLatLng(latRadians + o.latRadians, lngRadians + o.lngRadians);
   }
 
   /**
    * Subtracts the given point from this point.
    * Note that there is no guarantee that the new point will be <em>valid</em>.
    */
-  public S2LatLng sub(final S2LatLng o) {
-    return new S2LatLng(latRadians - o.latRadians, lngRadians - o.lngRadians);
+  public SphereLatLng sub(final SphereLatLng o) {
+    return new SphereLatLng(latRadians - o.latRadians, lngRadians - o.lngRadians);
   }
 
   /**
    * Scales this point by the given scaling factor.
    * Note that there is no guarantee that the new point will be <em>valid</em>.
    */
-  public S2LatLng mul(final double m) {
+  public SphereLatLng mul(final double m) {
     // TODO(dbeaumont): Maybe check that m >= 0 ?
-    return new S2LatLng(latRadians * m, lngRadians * m);
+    return new SphereLatLng(latRadians * m, lngRadians * m);
   }
 
   @Override
   public boolean equals(Object that) {
-    if (that instanceof S2LatLng) {
-      S2LatLng o = (S2LatLng) that;
+    if (that instanceof SphereLatLng) {
+      SphereLatLng o = (SphereLatLng) that;
       return (latRadians == o.latRadians) && (lngRadians == o.lngRadians);
     }
     return false;
@@ -266,7 +279,7 @@ public strictfp class S2LatLng {
    * Returns true if both the latitude and longitude of the given point are
    * within {@code maxError} radians of this point.
    */
-  public boolean approxEquals(S2LatLng o, double maxError) {
+  public boolean approxEquals(SphereLatLng o, double maxError) {
     return (Math.abs(latRadians - o.latRadians) < maxError)
         && (Math.abs(lngRadians - o.lngRadians) < maxError);
   }
@@ -276,7 +289,7 @@ public strictfp class S2LatLng {
    * point. This corresponds to a distance of less than {@code 1cm} at the
    * surface of the Earth.
    */
-  public boolean approxEquals(S2LatLng o) {
+  public boolean approxEquals(SphereLatLng o) {
     return approxEquals(o, 1e-9);
   }
 

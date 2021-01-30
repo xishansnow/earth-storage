@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 
 /**
+ * 大圆上的夹角类
  * An S1Interval represents a closed interval on a unit circle (also known as a
  * 1-dimensional sphere). It is capable of representing the empty interval
  * (containing no points), the full interval (containing all points), and
@@ -67,11 +68,11 @@ public final strictfp class S1Interval implements Cloneable {
     double newLo = lo;
     double newHi = hi;
     if (!checked) {
-      if (lo == -S2.M_PI && hi != S2.M_PI) {
-        newLo = S2.M_PI;
+      if (lo == -Sphere.M_PI && hi != Sphere.M_PI) {
+        newLo = Sphere.M_PI;
       }
-      if (hi == -S2.M_PI && lo != S2.M_PI) {
-        newHi = S2.M_PI;
+      if (hi == -Sphere.M_PI && lo != Sphere.M_PI) {
+        newHi = Sphere.M_PI;
       }
     }
     this.lo = newLo;
@@ -79,17 +80,17 @@ public final strictfp class S1Interval implements Cloneable {
   }
 
   public static S1Interval empty() {
-    return new S1Interval(S2.M_PI, -S2.M_PI, true);
+    return new S1Interval(Sphere.M_PI, -Sphere.M_PI, true);
   }
 
   public static S1Interval full() {
-    return new S1Interval(-S2.M_PI, S2.M_PI, true);
+    return new S1Interval(-Sphere.M_PI, Sphere.M_PI, true);
   }
 
   /** Convenience method to construct an interval containing a single point. */
   public static S1Interval fromPoint(double p) {
-    if (p == -S2.M_PI) {
-      p = S2.M_PI;
+    if (p == -Sphere.M_PI) {
+      p = Sphere.M_PI;
     }
     return new S1Interval(p, p, true);
   }
@@ -101,13 +102,13 @@ public final strictfp class S1Interval implements Cloneable {
    */
   public static S1Interval fromPointPair(double p1, double p2) {
     // assert (Math.abs(p1) <= S2.M_PI && Math.abs(p2) <= S2.M_PI);
-    if (p1 == -S2.M_PI) {
-      p1 = S2.M_PI;
+    if (p1 == -Sphere.M_PI) {
+      p1 = Sphere.M_PI;
     }
-    if (p2 == -S2.M_PI) {
-      p2 = S2.M_PI;
+    if (p2 == -Sphere.M_PI) {
+      p2 = Sphere.M_PI;
     }
-    if (positiveDistance(p1, p2) <= S2.M_PI) {
+    if (positiveDistance(p1, p2) <= Sphere.M_PI) {
       return new S1Interval(p1, p2, true);
     } else {
       return new S1Interval(p2, p1, true);
@@ -127,19 +128,19 @@ public final strictfp class S1Interval implements Cloneable {
    * value -Pi appears only in the Empty() and Full() intervals.
    */
   public boolean isValid() {
-    return (Math.abs(lo()) <= S2.M_PI && Math.abs(hi()) <= S2.M_PI
-        && !(lo() == -S2.M_PI && hi() != S2.M_PI) && !(hi() == -S2.M_PI && lo() != S2.M_PI));
+    return (Math.abs(lo()) <= Sphere.M_PI && Math.abs(hi()) <= Sphere.M_PI
+        && !(lo() == -Sphere.M_PI && hi() != Sphere.M_PI) && !(hi() == -Sphere.M_PI && lo() != Sphere.M_PI));
   }
 
   /** Return true if the interval contains all points on the unit circle. */
   public boolean isFull() {
-    return hi() - lo() == 2 * S2.M_PI;
+    return hi() - lo() == 2 * Sphere.M_PI;
   }
 
 
   /** Return true if the interval is empty, i.e. it contains no points. */
   public boolean isEmpty() {
-    return lo() - hi() == 2 * S2.M_PI;
+    return lo() - hi() == 2 * Sphere.M_PI;
   }
 
 
@@ -158,7 +159,7 @@ public final strictfp class S1Interval implements Cloneable {
       return center;
     }
     // Return the center in the range (-Pi, Pi].
-    return (center <= 0) ? (center + S2.M_PI) : (center - S2.M_PI);
+    return (center <= 0) ? (center + Sphere.M_PI) : (center - Sphere.M_PI);
   }
 
   /**
@@ -170,7 +171,7 @@ public final strictfp class S1Interval implements Cloneable {
     if (length >= 0) {
       return length;
     }
-    length += 2 * S2.M_PI;
+    length += 2 * Sphere.M_PI;
     // Empty intervals have a negative length.
     return (length > 0) ? length : -1;
   }
@@ -195,8 +196,8 @@ public final strictfp class S1Interval implements Cloneable {
   public boolean contains(double p) {
     // Works for empty, full, and singleton intervals.
     // assert (Math.abs(p) <= S2.M_PI);
-    if (p == -S2.M_PI) {
-      p = S2.M_PI;
+    if (p == -Sphere.M_PI) {
+      p = Sphere.M_PI;
     }
     return fastContains(p);
   }
@@ -218,8 +219,8 @@ public final strictfp class S1Interval implements Cloneable {
   public boolean interiorContains(double p) {
     // Works for empty, full, and singleton intervals.
     // assert (Math.abs(p) <= S2.M_PI);
-    if (p == -S2.M_PI) {
-      p = S2.M_PI;
+    if (p == -Sphere.M_PI) {
+      p = Sphere.M_PI;
     }
 
     if (isInverted()) {
@@ -315,8 +316,8 @@ public final strictfp class S1Interval implements Cloneable {
    */
   public S1Interval addPoint(double p) {
     // assert (Math.abs(p) <= S2.M_PI);
-    if (p == -S2.M_PI) {
-      p = S2.M_PI;
+    if (p == -Sphere.M_PI) {
+      p = Sphere.M_PI;
     }
 
     if (fastContains(p)) {
@@ -351,15 +352,15 @@ public final strictfp class S1Interval implements Cloneable {
 
     // Check whether this interval will be full after expansion, allowing
     // for a 1-bit rounding error when computing each endpoint.
-    if (getLength() + 2 * radius >= 2 * S2.M_PI - 1e-15) {
+    if (getLength() + 2 * radius >= 2 * Sphere.M_PI - 1e-15) {
       return full();
     }
 
     // NOTE(dbeaumont): Should this remainder be 2 * M_PI or just M_PI ??
-    double lo = Math.IEEEremainder(lo() - radius, 2 * S2.M_PI);
-    double hi = Math.IEEEremainder(hi() + radius, 2 * S2.M_PI);
-    if (lo == -S2.M_PI) {
-      lo = S2.M_PI;
+    double lo = Math.IEEEremainder(lo() - radius, 2 * Sphere.M_PI);
+    double hi = Math.IEEEremainder(hi() + radius, 2 * Sphere.M_PI);
+    if (lo == -Sphere.M_PI) {
+      lo = Sphere.M_PI;
     }
     return new S1Interval(lo, hi);
   }
@@ -457,8 +458,8 @@ public final strictfp class S1Interval implements Cloneable {
     if (y.isEmpty()) {
       return getLength() <= maxError;
     }
-    return (Math.abs(Math.IEEEremainder(y.lo() - lo(), 2 * S2.M_PI))
-        + Math.abs(Math.IEEEremainder(y.hi() - hi(), 2 * S2.M_PI))) <= maxError;
+    return (Math.abs(Math.IEEEremainder(y.lo() - lo(), 2 * Sphere.M_PI))
+        + Math.abs(Math.IEEEremainder(y.hi() - hi(), 2 * Sphere.M_PI))) <= maxError;
   }
 
   public boolean approxEquals(final S1Interval y) {
@@ -503,6 +504,6 @@ public final strictfp class S1Interval implements Cloneable {
     }
     // We want to ensure that if b == Pi and a == (-Pi + eps),
     // the return result is approximately 2*Pi and not zero.
-    return (b + S2.M_PI) - (a - S2.M_PI);
+    return (b + Sphere.M_PI) - (a - Sphere.M_PI);
   }
 }

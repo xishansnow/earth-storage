@@ -1,4 +1,4 @@
-package cn.edu.pku.asic.storage.dggs;
+package cn.edu.pku.asic.storage.dggs.core;
 
 
 import java.lang.annotation.ElementType;

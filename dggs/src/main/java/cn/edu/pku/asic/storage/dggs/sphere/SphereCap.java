@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 
 /**
+ * 球冠类
  * This class represents a spherical cap, i.e. a portion of a sphere cut off by
  * a plane. The cap is defined by its axis and height. This representation has
  * good numerical accuracy for very small caps (unlike the (axis,
@@ -28,10 +29,10 @@ package cn.edu.pku.asic.storage.dggs.s2geometry;
  * and the radius of cap's base (a). All formulas assume a unit radius.
  *
  * h = 1 - cos(theta) = 2 sin^2(theta/2) d^2 = 2 h = a^2 + h^2
- * 球冠类
+
  *
  */
-public final strictfp class S2Cap implements S2Region {
+public final strictfp class SphereCap implements SphereRegion {
 
   /**
    * Multiply a positive number by this constant to ensure that the result of a
@@ -40,17 +41,17 @@ public final strictfp class S2Cap implements S2Region {
    */
   private static final double ROUND_UP = 1.0 + 1.0 / (1L << 52);
 
-  private final S2Point axis;
+  private final SpherePoint axis;
   private final double height;
 
   // Caps may be constructed from either an axis and a height, or an axis and
   // an angle. To avoid ambiguity, there are no public constructors
-  private S2Cap() {
-    axis = new S2Point();
+  private SphereCap() {
+    axis = new SpherePoint();
     height = 0;
   }
 
-  private S2Cap(S2Point axis, double height) {
+  private SphereCap(SpherePoint axis, double height) {
     this.axis = axis;
     this.height = height;
     // assert (isValid());
@@ -61,9 +62,9 @@ public final strictfp class S2Cap implements S2Region {
    * distance along the cap axis from the cap center. 'axis' should be a
    * unit-length vector.
    */
-  public static S2Cap fromAxisHeight(S2Point axis, double height) {
+  public static SphereCap fromAxisHeight(SpherePoint axis, double height) {
     // assert (S2.isUnitLength(axis));
-    return new S2Cap(axis, height);
+    return new SphereCap(axis, height);
   }
 
   /**
@@ -71,14 +72,14 @@ public final strictfp class S2Cap implements S2Region {
    * between the axis and a point on the cap. 'axis' should be a unit-length
    * vector, and 'angle' should be between 0 and 180 degrees.
    */
-  public static S2Cap fromAxisAngle(S2Point axis, S1Angle angle) {
+  public static SphereCap fromAxisAngle(SpherePoint axis, S1Angle angle) {
     // The height of the cap can be computed as 1-cos(angle), but this isn't
     // very accurate for angles close to zero (where cos(angle) is almost 1).
     // Computing it as 2*(sin(angle/2)**2) gives much better precision.
 
     // assert (S2.isUnitLength(axis));
     double d = Math.sin(0.5 * angle.radians());
-    return new S2Cap(axis, 2 * d * d);
+    return new SphereCap(axis, 2 * d * d);
 
   }
 
@@ -86,24 +87,24 @@ public final strictfp class S2Cap implements S2Region {
    * Create a cap given its axis and its area in steradians. 'axis' should be a
    * unit-length vector, and 'area' should be between 0 and 4 * M_PI.
    */
-  public static S2Cap fromAxisArea(S2Point axis, double area) {
+  public static SphereCap fromAxisArea(SpherePoint axis, double area) {
     // assert (S2.isUnitLength(axis));
-    return new S2Cap(axis, area / (2 * S2.M_PI));
+    return new SphereCap(axis, area / (2 * Sphere.M_PI));
   }
 
   /** Return an empty cap, i.e. a cap that contains no points. */
-  public static S2Cap empty() {
-    return new S2Cap(new S2Point(1, 0, 0), -1);
+  public static SphereCap empty() {
+    return new SphereCap(new SpherePoint(1, 0, 0), -1);
   }
 
   /** Return a full cap, i.e. a cap that contains all points. */
-  public static S2Cap full() {
-    return new S2Cap(new S2Point(1, 0, 0), 2);
+  public static SphereCap full() {
+    return new SphereCap(new SpherePoint(1, 0, 0), 2);
   }
 
 
   // Accessor methods.
-  public S2Point axis() {
+  public SpherePoint axis() {
     return axis;
   }
 
@@ -112,7 +113,7 @@ public final strictfp class S2Cap implements S2Region {
   }
 
   public double area() {
-    return 2 * S2.M_PI * Math.max(0.0, height);
+    return 2 * Sphere.M_PI * Math.max(0.0, height);
   }
 
   /**
@@ -134,7 +135,7 @@ public final strictfp class S2Cap implements S2Region {
    * than 2.
    */
   public boolean isValid() {
-    return S2.isUnitLength(axis) && height <= 2;
+    return Sphere.isUnitLength(axis) && height <= 2;
   }
 
   /** Return true if the cap is empty, i.e. it contains no points. */
@@ -153,18 +154,18 @@ public final strictfp class S2Cap implements S2Region {
    * operator is not a bijection, since the complement of a singleton cap
    * (containing a single point) is the same as the complement of an empty cap.
    */
-  public S2Cap complement() {
+  public SphereCap complement() {
     // The complement of a full cap is an empty cap, not a singleton.
     // Also make sure that the complement of an empty cap has height 2.
     double cHeight = isFull() ? -1 : 2 - Math.max(height, 0.0);
-    return S2Cap.fromAxisHeight(S2Point.neg(axis), cHeight);
+    return SphereCap.fromAxisHeight(SpherePoint.neg(axis), cHeight);
   }
 
   /**
    * Return true if and only if this cap contains the given other cap (in a set
    * containment sense, e.g. every cap contains the empty cap).
    */
-  public boolean contains(S2Cap other) {
+  public boolean contains(SphereCap other) {
     if (isFull() || other.isEmpty()) {
       return true;
     }
@@ -177,7 +178,7 @@ public final strictfp class S2Cap implements S2Region {
    * other cap. (This relationship is not symmetric, since only the interior of
    * this cap is used.)
    */
-  public boolean interiorIntersects(S2Cap other) {
+  public boolean interiorIntersects(SphereCap other) {
     // Interior(X) intersects Y if and only if Complement(Interior(X))
     // does not contain Y.
     return !complement().contains(other);
@@ -188,9 +189,9 @@ public final strictfp class S2Cap implements S2Region {
    * the region (i.e. the region excluding its boundary). 'p' should be a
    * unit-length vector.
    */
-  public boolean interiorContains(S2Point p) {
+  public boolean interiorContains(SpherePoint p) {
     // assert (S2.isUnitLength(p));
-    return isFull() || S2Point.sub(axis, p).norm2() < 2 * height;
+    return isFull() || SpherePoint.sub(axis, p).norm2() < 2 * height;
   }
 
   /**
@@ -198,37 +199,37 @@ public final strictfp class S2Cap implements S2Region {
    * is empty the axis is set to the given point, but otherwise it is left
    * unchanged. 'p' should be a unit-length vector.
    */
-  public S2Cap addPoint(S2Point p) {
+  public SphereCap addPoint(SpherePoint p) {
     // Compute the squared chord length, then convert it into a height.
     // assert (S2.isUnitLength(p));
     if (isEmpty()) {
-      return new S2Cap(p, 0);
+      return new SphereCap(p, 0);
     } else {
       // To make sure that the resulting cap actually includes this point,
       // we need to round up the distance calculation. That is, after
       // calling cap.AddPoint(p), cap.Contains(p) should be true.
-      double dist2 = S2Point.sub(axis, p).norm2();
+      double dist2 = SpherePoint.sub(axis, p).norm2();
       double newHeight = Math.max(height, ROUND_UP * 0.5 * dist2);
-      return new S2Cap(axis, newHeight);
+      return new SphereCap(axis, newHeight);
     }
   }
 
   // Increase the cap height if necessary to include "other". If the current
   // cap is empty it is set to the given other cap.
-  public S2Cap addCap(S2Cap other) {
+  public SphereCap addCap(SphereCap other) {
     if (isEmpty()) {
-      return new S2Cap(other.axis, other.height);
+      return new SphereCap(other.axis, other.height);
     } else {
       // See comments for FromAxisAngle() and AddPoint(). This could be
       // optimized by doing the calculation in terms of cap heights rather
       // than cap opening angles.
       double angle = axis.angle(other.axis) + other.angle().radians();
-      if (angle >= S2.M_PI) {
-        return new S2Cap(axis, 2); //Full cap
+      if (angle >= Sphere.M_PI) {
+        return new SphereCap(axis, 2); //Full cap
       } else {
         double d = Math.sin(0.5 * angle);
         double newHeight = Math.max(height, ROUND_UP * 2 * d * d);
-        return new S2Cap(axis, newHeight);
+        return new SphereCap(axis, newHeight);
       }
     }
   }
@@ -236,35 +237,35 @@ public final strictfp class S2Cap implements S2Region {
   // //////////////////////////////////////////////////////////////////////
   // S2Region interface (see {@code S2Region} for details):
   @Override
-  public S2Cap getCapBound() {
+  public SphereCap getCapBound() {
     return this;
   }
 
   @Override
-  public S2LatLngRect getRectBound() {
+  public SphereLatLngRect getRectBound() {
     if (isEmpty()) {
-      return S2LatLngRect.empty();
+      return SphereLatLngRect.empty();
     }
 
     // Convert the axis to a (lat,lng) pair, and compute the cap angle.
-    S2LatLng axisLatLng = new S2LatLng(axis);
+    SphereLatLng axisLatLng = new SphereLatLng(axis);
     double capAngle = angle().radians();
 
     boolean allLongitudes = false;
     double[] lat = new double[2], lng = new double[2];
-    lng[0] = -S2.M_PI;
-    lng[1] = S2.M_PI;
+    lng[0] = -Sphere.M_PI;
+    lng[1] = Sphere.M_PI;
 
     // Check whether cap includes the south pole.
     lat[0] = axisLatLng.lat().radians() - capAngle;
-    if (lat[0] <= -S2.M_PI_2) {
-      lat[0] = -S2.M_PI_2;
+    if (lat[0] <= -Sphere.M_PI_2) {
+      lat[0] = -Sphere.M_PI_2;
       allLongitudes = true;
     }
     // Check whether cap includes the north pole.
     lat[1] = axisLatLng.lat().radians() + capAngle;
-    if (lat[1] >= S2.M_PI_2) {
-      lat[1] = S2.M_PI_2;
+    if (lat[1] >= Sphere.M_PI_2) {
+      lat[1] = Sphere.M_PI_2;
       allLongitudes = true;
     }
     if (!allLongitudes) {
@@ -284,19 +285,19 @@ public final strictfp class S2Cap implements S2Region {
       if (sinA <= sinC) {
         double angleA = Math.asin(sinA / sinC);
         lng[0] = Math.IEEEremainder(axisLatLng.lng().radians() - angleA,
-          2 * S2.M_PI);
+          2 * Sphere.M_PI);
         lng[1] = Math.IEEEremainder(axisLatLng.lng().radians() + angleA,
-          2 * S2.M_PI);
+          2 * Sphere.M_PI);
       }
     }
-    return new S2LatLngRect(new R1Interval(lat[0], lat[1]), new S1Interval(lng[0], lng[1]));
+    return new SphereLatLngRect(new R1Interval(lat[0], lat[1]), new S1Interval(lng[0], lng[1]));
   }
 
 
-  public boolean contains(S2Point p) {
+  public boolean contains(SpherePoint p) {
     // The point 'p' should be a unit-length vector.
     // assert (S2.isUnitLength(p));
-    return S2Point.sub(axis, p).norm2() <= 2 * height;
+    return SpherePoint.sub(axis, p).norm2() <= 2 * height;
 
   }
 
@@ -305,11 +306,11 @@ public final strictfp class S2Cap implements S2Region {
   @Override
   public boolean equals(Object that) {
 
-    if (!(that instanceof S2Cap)) {
+    if (!(that instanceof SphereCap)) {
       return false;
     }
 
-    S2Cap other = (S2Cap) that;
+    SphereCap other = (SphereCap) that;
     return (axis.equals(other.axis) && height == other.height)
         || (isEmpty() && other.isEmpty()) || (isFull() && other.isFull());
 
@@ -337,7 +338,7 @@ public final strictfp class S2Cap implements S2Region {
    * Return true if the cap axis and height differ by at most "max_error" from
    * the given cap "other".
    */
-  boolean approxEquals(S2Cap other, double maxError) {
+  boolean approxEquals(SphereCap other, double maxError) {
     return (axis.aequal(other.axis, maxError) && Math.abs(height - other.height) <= maxError)
       || (isEmpty() && other.height <= maxError)
       || (other.isEmpty() && height <= maxError)
@@ -345,7 +346,7 @@ public final strictfp class S2Cap implements S2Region {
       || (other.isFull() && height >= 2 - maxError);
   }
 
-  boolean approxEquals(S2Cap other) {
+  boolean approxEquals(SphereCap other) {
     return approxEquals(other, 1e-14);
   }
 

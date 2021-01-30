@@ -1,6 +1,7 @@
-package cn.edu.pku.asic.storage.dggs;
+package cn.edu.pku.asic.storage.dggs.s2geometry;
 
-import java.lang.annotation.Annotation;
+import cn.edu.pku.asic.storage.dggs.core.AbstractDggs;
+
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
@@ -25,7 +26,7 @@ import java.io.ObjectOutput;
 //
 //
 //)
-public class S2GeometryDggs extends AbstractDggs{
+public class S2GeometryDggs extends AbstractDggs {
 
 
     /**

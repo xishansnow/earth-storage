@@ -13,13 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.edu.pku.asic.storage.dggs.s2geometry;
-
-import cn.edu.pku.asic.storage.dggs.sphere.SphereCap;
-import cn.edu.pku.asic.storage.dggs.sphere.SphereLatLngRect;
-import cn.edu.pku.asic.storage.dggs.sphere.SphereRegion;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
+ * 球面上所有具有区域特点的几何元素的抽象基类
  * An S2Region represents a two-dimensional region over the unit sphere. It is
  * an abstract interface with various concrete subtypes.
  *
@@ -30,7 +27,7 @@ import cn.edu.pku.asic.storage.dggs.sphere.SphereRegion;
  *
  *
  */
-public interface S2Region extends SphereRegion,S2RegionInterface {
+public interface SphereRegion {
 
   /** Return a bounding spherical cap. */
   public abstract SphereCap getCapBound();
@@ -39,17 +36,4 @@ public interface S2Region extends SphereRegion,S2RegionInterface {
   /** Return a bounding latitude-longitude rectangle. */
   public abstract SphereLatLngRect getRectBound();
 
-  /**
-   * If this method returns true, the region completely contains the given cell.
-   * Otherwise, either the region does not contain the cell or the containment
-   * relationship could not be determined.
-   */
-  public abstract boolean contains(S2Cell cell);
-
-  /**
-   * If this method returns false, the region does not intersect the given cell.
-   * Otherwise, either region intersects the cell, or the intersection
-   * relationship could not be determined.
-   */
-  public abstract boolean mayIntersect(S2Cell cell);
 }

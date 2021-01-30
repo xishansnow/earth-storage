@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 import com.google.common.collect.*;
 
@@ -22,8 +22,9 @@ import java.util.*;
 import java.util.logging.Logger;
 
 /**
+ * 球面多边形类
  * An S2Polygon is an S2Region object that represents a polygon. A polygon
- * consists of zero or more {@link S2Loop loops} representing "shells" and
+ * consists of zero or more {@link SphereLoop loops} representing "shells" and
  * "holes". All loops should be oriented CCW, i.e. the shell or hole is on the
  * left side of the loop. Loops may be specified in any order. A point is
  * defined to be inside the polygon if it is contained by an odd number of
@@ -46,21 +47,21 @@ import java.util.logging.Logger;
  * loop.
  *
  */
-public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon> {
-  private static final Logger log = Logger.getLogger(S2Polygon.class.getCanonicalName());
+public final strictfp class SpherePolygon implements SphereRegion, Comparable<SpherePolygon> {
+  private static final Logger log = Logger.getLogger(SpherePolygon.class.getCanonicalName());
 
-  private List<S2Loop> loops;
+  private List<SphereLoop> loops;
 
-  private S2LatLngRect bound;
+  private SphereLatLngRect bound;
   private boolean hasHoles;
   private int numVertices;
 
   /**
    * Creates an empty polygon that should be initialized by calling Init().
    */
-  public S2Polygon() {
+  public SpherePolygon() {
     this.loops = Lists.newArrayList();
-    this.bound = S2LatLngRect.empty();
+    this.bound = SphereLatLngRect.empty();
     this.hasHoles = false;
     this.numVertices = 0;
   }
@@ -69,9 +70,9 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * Convenience constructor that calls Init() with the given loops. Clears the
    * given list.
    */
-  public S2Polygon(List<S2Loop> loops) {
+  public SpherePolygon(List<SphereLoop> loops) {
     this.loops = Lists.newArrayList();
-    this.bound = S2LatLngRect.empty();
+    this.bound = SphereLatLngRect.empty();
 
     init(loops);
   }
@@ -79,7 +80,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   /**
    * Copy constructor.
    */
-  public S2Polygon(S2Loop loop) {
+  public SpherePolygon(SphereLoop loop) {
     this.loops = Lists.newArrayList();
     this.bound = loop.getRectBound();
     this.hasHoles = false;
@@ -91,14 +92,14 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   /**
    * Copy constructor.
    */
-  public S2Polygon(S2Polygon src) {
+  public SpherePolygon(SpherePolygon src) {
     this.loops = Lists.newArrayList();
     this.bound = src.getRectBound();
     this.hasHoles = src.hasHoles;
     this.numVertices = src.numVertices;
 
     for (int i = 0; i < src.numLoops(); ++i) {
-      loops.add(new S2Loop(src.loop(i)));
+      loops.add(new SphereLoop(src.loop(i)));
     }
   }
 
@@ -110,7 +111,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * ordered with a different starting point, e.g. ABCD and BCDA).
    */
   @Override
-  public int compareTo(S2Polygon other) {
+  public int compareTo(SpherePolygon other) {
     // If number of loops differ, use that.
     if (this.numLoops() != other.numLoops()) {
       return this.numLoops() - other.numLoops();
@@ -131,16 +132,16 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * each loop is immediately followed by its descendants in the nesting
    * hierarchy. (See also getParent and getLastDescendant.)
    */
-  public void init(List<S2Loop> loops) {
+  public void init(List<SphereLoop> loops) {
     // assert isValid(loops);
     // assert (this.loops.isEmpty());
 
-    Map<S2Loop, List<S2Loop>> loopMap = Maps.newHashMap();
+    Map<SphereLoop, List<SphereLoop>> loopMap = Maps.newHashMap();
     // Yes, a null key is valid. It is used here to refer to the root of the
     // loopMap
-    loopMap.put(null, Lists.<S2Loop>newArrayList());
+    loopMap.put(null, Lists.<SphereLoop>newArrayList());
 
-    for (S2Loop loop : loops) {
+    for (SphereLoop loop : loops) {
       insertLoop(loop, null, loopMap);
       this.numVertices += loop.numVertices();
     }
@@ -166,7 +167,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
 
     // Compute the bounding rectangle of the entire polygon.
     hasHoles = false;
-    bound = S2LatLngRect.empty();
+    bound = SphereLatLngRect.empty();
     for (int i = 0; i < numLoops(); ++i) {
       if (loop(i).sign() < 0) {
         hasHoles = true;
@@ -180,10 +181,10 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * Release ownership of the loops of this polygon by appending them to the
    * given list. Resets the polygon to be empty.
    */
-  public void release(List<S2Loop> loops) {
+  public void release(List<SphereLoop> loops) {
     loops.addAll(this.loops);
     this.loops.clear();
-    bound = S2LatLngRect.empty();
+    bound = SphereLatLngRect.empty();
     hasHoles = false;
     numVertices = 0;
   }
@@ -192,14 +193,14 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * Return true if the given loops form a valid polygon. Assumes that that all
    * of the given loops have already been validated.
    */
-  public static boolean isValid(final List<S2Loop> loops) {
+  public static boolean isValid(final List<SphereLoop> loops) {
     // If a loop contains an edge AB, then no other loop may contain AB or BA.
     // We only need this test if there are at least two loops, assuming that
     // each loop has already been validated.
     if (loops.size() > 1) {
       Map<UndirectedEdge, LoopVertexIndexPair> edges = Maps.newHashMap();
       for (int i = 0; i < loops.size(); ++i) {
-        S2Loop lp = loops.get(i);
+        SphereLoop lp = loops.get(i);
         for (int j = 0; j < lp.numVertices(); ++j) {
           UndirectedEdge key = new UndirectedEdge(lp.vertex(j), lp.vertex(j + 1));
           LoopVertexIndexPair value = new LoopVertexIndexPair(i, j);
@@ -239,7 +240,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     return loops.size();
   }
 
-  public S2Loop loop(int k) {
+  public SphereLoop loop(int k) {
     return loops.get(k);
   }
 
@@ -275,35 +276,35 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     return k - 1;
   }
 
-  private S2AreaCentroid getAreaCentroid(boolean doCentroid) {
+  private SphereAreaCentroid getAreaCentroid(boolean doCentroid) {
     double areaSum = 0;
-    S2Point centroidSum = new S2Point(0, 0, 0);
+    SpherePoint centroidSum = new SpherePoint(0, 0, 0);
     for (int i = 0; i < numLoops(); ++i) {
-      S2AreaCentroid areaCentroid = doCentroid ? loop(i).getAreaAndCentroid() : null;
+      SphereAreaCentroid areaCentroid = doCentroid ? loop(i).getAreaAndCentroid() : null;
       double loopArea = doCentroid ? areaCentroid.getArea() : loop(i).getArea();
 
       int loopSign = loop(i).sign();
       areaSum += loopSign * loopArea;
       if (doCentroid) {
-        S2Point currentCentroid = areaCentroid.getCentroid();
+        SpherePoint currentCentroid = areaCentroid.getCentroid();
         centroidSum =
-            new S2Point(centroidSum.x + loopSign * currentCentroid.x,
+            new SpherePoint(centroidSum.x + loopSign * currentCentroid.x,
                 centroidSum.y + loopSign * currentCentroid.y,
                 centroidSum.z + loopSign * currentCentroid.z);
       }
     }
 
-    return new S2AreaCentroid(areaSum, doCentroid ? centroidSum : null);
+    return new SphereAreaCentroid(areaSum, doCentroid ? centroidSum : null);
   }
 
   /**
    * Return the area of the polygon interior, i.e. the region on the left side
    * of an odd number of loops (this value return value is between 0 and 4*Pi)
    * and the true centroid of the polygon multiplied by the area of the polygon
-   * (see s2.h for details on centroids). Note that the centroid may not be
+   * (see s2geometry.h for details on centroids). Note that the centroid may not be
    * contained by the polygon.
    */
-  public S2AreaCentroid getAreaAndCentroid() {
+  public SphereAreaCentroid getAreaAndCentroid() {
     return getAreaCentroid(true);
   }
 
@@ -317,10 +318,10 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
 
   /**
    * Return the true centroid of the polygon multiplied by the area of the
-   * polygon (see s2.h for details on centroids). Note that the centroid may not
+   * polygon (see s2geometry.h for details on centroids). Note that the centroid may not
    * be contained by the polygon.
    */
-  public S2Point getCentroid() {
+  public SpherePoint getCentroid() {
     return getAreaCentroid(true).getCentroid();
   }
 
@@ -332,7 +333,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    *
    * If the point is contained inside the polygon, the distance returned is 0.
    */
-  public S1Angle getDistance(S2Point p) {
+  public S1Angle getDistance(SpherePoint p) {
     if (contains(p)) {
       return S1Angle.radians(0);
     }
@@ -352,7 +353,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * Return true if this polygon contains the given other polygon, i.e. if
    * polygon A contains all points contained by polygon B.
    */
-  public boolean contains(S2Polygon b) {
+  public boolean contains(SpherePolygon b) {
     // If both polygons have one loop, use the more efficient S2Loop method.
     // Note that S2Loop.contains does its own bounding rectangle check.
     if (numLoops() == 1 && b.numLoops() == 1) {
@@ -395,7 +396,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * Return true if this polygon intersects the given other polygon, i.e. if
    * there is a point that is contained by both polygons.
    */
-  public boolean intersects(S2Polygon b) {
+  public boolean intersects(SpherePolygon b) {
     // A.intersects(B) if and only if !complement(A).contains(B). However,
     // implementing a complement() operation is trickier than it sounds,
     // and in any case it's more efficient to test for intersection directly.
@@ -429,19 +430,19 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     return intersectsAnyShell(b) || b.intersectsAnyShell(this);
   }
 
-  private static void addIntersection(S2Point a0,
-                                      S2Point a1,
-                                      S2Point b0,
-                                      S2Point b1,
+  private static void addIntersection(SpherePoint a0,
+                                      SpherePoint a1,
+                                      SpherePoint b0,
+                                      SpherePoint b1,
                                       boolean addSharedEdges,
                                       int crossing,
                                       List<ParametrizedS2Point> intersections) {
     if (crossing > 0) {
       // There is a proper edge crossing.
-      S2Point x = S2EdgeUtil.getIntersection(a0, a1, b0, b1);
-      double t = S2EdgeUtil.getDistanceFraction(x, a0, a1);
+      SpherePoint x = SphereEdgeUtil.getIntersection(a0, a1, b0, b1);
+      double t = SphereEdgeUtil.getDistanceFraction(x, a0, a1);
       intersections.add(new ParametrizedS2Point(t, x));
-    } else if (S2EdgeUtil.vertexCrossing(a0, a1, b0, b1)) {
+    } else if (SphereEdgeUtil.vertexCrossing(a0, a1, b0, b1)) {
       // There is a crossing at one of the vertices. The basic rule is simple:
       // if a0 equals one of the "b" vertices, the crossing occurs at t=0;
       // otherwise, it occurs at t=1.
@@ -468,14 +469,14 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
 
 
   public boolean isNormalized() {
-    Multiset<S2Point> vertices = HashMultiset.<S2Point>create();
-    S2Loop lastParent = null;
+    Multiset<SpherePoint> vertices = HashMultiset.<SpherePoint>create();
+    SphereLoop lastParent = null;
     for (int i = 0; i < numLoops(); ++i) {
-      S2Loop child = loop(i);
+      SphereLoop child = loop(i);
       if (child.depth() == 0) {
         continue;
       }
-      S2Loop parent = loop(getParent(i));
+      SphereLoop parent = loop(getParent(i));
       if (parent != lastParent) {
         vertices.clear();
         for (int j = 0; j < parent.numVertices(); ++j) {
@@ -503,7 +504,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * to differ by up to "max_error". Note: This method mostly useful only for
    * testing purposes.
    */
-  boolean boundaryApproxEquals(S2Polygon b, double maxError) {
+  boolean boundaryApproxEquals(SpherePolygon b, double maxError) {
     if (numLoops() != b.numLoops()) {
       log.severe(
           "!= loops: " + Integer.toString(numLoops()) + " vs. " + Integer.toString(b.numLoops()));
@@ -513,10 +514,10 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     // For now, we assume that there is at most one candidate match for each
     // loop. (So far this method is just used for testing.)
     for (int i = 0; i < numLoops(); ++i) {
-      S2Loop aLoop = loop(i);
+      SphereLoop aLoop = loop(i);
       boolean success = false;
       for (int j = 0; j < numLoops(); ++j) {
-        S2Loop bLoop = b.loop(j);
+        SphereLoop bLoop = b.loop(j);
         if (bLoop.depth() == aLoop.depth() && bLoop.boundaryApproxEquals(aLoop, maxError)) {
           success = true;
           break;
@@ -533,14 +534,14 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
 
   /** Return a bounding spherical cap. */
   @Override
-  public S2Cap getCapBound() {
+  public SphereCap getCapBound() {
     return bound.getCapBound();
   }
 
 
   /** Return a bounding latitude-longitude rectangle. */
   @Override
-  public S2LatLngRect getRectBound() {
+  public SphereLatLngRect getRectBound() {
     return bound;
   }
 
@@ -548,7 +549,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   /**
    * The point 'p' does not need to be normalized.
    */
-  public boolean contains(S2Point p) {
+  public boolean contains(SpherePoint p) {
     if (numLoops() == 1) {
       return loop(0).contains(p); // Optimization.
     }
@@ -566,21 +567,21 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   }
 
   // For each map entry, sorts the value list.
-  private static void sortValueLoops(Map<S2Loop, List<S2Loop>> loopMap) {
-    for (S2Loop key : loopMap.keySet()) {
+  private static void sortValueLoops(Map<SphereLoop, List<SphereLoop>> loopMap) {
+    for (SphereLoop key : loopMap.keySet()) {
       Collections.sort(loopMap.get(key));
     }
   }
 
-  private static void insertLoop(S2Loop newLoop, S2Loop parent, Map<S2Loop, List<S2Loop>> loopMap) {
-    List<S2Loop> children = loopMap.get(parent);
+  private static void insertLoop(SphereLoop newLoop, SphereLoop parent, Map<SphereLoop, List<SphereLoop>> loopMap) {
+    List<SphereLoop> children = loopMap.get(parent);
 
     if (children == null) {
       children = Lists.newArrayList();
       loopMap.put(parent, children);
     }
 
-    for (S2Loop child : children) {
+    for (SphereLoop child : children) {
       if (child.containsNested(newLoop)) {
         insertLoop(newLoop, child, loopMap);
         return;
@@ -593,9 +594,9 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
 
     // Some of the children of the parent loop may now be children of
     // the new loop.
-    List<S2Loop> newChildren = loopMap.get(newLoop);
+    List<SphereLoop> newChildren = loopMap.get(newLoop);
     for (int i = 0; i < children.size();) {
-      S2Loop child = children.get(i);
+      SphereLoop child = children.get(i);
       if (newLoop.containsNested(child)) {
         if (newChildren == null) {
           newChildren = Lists.newArrayList();
@@ -610,20 +611,20 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     children.add(newLoop);
   }
 
-  private void initLoop(S2Loop loop, int depth, Map<S2Loop, List<S2Loop>> loopMap) {
+  private void initLoop(SphereLoop loop, int depth, Map<SphereLoop, List<SphereLoop>> loopMap) {
     if (loop != null) {
       loop.setDepth(depth);
       loops.add(loop);
     }
-    List<S2Loop> children = loopMap.get(loop);
+    List<SphereLoop> children = loopMap.get(loop);
     if (children != null) {
-      for (S2Loop child : children) {
+      for (SphereLoop child : children) {
         initLoop(child, depth + 1, loopMap);
       }
     }
   }
 
-  private int containsOrCrosses(S2Loop b) {
+  private int containsOrCrosses(SphereLoop b) {
     boolean inside = false;
     for (int i = 0; i < numLoops(); ++i) {
       int result = loop(i).containsOrCrosses(b);
@@ -638,7 +639,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   }
 
   /** Return true if any loop contains the given loop. */
-  private boolean anyLoopContains(S2Loop b) {
+  private boolean anyLoopContains(SphereLoop b) {
     for (int i = 0; i < numLoops(); ++i) {
       if (loop(i).contains(b)) {
         return true;
@@ -648,7 +649,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   }
 
   /** Return true if this polygon (A) contains all the shells of B. */
-  private boolean containsAllShells(S2Polygon b) {
+  private boolean containsAllShells(SpherePolygon b) {
     for (int j = 0; j < b.numLoops(); ++j) {
       if (b.loop(j).sign() < 0) {
         continue;
@@ -665,7 +666,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    * Return true if this polygon (A) excludes (i.e. does not intersect) all
    * holes of B.
    */
-  private boolean excludesAllHoles(S2Polygon b) {
+  private boolean excludesAllHoles(SpherePolygon b) {
     for (int j = 0; j < b.numLoops(); ++j) {
       if (b.loop(j).sign() > 0) {
         continue;
@@ -679,7 +680,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
   }
 
   /** Return true if this polygon (A) intersects any shell of B. */
-  private boolean intersectsAnyShell(S2Polygon b) {
+  private boolean intersectsAnyShell(SpherePolygon b) {
     for (int j = 0; j < b.numLoops(); ++j) {
       if (b.loop(j).sign() < 0) {
         continue;
@@ -700,11 +701,11 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     StringBuilder sb = new StringBuilder();
     sb.append("Polygon: (").append(numLoops()).append(") loops:\n");
     for (int i = 0; i < numLoops(); ++i) {
-      S2Loop s2Loop = loop(i);
+      SphereLoop s2Loop = loop(i);
       sb.append("loop <\n");
       for (int v = 0; v < s2Loop.numVertices(); ++v) {
-        S2Point s2Point = s2Loop.vertex(v);
-        sb.append(s2Point.toDegreesString());
+        SpherePoint spherePoint = s2Loop.vertex(v);
+        sb.append(spherePoint.toDegreesString());
         sb.append("\n"); // end of vertex
       }
       sb.append(">\n"); // end of loop
@@ -718,19 +719,19 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
     // If you need to convert between the types then separate conversion
     // methods should be introduced.
 
-    private final S2Point a;
-    private final S2Point b;
+    private final SpherePoint a;
+    private final SpherePoint b;
 
-    public UndirectedEdge(S2Point start, S2Point end) {
+    public UndirectedEdge(SpherePoint start, SpherePoint end) {
       this.a = start;
       this.b = end;
     }
 
-    public S2Point getStart() {
+    public SpherePoint getStart() {
       return a;
     }
 
-    public S2Point getEnd() {
+    public SpherePoint getEnd() {
       return b;
     }
 
@@ -780,9 +781,9 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
    */
   private static final class ParametrizedS2Point implements Comparable<ParametrizedS2Point> {
     private final double time;
-    private final S2Point point;
+    private final SpherePoint point;
 
-    public ParametrizedS2Point(double time, S2Point point) {
+    public ParametrizedS2Point(double time, SpherePoint point) {
       this.time = time;
       this.point = point;
     }
@@ -791,7 +792,7 @@ public final strictfp class S2Polygon implements S2Region, Comparable<S2Polygon>
       return time;
     }
 
-    public S2Point getPoint() {
+    public SpherePoint getPoint() {
       return point;
     }
 

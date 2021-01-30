@@ -14,28 +14,29 @@
  * limitations under the License.
  */
 
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
+ * 球面有向边类
  * An abstract directed edge from one S2Point to another S2Point.
  *
  * @author kirilll@google.com (Kirill Levin)
  */
-public final class S2Edge {
+public final class SphereEdge {
 
-  private final S2Point start;
-  private final S2Point end;
+  private final SpherePoint start;
+  private final SpherePoint end;
 
-  public S2Edge(S2Point start, S2Point end) {
+  public SphereEdge(SpherePoint start, SpherePoint end) {
     this.start = start;
     this.end = end;
   }
 
-  public S2Point getStart() {
+  public SpherePoint getStart() {
     return start;
   }
 
-  public S2Point getEnd() {
+  public SpherePoint getEnd() {
     return end;
   }
 
@@ -52,10 +53,10 @@ public final class S2Edge {
 
   @Override
   public boolean equals(Object o) {
-    if (o == null || !(o instanceof S2Edge)) {
+    if (o == null || !(o instanceof SphereEdge)) {
       return false;
     }
-    S2Edge other = (S2Edge) o;
+    SphereEdge other = (SphereEdge) o;
     return getStart().equals(other.getStart()) && getEnd().equals(other.getEnd());
   }
 }

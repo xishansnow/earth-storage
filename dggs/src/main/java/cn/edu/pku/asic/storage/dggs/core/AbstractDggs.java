@@ -1,6 +1,6 @@
-package cn.edu.pku.asic.storage.dggs;
+package cn.edu.pku.asic.storage.dggs.core;
 
-import cn.edu.pku.asic.storage.dggs.s2geometry.S2Point;
+import cn.edu.pku.asic.storage.dggs.sphere.SpherePoint;
 
 import java.io.Externalizable;
 import java.lang.annotation.ElementType;
@@ -74,9 +74,9 @@ public abstract class AbstractDggs implements Externalizable {
 
 
 
-    public S2Point origin(){            // return origin point's coordinate of DGG system
+    public SpherePoint origin(){            // return origin point's coordinate of DGG system
 
-        S2Point origin = null;
+        SpherePoint origin = null;
 
         return(origin);
 //        Metadata mt = getClass().getAnnotation(Metadata.class);

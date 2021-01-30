@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cn.edu.pku.asic.storage.dggs.s2geometry;
+package cn.edu.pku.asic.storage.dggs.sphere;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
+ * 球面上的线类
  * An S2Polyline represents a sequence of zero or more vertices connected by
  * straight edges (geodesics). Edges of length 0 and 180 degrees are not
  * allowed, i.e. adjacent vertices should not be identical or antipodal.
@@ -33,21 +34,21 @@ import java.util.logging.Logger;
  * vertices.
  *
  */
-public final strictfp class S2Polyline implements S2Region {
-  private static final Logger log = Logger.getLogger(S2Polyline.class.getCanonicalName());
+public final strictfp class SpherePolyline implements SphereRegion {
+  private static final Logger log = Logger.getLogger(SpherePolyline.class.getCanonicalName());
 
   private final int numVertices;
-  private final S2Point[] vertices;
+  private final SpherePoint[] vertices;
 
   /**
    * Create a polyline that connects the given vertices. Empty polylines are
    * allowed. Adjacent vertices should not be identical or antipodal. All
    * vertices should be unit length.
    */
-  public S2Polyline(List<S2Point> vertices) {
+  public SpherePolyline(List<SpherePoint> vertices) {
     // assert isValid(vertices);
     this.numVertices = vertices.size();
-    this.vertices = vertices.toArray(new S2Point[numVertices]);
+    this.vertices = vertices.toArray(new SpherePoint[numVertices]);
   }
 
   /**
@@ -55,7 +56,7 @@ public final strictfp class S2Polyline implements S2Region {
    *
    * TODO(dbeaumont): Now that S2Polyline is immutable, remove this.
    */
-  public S2Polyline(S2Polyline src) {
+  public SpherePolyline(SpherePolyline src) {
     this.numVertices = src.numVertices();
     this.vertices = src.vertices.clone();
   }
@@ -63,11 +64,11 @@ public final strictfp class S2Polyline implements S2Region {
   /**
    * Return true if the given vertices form a valid polyline.
    */
-  public boolean isValid(List<S2Point> vertices) {
+  public boolean isValid(List<SpherePoint> vertices) {
     // All vertices must be unit length.
     int n = vertices.size();
     for (int i = 0; i < n; ++i) {
-      if (!S2.isUnitLength(vertices.get(i))) {
+      if (!Sphere.isUnitLength(vertices.get(i))) {
         log.info("Vertex " + i + " is not unit length");
         return false;
       }
@@ -76,7 +77,7 @@ public final strictfp class S2Polyline implements S2Region {
     // Adjacent vertices must not be identical or antipodal.
     for (int i = 1; i < n; ++i) {
       if (vertices.get(i - 1).equals(vertices.get(i))
-          || vertices.get(i - 1).equals(S2Point.neg(vertices.get(i)))) {
+          || vertices.get(i - 1).equals(SpherePoint.neg(vertices.get(i)))) {
         log.info("Vertices " + (i - 1) + " and " + i + " are identical or antipodal");
         return false;
       }
@@ -89,7 +90,7 @@ public final strictfp class S2Polyline implements S2Region {
     return numVertices;
   }
 
-  public S2Point vertex(int k) {
+  public SpherePoint vertex(int k) {
     // assert (k >= 0 && k < numVertices);
     return vertices[k];
   }
@@ -112,7 +113,7 @@ public final strictfp class S2Polyline implements S2Region {
    * greater than one are clamped. The return value is unit length. This cost of
    * this function is currently linear in the number of vertices.
    */
-  public S2Point interpolate(double fraction) {
+  public SpherePoint interpolate(double fraction) {
     // We intentionally let the (fraction >= 1) case fall through, since
     // we need to handle it in the loop below in any case because of
     // possible roundoff errors.
@@ -131,8 +132,8 @@ public final strictfp class S2Polyline implements S2Region {
         // This code interpolates with respect to arc length rather than
         // straight-line distance, and produces a unit-length result.
         double f = Math.sin(target) / Math.sin(length);
-        return S2Point.add(S2Point.mul(vertex(i - 1), (Math.cos(target) - f * Math.cos(length))),
-            S2Point.mul(vertex(i), f));
+        return SpherePoint.add(SpherePoint.mul(vertex(i - 1), (Math.cos(target) - f * Math.cos(length))),
+            SpherePoint.mul(vertex(i), f));
       }
       target -= length;
     }
@@ -143,15 +144,15 @@ public final strictfp class S2Polyline implements S2Region {
 
   /** Return a bounding spherical cap. */
   @Override
-  public S2Cap getCapBound() {
+  public SphereCap getCapBound() {
     return getRectBound().getCapBound();
   }
 
 
   /** Return a bounding latitude-longitude rectangle. */
   @Override
-  public S2LatLngRect getRectBound() {
-    S2EdgeUtil.RectBounder bounder = new S2EdgeUtil.RectBounder();
+  public SphereLatLngRect getRectBound() {
+    SphereEdgeUtil.RectBounder bounder = new SphereEdgeUtil.RectBounder();
     for (int i = 0; i < numVertices(); ++i) {
       bounder.addPoint(vertex(i));
     }
@@ -164,7 +165,7 @@ public final strictfp class S2Polyline implements S2Region {
    * the polyline that is closest to the given point. The polyline must have at
    * least one vertex. Throws IllegalStateException if this is not the case.
    */
-  public int getNearestEdgeIndex(S2Point point) {
+  public int getNearestEdgeIndex(SpherePoint point) {
     Preconditions.checkState(numVertices() > 0, "Empty polyline");
 
     if (numVertices() == 1) {
@@ -178,7 +179,7 @@ public final strictfp class S2Polyline implements S2Region {
 
     // Find the line segment in the polyline that is closest to the point given.
     for (int i = 0; i < numVertices() - 1; ++i) {
-      S1Angle distanceToSegment = S2EdgeUtil.getDistance(point, vertex(i), vertex(i + 1));
+      S1Angle distanceToSegment = SphereEdgeUtil.getDistance(point, vertex(i), vertex(i + 1));
       if (distanceToSegment.lessThan(minDistance)) {
         minDistance = distanceToSegment;
         minIndex = i;
@@ -191,23 +192,23 @@ public final strictfp class S2Polyline implements S2Region {
    * Given a point p and the index of the start point of an edge of this polyline,
    * returns the point on that edge that is closest to p.
    */
-  public S2Point projectToEdge(S2Point point, int index) {
+  public SpherePoint projectToEdge(SpherePoint point, int index) {
     Preconditions.checkState(numVertices() > 0, "Empty polyline");
     Preconditions.checkState(numVertices() == 1 || index < numVertices() - 1, "Invalid edge index");
     if (numVertices() == 1) {
       // If there is only one vertex, it is always closest to any given point.
       return vertex(0);
     }
-    return S2EdgeUtil.getClosestPoint(point, vertex(index), vertex(index + 1));
+    return SphereEdgeUtil.getClosestPoint(point, vertex(index), vertex(index + 1));
   }
 
   @Override
   public boolean equals(Object that) {
-    if (!(that instanceof S2Polyline)) {
+    if (!(that instanceof SpherePolyline)) {
       return false;
     }
 
-    S2Polyline thatPolygon = (S2Polyline) that;
+    SpherePolyline thatPolygon = (SpherePolyline) that;
     if (numVertices != thatPolygon.numVertices) {
       return false;
     }
