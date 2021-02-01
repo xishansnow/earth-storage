@@ -14,6 +14,6 @@ import java.io.Externalizable;
  * @See =============================================================================================
  * @Description
  */
-public abstract class AbstractCellId<TID extends AbstractCellId<TID>> implements Externalizable {
+public abstract class AbstractCellId<TID extends AbstractCellId<TID>>  { //implements Externalizable
 
 }

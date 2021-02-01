@@ -15,6 +15,7 @@
  */
 package cn.edu.pku.asic.storage.dggs.s2geometry;
 
+import cn.edu.pku.asic.storage.dggs.core.AbstractCellUnion;
 import com.google.common.collect.Lists;
 import cn.edu.pku.asic.storage.dggs.sphere.*;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * suitable for optimizations based on preprocessing.
  *
  */
-public strictfp class S2CellUnion implements S2Region, Iterable<S2CellId> {
+public strictfp class S2CellUnion extends AbstractCellUnion<S2CellId,S2Cell> implements S2Region, Iterable<S2CellId> {
 
   /** The CellIds that form the Union */
   private ArrayList<S2CellId> cellIds = new ArrayList<S2CellId>();

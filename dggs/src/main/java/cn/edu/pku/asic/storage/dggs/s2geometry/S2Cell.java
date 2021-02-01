@@ -16,6 +16,7 @@
 package cn.edu.pku.asic.storage.dggs.s2geometry;
 
 
+import cn.edu.pku.asic.storage.dggs.core.AbstractCell;
 import cn.edu.pku.asic.storage.dggs.sphere.*;
 //import cn.edu.pku.asic.storage.dggs.s2geometry.S2Projections;
 
@@ -27,7 +28,7 @@ import cn.edu.pku.asic.storage.dggs.sphere.*;
  *
  */
 
-public final strictfp class S2Cell implements S2Region {
+public final strictfp class S2Cell extends AbstractCell<S2CellId,S2Cell> implements S2Region {
 
   private static final int MAX_CELL_SIZE = 1 << S2CellId.MAX_LEVEL;
 

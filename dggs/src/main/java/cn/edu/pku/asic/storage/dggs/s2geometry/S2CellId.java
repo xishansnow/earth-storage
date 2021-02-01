@@ -16,6 +16,7 @@
 package cn.edu.pku.asic.storage.dggs.s2geometry;
 
 //import cn.edu.pku.asic.storage.dggs.s2geometry.S2Projections;
+import cn.edu.pku.asic.storage.dggs.core.AbstractCellId;
 import cn.edu.pku.asic.storage.dggs.sphere.*;
 
 import java.util.List;
@@ -51,7 +52,7 @@ import java.util.Locale;
  *
  *
  */
-public final strictfp class S2CellId implements Comparable<S2CellId> {
+public final strictfp class S2CellId extends AbstractCellId<S2CellId> implements Comparable<S2CellId> {
 
   // Although only 60 bits are needed to represent the index of a leaf
   // cell, we need an extra bit in order to represent the position of
