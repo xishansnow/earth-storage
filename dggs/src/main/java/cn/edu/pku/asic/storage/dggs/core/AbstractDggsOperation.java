@@ -38,7 +38,7 @@ import org.apache.commons.logging.LogFactory;
  *                  generateDggs()  -- user can configure some DGGS parameters, and use this method to produce
  *
  */
-public interface AbstractDggsOperation {
+public interface AbstractDggsOperation<TID,TCELL> {
     Log LOG = LogFactory.getLog(AbstractDggsOperation.class);
 
 
@@ -51,8 +51,8 @@ public interface AbstractDggsOperation {
     @Retention(RetentionPolicy.RUNTIME)
     @interface Preferred {}
 
-    default void setup() {}
-    void construct();
+//    default void setup() {}
+//    void construct();
 
     //AddressType:
     // GEO   -- longitude latitude
@@ -64,12 +64,12 @@ public interface AbstractDggsOperation {
     // PROJTRI -- triangle number and (x, y) coordinates within that triangle on the ISEA plane
     // VERTEX2DD -- vertex number, triangle number, and (x, y) coordinates on ISEA plane
     // AIGEN -- the polygon of the DGG cell in ARC/INFO Generate file format
-    void generateGrid();        // create all (or some portion) of the specified DGG
-    void gridStatistics();      // output a table of grid characteristics for the specified DGG
-    void transformPoints();     // perform address conversion for specified point set.
-    void binPointVals();        // bin a set of floating-point data values associated with geodetic coordinates into the cells of a DGG(s) specified
-    void binPointPresence();    // perform presence/absence binning into the DGG(s) specified
-
+//    void generateGrid();        // create all (or some portion) of the specified DGG
+//    void gridStatistics();      // output a table of grid characteristics for the specified DGG
+//    void transformPoints();     // perform address conversion for specified point set.
+//    void binPointVals();        // bin a set of floating-point data values associated with geodetic coordinates into the cells of a DGG(s) specified
+//    void binPointPresence();    // perform presence/absence binning into the DGG(s) specified
+//
 
 
 }

@@ -241,7 +241,7 @@ public final strictfp class S2Cell extends AbstractCell<S2CellId,S2Cell> impleme
     // to be 2 / (1 + sqrt(1 - r*r)) where "r" is the radius of the disc.
     // For example, when r=0 the ratio is 1, and when r=1 the ratio is 2.
     // Here we set Pi*r*r == flat_area to find the equivalent disc.
-    return flatArea * 2 / (1 + Math.sqrt(1 - Math.min(S2.M_1_PI * flatArea, 1.0)));
+    return flatArea * 2 / (1 + Math.sqrt(1 - Math.min(Sphere.M_1_PI * flatArea, 1.0)));
   }
 
   /**
@@ -328,7 +328,7 @@ public final strictfp class S2Cell extends AbstractCell<S2CellId,S2Cell> impleme
 
       R1Interval lat = R1Interval.fromPointPair(getLatitude(i, j), getLatitude(1 - i, 1 - j));
       lat = lat.expanded(MAX_ERROR).intersection(SphereLatLngRect.fullLat());
-      if (lat.lo() == -S2.M_PI_2 || lat.hi() == S2.M_PI_2) {
+      if (lat.lo() == -Sphere.M_PI_2 || lat.hi() == Sphere.M_PI_2) {
         return new SphereLatLngRect(lat, S1Interval.full());
       }
       S1Interval lng = S1Interval.fromPointPair(getLongitude(i, 1 - j), getLongitude(1 - i, j));
@@ -341,22 +341,22 @@ public final strictfp class S2Cell extends AbstractCell<S2CellId,S2Cell> impleme
     switch (face) {
       case 0:
         return new SphereLatLngRect(
-            new R1Interval(-S2.M_PI_4, S2.M_PI_4), new S1Interval(-S2.M_PI_4, S2.M_PI_4));
+            new R1Interval(-Sphere.M_PI_4, Sphere.M_PI_4), new S1Interval(-Sphere.M_PI_4, Sphere.M_PI_4));
       case 1:
         return new SphereLatLngRect(
-            new R1Interval(-S2.M_PI_4, S2.M_PI_4), new S1Interval(S2.M_PI_4, 3 * S2.M_PI_4));
+            new R1Interval(-Sphere.M_PI_4, Sphere.M_PI_4), new S1Interval(Sphere.M_PI_4, 3 * Sphere.M_PI_4));
       case 2:
         return new SphereLatLngRect(
-            new R1Interval(POLE_MIN_LAT, S2.M_PI_2), new S1Interval(-S2.M_PI, S2.M_PI));
+            new R1Interval(POLE_MIN_LAT, Sphere.M_PI_2), new S1Interval(-Sphere.M_PI, Sphere.M_PI));
       case 3:
         return new SphereLatLngRect(
-            new R1Interval(-S2.M_PI_4, S2.M_PI_4), new S1Interval(3 * S2.M_PI_4, -3 * S2.M_PI_4));
+            new R1Interval(-Sphere.M_PI_4, Sphere.M_PI_4), new S1Interval(3 * Sphere.M_PI_4, -3 * Sphere.M_PI_4));
       case 4:
         return new SphereLatLngRect(
-            new R1Interval(-S2.M_PI_4, S2.M_PI_4), new S1Interval(-3 * S2.M_PI_4, -S2.M_PI_4));
+            new R1Interval(-Sphere.M_PI_4, Sphere.M_PI_4), new S1Interval(-3 * Sphere.M_PI_4, -Sphere.M_PI_4));
       default:
         return new SphereLatLngRect(
-            new R1Interval(-S2.M_PI_2, -POLE_MIN_LAT), new S1Interval(-S2.M_PI, S2.M_PI));
+            new R1Interval(-Sphere.M_PI_2, -POLE_MIN_LAT), new S1Interval(-Sphere.M_PI, Sphere.M_PI));
     }
 
   }

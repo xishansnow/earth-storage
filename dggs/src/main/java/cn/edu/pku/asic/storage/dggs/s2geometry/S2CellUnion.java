@@ -407,12 +407,12 @@ public strictfp class S2CellUnion extends AbstractCellUnion<S2CellId,S2Cell> imp
     expand(Math.min(minLevel + maxLevelDiff, radiusLevel));
   }
 
-  @Override
-  public S2Region clone() {
-    S2CellUnion copy = new S2CellUnion();
-    copy.initRawCellIds(Lists.newArrayList(cellIds));
-    return copy;
-  }
+//  @Override
+//  public S2Region clone() {
+//    S2CellUnion copy = new S2CellUnion();
+//    copy.initRawCellIds(Lists.newArrayList(cellIds));
+//    return copy;
+//  }
 
   @Override
   public SphereCap getCapBound() {

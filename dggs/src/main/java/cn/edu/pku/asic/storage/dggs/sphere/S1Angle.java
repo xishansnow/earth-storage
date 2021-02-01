@@ -17,8 +17,8 @@ package cn.edu.pku.asic.storage.dggs.sphere;
 
 
 /**
- * 角度类
- * 1-dim Angle class to express longitude and latitude.
+ * 大圆上的夹角类，可用于定义大圆上的角距、赤道上的经度、子午面上的纬度
+ *
  * internal unit is radians.
  */
 

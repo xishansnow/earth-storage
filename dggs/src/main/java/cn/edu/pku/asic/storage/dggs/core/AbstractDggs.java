@@ -20,7 +20,7 @@ import java.lang.annotation.Target;
  *=============================================================================================
  * @Description    Parent of all DGG System.            
  */
-public abstract class AbstractDggs implements Externalizable {
+public abstract class AbstractDggs<TID extends AbstractCellId,TCELL extends AbstractCell,TCELLUNION extends AbstractCellUnion> implements Externalizable {
     /**
      *  Metadata annotates the subclass of AbstractDGGS, to describe it's basic feature descriptions
      */

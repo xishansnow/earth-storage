@@ -16,7 +16,7 @@
 package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
- * 球面经纬度类
+ * 球面经纬度类，单位为弧度
  * This class represents a point on the unit sphere as a pair of
  * latitude-longitude coordinates. Like the rest of the "geometry" package, the
  * intent is to represent spherical geometry as a mathematical abstraction, so

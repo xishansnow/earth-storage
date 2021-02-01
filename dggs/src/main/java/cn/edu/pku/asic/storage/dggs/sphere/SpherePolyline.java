@@ -34,7 +34,7 @@ import java.util.logging.Logger;
  * vertices.
  *
  */
-public final strictfp class SpherePolyline implements SphereRegion {
+public strictfp class SpherePolyline implements SphereRegion {
   private static final Logger log = Logger.getLogger(SpherePolyline.class.getCanonicalName());
 
   private final int numVertices;

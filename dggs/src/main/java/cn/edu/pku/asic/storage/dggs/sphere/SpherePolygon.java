@@ -47,7 +47,7 @@ import java.util.logging.Logger;
  * loop.
  *
  */
-public final strictfp class SpherePolygon implements SphereRegion, Comparable<SpherePolygon> {
+public strictfp class SpherePolygon implements SphereRegion, Comparable<SpherePolygon> {
   private static final Logger log = Logger.getLogger(SpherePolygon.class.getCanonicalName());
 
   private List<SphereLoop> loops;

@@ -48,7 +48,7 @@ import java.util.logging.Logger;
  *
  */
 
-public final strictfp class SphereLoop implements SphereRegion, Comparable<SphereLoop> {
+public strictfp class SphereLoop implements SphereRegion, Comparable<SphereLoop> {
   private static final Logger log = Logger.getLogger(SphereLoop.class.getCanonicalName());
 
   /**

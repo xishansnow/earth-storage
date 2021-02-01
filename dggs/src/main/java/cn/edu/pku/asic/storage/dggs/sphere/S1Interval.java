@@ -17,7 +17,12 @@ package cn.edu.pku.asic.storage.dggs.sphere;
 
 
 /**
- * 大圆上的夹角类
+ * 大圆上的间距类，用于定义经差，单位为弧度
+ * lo = -Pi and hi = Pi,   代表覆盖整个经度范围
+ * lo = Pi and hi = -Pi,   代表空
+ * lo = hi,   代表在一个经圈上
+ * 其他情况：  从经度lo到经度hi的经差，注意lo不一定小于hi
+ *
  * An S1Interval represents a closed interval on a unit circle (also known as a
  * 1-dimensional sphere). It is capable of representing the empty interval
  * (containing no points), the full interval (containing all points), and

@@ -15,11 +15,16 @@
  */
 package cn.edu.pku.asic.storage.dggs.s2geometry;
 
+import cn.edu.pku.asic.storage.dggs.core.AbstractDggs;
 import cn.edu.pku.asic.storage.dggs.sphere.*;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 
-public final strictfp class S2 extends Sphere {
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
+public final strictfp class S2 extends AbstractDggs<S2CellId,S2Cell,S2CellUnion> {
 
   // Together these flags define a cell orientation. If SWAP_MASK
   // is true, then canonical traversal order is flipped around the
@@ -129,6 +134,42 @@ public final strictfp class S2 extends Sphere {
   }
 
   /**
+   * The object implements the writeExternal method to save its contents
+   * by calling the methods of DataOutput for its primitive values or
+   * calling the writeObject method of ObjectOutput for objects, strings,
+   * and arrays.
+   *
+   * @param out the stream to write the object to
+   * @throws IOException Includes any I/O exceptions that may occur
+   * @serialData Overriding methods should use this tag to describe
+   * the data layout of this Externalizable object.
+   * List the sequence of element types and, if possible,
+   * relate the element to a public/protected field and/or
+   * method of this Externalizable class.
+   */
+  @Override
+  public void writeExternal(ObjectOutput out) throws IOException {
+
+  }
+
+  /**
+   * The object implements the readExternal method to restore its
+   * contents by calling the methods of DataInput for primitive
+   * types and readObject for objects, strings and arrays.  The
+   * readExternal method must read the values in the same sequence
+   * and with the same types as were written by writeExternal.
+   *
+   * @param in the stream to read data from in order to restore the object
+   * @throws IOException            if I/O errors occur
+   * @throws ClassNotFoundException If the class for an object being
+   *                                restored cannot be found.
+   */
+  @Override
+  public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+
+  }
+
+  /**
    * Defines an area or a length cell metric.
    */
   public static class Metric {
@@ -164,7 +205,7 @@ public final strictfp class S2 extends Sphere {
      * always a valid level.
      */
     public int getClosestLevel(double value) {
-      return getMinLevel(M_SQRT2 * value);
+      return getMinLevel(Sphere.M_SQRT2 * value);
     }
 
     /**
@@ -219,7 +260,7 @@ public final strictfp class S2 extends Sphere {
    * tests in order to avoid triggering code to handle degenerate cases. (This
    * rules out the north and south poles.)
    */
-  public static SpherePoint origin() {
+  public SpherePoint origin() {
     return new SpherePoint(0, 1, 0);
   }
 

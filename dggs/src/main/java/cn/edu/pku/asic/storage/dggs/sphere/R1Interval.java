@@ -16,9 +16,16 @@
 package cn.edu.pku.asic.storage.dggs.sphere;
 
 /**
+ * 实线上的间距类，单位为弧度:
+ * lo < hi : 用于定义纬差
+ * lo > hi : 空间距
+ * lo = hi : 仅包含一个纬圈
+ * 【注意：正常的维差通常满足条件1】
  * An R1Interval represents a closed, bounded interval on the real line. It is
  * capable of representing the empty interval (containing no points) and
  * zero-length intervals (containing a single point).
+ *
+ * [-PI/2,PI/2]
  */
 
 public final strictfp class R1Interval {

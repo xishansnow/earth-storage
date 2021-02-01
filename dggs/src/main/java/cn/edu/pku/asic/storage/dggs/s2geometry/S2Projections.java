@@ -18,6 +18,7 @@ package cn.edu.pku.asic.storage.dggs.s2geometry;
 import cn.edu.pku.asic.storage.dggs.sphere.R2Vector;
 //import cn.edu.pku.asic.storage.dggs.s2geometry.S2;
 import cn.edu.pku.asic.storage.dggs.s2geometry.S2.Metric;
+import cn.edu.pku.asic.storage.dggs.sphere.Sphere;
 import cn.edu.pku.asic.storage.dggs.sphere.SpherePoint;
 
 /**
@@ -73,6 +74,7 @@ import cn.edu.pku.asic.storage.dggs.sphere.SpherePoint;
  */
 
 public final strictfp class S2Projections {
+
   public enum Projections {
     S2_LINEAR_PROJECTION, S2_TAN_PROJECTION, S2_QUADRATIC_PROJECTION
   }
@@ -91,18 +93,18 @@ public final strictfp class S2Projections {
   // cells at level k is exactly AVG_AREA.GetValue(k).
   public static final Metric MIN_AREA = new Metric(2,
     S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? 1 / (3 * Math.sqrt(3)) : // 0.192
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? (S2.M_PI * S2.M_PI)
-        / (16 * S2.M_SQRT2) : // 0.436
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? (Sphere.M_PI * Sphere.M_PI)
+        / (16 * Sphere.M_SQRT2) : // 0.436
         S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION
-          ? 2 * S2.M_SQRT2 / 9 : // 0.314
+          ? 2 * Sphere.M_SQRT2 / 9 : // 0.314
           0);
   public static final Metric MAX_AREA = new Metric(2,
     S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? 1 : // 1.000
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI * S2.M_PI / 16 : // 0.617
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI * Sphere.M_PI / 16 : // 0.617
         S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION
           ? 0.65894981424079037 : // 0.659
           0);
-  public static final Metric AVG_AREA = new Metric(2, S2.M_PI / 6); // 0.524)
+  public static final Metric AVG_AREA = new Metric(2, Sphere.M_PI / 6); // 0.524)
 
 
   // Each cell is bounded by four planes passing through its four edges and
@@ -114,16 +116,16 @@ public final strictfp class S2Projections {
   // cells at level k is approximately AVG_ANGLE_SPAN.GetValue(k).
   public static final Metric MIN_ANGLE_SPAN = new Metric(1,
     S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? 0.5 : // 0.500
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI / 4 : // 0.785
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI / 4 : // 0.785
         S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION ? 2. / 3 : // 0.667
           0);
   public static final Metric MAX_ANGLE_SPAN = new Metric(1,
     S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? 1 : // 1.000
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI / 4 : // 0.785
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI / 4 : // 0.785
         S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION
           ? 0.85244858959960922 : // 0.852
           0);
-  public static final Metric AVG_ANGLE_SPAN = new Metric(1, S2.M_PI / 4); // 0.785
+  public static final Metric AVG_ANGLE_SPAN = new Metric(1, Sphere.M_PI / 4); // 0.785
 
 
   // The width of geometric figure is defined as the distance between two
@@ -146,8 +148,8 @@ public final strictfp class S2Projections {
   // For example, this is useful when "growing" regions by a fixed distance.
   public static final Metric MIN_WIDTH = new Metric(1,
     (S2Projections.S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? 1 / Math.sqrt(6) : // 0.408
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI / (4 * S2.M_SQRT2) : // 0.555
-        S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION ? S2.M_SQRT2 / 3 : // 0.471
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI / (4 * Sphere.M_SQRT2) : // 0.555
+        S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION ? Sphere.M_SQRT2 / 3 : // 0.471
         0));
 
   public static final Metric MAX_WIDTH = new Metric(1, MAX_ANGLE_SPAN.deriv());
@@ -168,9 +170,9 @@ public final strictfp class S2Projections {
   // between adjacent cell centers along the space-filling Hilbert curve for
   // cells at any given level.
   public static final Metric MIN_EDGE = new Metric(1,
-    S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? S2.M_SQRT2 / 3 : // 0.471
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI / (4 * S2.M_SQRT2) : // 0.555
-        S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION ? S2.M_SQRT2 / 3 : // 0.471
+    S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? Sphere.M_SQRT2 / 3 : // 0.471
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI / (4 * Sphere.M_SQRT2) : // 0.555
+        S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION ? Sphere.M_SQRT2 / 3 : // 0.471
           0);
   public static final Metric MAX_EDGE = new Metric(1, MAX_ANGLE_SPAN.deriv());
   public static final Metric AVG_EDGE = new Metric(1,
@@ -190,14 +192,14 @@ public final strictfp class S2Projections {
   // example, the distance from an arbitrary point to the closest cell center
   // at a given level is at most half the maximum diagonal length.
   public static final Metric MIN_DIAG = new Metric(1,
-    S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? S2.M_SQRT2 / 3 : // 0.471
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI / (3 * S2.M_SQRT2) : // 0.740
+    S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? Sphere.M_SQRT2 / 3 : // 0.471
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI / (3 * Sphere.M_SQRT2) : // 0.740
         S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION
-          ? 4 * S2.M_SQRT2 / 9 : // 0.629
+          ? 4 * Sphere.M_SQRT2 / 9 : // 0.629
           0);
   public static final Metric MAX_DIAG = new Metric(1,
-    S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? S2.M_SQRT2 : // 1.414
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_PI / Math.sqrt(6) : // 1.283
+    S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? Sphere.M_SQRT2 : // 1.414
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_PI / Math.sqrt(6) : // 1.283
         S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION
           ? 1.2193272972170106 : // 1.219
           0);
@@ -212,8 +214,8 @@ public final strictfp class S2Projections {
   // the edge aspect ratio of a cell is defined as the ratio of its longest
   // edge length to its shortest edge length.
   public static final double MAX_EDGE_ASPECT =
-      S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? S2.M_SQRT2 : // 1.414
-      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? S2.M_SQRT2 : // 1.414
+      S2_PROJECTION == Projections.S2_LINEAR_PROJECTION ? Sphere.M_SQRT2 : // 1.414
+      S2_PROJECTION == Projections.S2_TAN_PROJECTION ? Sphere.M_SQRT2 : // 1.414
       S2_PROJECTION == Projections.S2_QUADRATIC_PROJECTION ? 1.44261527445268292 : // 1.443
       0;
 
@@ -236,7 +238,7 @@ public final strictfp class S2Projections {
         // tangents that are slightly below and slightly above 1.0 when rounded
         // to
         // the nearest double-precision result.
-        s = Math.tan(S2.M_PI_4 * s);
+        s = Math.tan(Sphere.M_PI_4 * s);
         return s + (1.0 / (1L << 53)) * s;
       case S2_QUADRATIC_PROJECTION:
         if (s >= 0) {
@@ -254,7 +256,7 @@ public final strictfp class S2Projections {
       case S2_LINEAR_PROJECTION:
         return u;
       case S2_TAN_PROJECTION:
-        return (4 * S2.M_1_PI) * Math.atan(u);
+        return (4 * Sphere.M_1_PI) * Math.atan(u);
       case S2_QUADRATIC_PROJECTION:
         if (u >= 0) {
           return Math.sqrt(1 + 3 * u) - 1;
