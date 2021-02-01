@@ -27,7 +27,7 @@
 
     <modules>
         <module>common</module>
-        <module>dggs</module>
+<!--        <module>dggs</module>-->
         <module>indexing</module>
 <!--        <module>produce-spark</module>               &lt;!&ndash;生成数据分区和索引&ndash;&gt;-->
 <!--        <module>index-manager</module>                  &lt;!&ndash;索引数据管理包&ndash;&gt;-->
