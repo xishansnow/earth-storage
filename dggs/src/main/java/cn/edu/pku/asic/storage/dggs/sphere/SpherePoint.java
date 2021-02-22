@@ -54,6 +54,7 @@ public strictfp class SpherePoint implements Comparable<SpherePoint> {
     return Math.sqrt(norm2());
   }
 
+  //Cross Product， 返回两个向量构成平面的的法向量
   public static SpherePoint crossProd(final SpherePoint p1, final SpherePoint p2) {
     return new SpherePoint(
         p1.y * p2.z - p1.z * p2.y, p1.z * p2.x - p1.x * p2.z, p1.x * p2.y - p1.y * p2.x);
@@ -67,6 +68,7 @@ public strictfp class SpherePoint implements Comparable<SpherePoint> {
     return new SpherePoint(p1.x - p2.x, p1.y - p2.y, p1.z - p2.z);
   }
 
+  //Dot Product，表征或计算两个向量之间的夹角 b向量在a向量方向上的投影，当点积=0时表示两者正交，当点积=|a||b|时，两者共线
   public double dotProd(SpherePoint that) {
     return this.x * that.x + this.y * that.y + this.z * that.z;
   }

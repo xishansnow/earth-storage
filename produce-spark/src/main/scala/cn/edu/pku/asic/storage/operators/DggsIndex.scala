@@ -2,10 +2,11 @@ package cn.edu.pku.asic.storage.operators
 
 import cn.edu.pku.asic.storage.common.cg.SpatialPartitioner
 import cn.edu.pku.asic.storage.common.cli.{AppOptions, CLIOperation}
-import cn.edu.pku.asic.storage.indexing.indexing.{RGrovePartitioner, RSGrovePartitioner}
+import cn.edu.pku.asic.storage.indexing.{RGrovePartitioner, RSGrovePartitioner}
 import cn.edu.pku.asic.storage.common.io.{SpatialFileRDD, SpatialOutputFormat}
 import cn.edu.pku.asic.storage.common.utils.OperationMetadata
 import cn.edu.pku.asic.storage.indexing.IndexHelper
+import org.apache.spark.SparkContext
 import org.apache.spark.internal.Logging
 
 import java.io.PrintStream
@@ -40,4 +41,16 @@ object DggsIndex extends CLIOperation with Logging{
   override def setup(opts: AppOptions): Unit = {
     super.setup(opts)
   }
+
+  /**
+   * Run the main function using the given user command-line options and spark context
+   *
+   * @param opts    user options for configuring the operation
+   * @param inputs  inputs provided by the user
+   * @param outputs outputs provided by the user
+   * @param sc      the Spark context used to run the operation
+   * @return an optional result of this operation
+   */
+  override def run(opts: AppOptions, inputs: Array[String], outputs: Array[String], sc: SparkContext): Any = ???
+
 }

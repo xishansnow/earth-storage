@@ -47,11 +47,12 @@ public strictfp class Sphere {
   }
 
   /**
+   * 判断球面上ab和cd是否相交于内部某点
    * Return true if edge AB crosses CD at a point that is interior to both
    * edges. Properties:
    *
-   *  (1) SimpleCrossing(b,a,c,d) == SimpleCrossing(a,b,c,d) (2)
-   * SimpleCrossing(c,d,a,b) == SimpleCrossing(a,b,c,d)
+   *  (1) SimpleCrossing(b,a,c,d) == SimpleCrossing(a,b,c,d)
+   *  (2) SimpleCrossing(c,d,a,b) == SimpleCrossing(a,b,c,d)
    */
   public static boolean simpleCrossing(SpherePoint a, SpherePoint b, SpherePoint c, SpherePoint d) {
     // We compute SimpleCCW() for triangles ACB, CBD, BDA, and DAC. All
@@ -63,6 +64,7 @@ public strictfp class Sphere {
 
     SpherePoint ab = SpherePoint.crossProd(a, b);
     SpherePoint cd = SpherePoint.crossProd(c, d);
+
     double acb = -ab.dotProd(c);
     double cbd = -cd.dotProd(b);
     double bda = ab.dotProd(d);
@@ -72,6 +74,7 @@ public strictfp class Sphere {
   }
 
   /**
+   * 更为鲁棒的外积计算函数
    * Return a vector "c" that is orthogonal to the given unit-length vectors "a"
    * and "b". This function is similar to a.CrossProd(b) except that it does a
    * better job of ensuring orthogonality when "a" is nearly parallel to "b",
@@ -105,16 +108,18 @@ public strictfp class Sphere {
   }
 
   /**
+   * 返回正交于
    * Return a unit-length vector that is orthogonal to "a". Satisfies Ortho(-a)
    * = -Ortho(a) for all a.
    */
   public static SpherePoint ortho(SpherePoint a) {
-    // The current implementation in S2Point has the property we need,
+    // The current implementation in SpherePoint has the property we need,
     // i.e. Ortho(-a) = -Ortho(a) for all a.
     return a.ortho();
   }
 
   /**
+   * 计算球面三角形的面积
    * Return the area of triangle ABC. The method used is about twice as
    * expensive as Girard's formula, but it is numerically stable for both large
    * and very small triangles. The points do not need to be normalized. The area

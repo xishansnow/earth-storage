@@ -13,7 +13,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface WebMethod{
   /**
-   * the path on which this web method can be accessed from a web request. If not set, the name of the method will
+   * the path on which this w
+   * eb method can be accessed from a web request. If not set, the name of the method will
    * be used.
    * @return the URL pattern of this method
    */
