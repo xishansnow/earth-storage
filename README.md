@@ -20,5 +20,23 @@
                 </dependency>
             </dependencies>
 ''''
-        In your code file, add codes to test if beast can be used: 
-        import edu.ucr.cs.bdlab.beast.BeastOptions;
+#Source Code Structure
+```
+earth-storage
+    ├── README.md
+    ├── analysis-spark          空间分析的库
+    ├── commandline             有关命令行的库
+    ├── common                  数据格式读写、地理信息模型、计算几何、数据统计、命令行、杂项工具等基础类库
+    ├── compute-spark           空间计算的库
+    ├── dggs                    地球离散网格的库    
+    ├── indexing                有关索引的基础库
+    ├── pom.xml
+    ├── preparation-spark       有关数据预处理的库
+    └── query-spark             有关数据查询的库
+```
+##Module 'common'
+
+##Model 'dggs'
+
+##'MIn your code file, add codes to test if beast can be used: 
+        import edu.ucr.cs.bdlab.beast.AppOptions;

@@ -15,7 +15,7 @@
  */
 package org.apache.spark.beast.sql
 
-import cn.edu.pku.asic.storage.common.geolite.{GeometryReader, GeometryWriter}
+import cn.edu.pku.asic.earthstorage.common.geolite.{GeometryReader, GeometryWriter}
 import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.catalyst.util.{ArrayData, GenericArrayData}
 import org.apache.spark.sql.types.{ArrayType, ByteType, DataType, UserDefinedType}

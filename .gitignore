@@ -2,3 +2,4 @@
 **/.idea/*
 **/*.iml
 **.bak
+/common/dependency-reduced-pom.xml

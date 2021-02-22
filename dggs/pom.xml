@@ -3,18 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>EarthStorage</artifactId>
-        <groupId>cn.edu.pku.asic.storage</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <artifactId>earthstorage</artifactId>
+        <groupId>cn.edu.pku.asic</groupId>
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dggs</artifactId>
-
-    <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
+    <name>Digital Global Grid System Module</name>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.uber/h3 -->

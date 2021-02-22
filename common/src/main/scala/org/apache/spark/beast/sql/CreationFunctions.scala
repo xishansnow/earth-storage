@@ -15,7 +15,7 @@
  */
 package org.apache.spark.beast.sql
 
-import cn.edu.pku.asic.storage.common.geolite.{GeometryReader, PointND}
+import cn.edu.pku.asic.earthstorage.common.geolite.{GeometryReader, PointND}
 import org.apache.spark.sql.catalyst.InternalRow
 import org.apache.spark.sql.catalyst.analysis.TypeCheckResult
 import org.apache.spark.sql.catalyst.expressions.Expression

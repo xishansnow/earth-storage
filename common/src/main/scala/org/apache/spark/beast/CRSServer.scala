@@ -1,6 +1,6 @@
 package org.apache.spark.beast
 
-import cn.edu.pku.asic.storage.common.utils.OperationParam
+import cn.edu.pku.asic.earthstorage.common.cli.OperationParam
 import org.apache.hadoop.conf.Configuration
 import org.apache.http.HttpEntity
 import org.apache.http.client.HttpClient

@@ -16,34 +16,31 @@
 -->
 <earthStroage>
     <Operations>
-        <Operation>cn.edu.pku.asic.storage.common.io.Cat</Operation>
+        <Operation>cn.edu.pku.asic.earthstorage.common.io.Cat</Operation>
     </Operations>
-    <Readers>
-
-    </Readers>
     <!-- Classes that implement the interface FeatureWriter     which are also annotated with class FeatureWriter.Metadata -->
     <Writers>
-        <Writer>cn.edu.pku.asic.storage.common.io.CSVFeatureWriter</Writer>
-        <Writer>cn.edu.pku.asic.storage.common.io.shapefile.ShapefileFeatureWriter</Writer>
-        <Writer>cn.edu.pku.asic.storage.common.io.shapefile.CompressedShapefileWriter</Writer>
-        <Writer>cn.edu.pku.asic.storage.common.io.GeoJSONFeatureWriter</Writer>
-        <Writer>cn.edu.pku.asic.storage.common.io.KMLFeatureWriter</Writer>
-        <Writer>cn.edu.pku.asic.storage.common.io.KMZFeatureWriter</Writer>
-        <Writer>cn.edu.pku.asic.storage.indexing.indexing.RTreeFeatureWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.common.io.CSVFeatureWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.common.io.shapefile.ShapefileFeatureWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.common.io.shapefile.CompressedShapefileWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.common.io.GeoJSONFeatureWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.common.io.KMLFeatureWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.common.io.KMZFeatureWriter</Writer>
+        <Writer>cn.edu.pku.asic.earthstorage.indexing.RTreeFeatureWriter</Writer>
     </Writers>
     <!-- Classes that implement the interface FeatureReader     which are also annotated with class FeatureReader.Metadata -->
     <Readers>
-        <Reader>cn.edu.pku.asic.storage.common.io.CSVFeatureReader</Reader>
-        <Reader>cn.edu.pku.asic.storage.common.io.shapefile.ShapefileFeatureReader</Reader>
-        <Reader>cn.edu.pku.asic.storage.common.io.GeoJSONFeatureReader</Reader>
-        <Reader>cn.edu.pku.asic.storage.common.io.GPXReader</Reader>
-        <Reader>cn.edu.pku.asic.storage.indexing.indexing.RTreeFeatureReader</Reader>
+        <Reader>cn.edu.pku.asic.earthstorage.common.io.CSVFeatureReader</Reader>
+        <Reader>cn.edu.pku.asic.earthstorage.common.io.shapefile.ShapefileFeatureReader</Reader>
+        <Reader>cn.edu.pku.asic.earthstorage.common.io.GeoJSONFeatureReader</Reader>
+        <Reader>cn.edu.pku.asic.earthstorage.common.io.GPXReader</Reader>
+        <Reader>cn.edu.pku.asic.earthstorage.indexing.RTreeFeatureReader</Reader>
     </Readers>
     <SpatialPartitioners>
-        <Partitioner>cn.edu.pku.asic.storage.partitioner.S2GeometryPartitioner</Partitioner>
-        <Partitioner>cn.edu.pku.asic.storage.partitioner.GeohashPartitioner</Partitioner>
-        <Partitioner>cn.edu.pku.asic.storage.partitioner.GeosotPartitioner</Partitioner>
-        <Partitioner>cn.edu.pku.asic.storage.partitioner.HexPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.asic.earthstorage.partitioner.S2GeometryPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.asic.earthstorage.partitioner.GeohashPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.asic.earthstorage.partitioner.GeosotPartitioner</Partitioner>
+        <Partitioner>cn.edu.pku.asic.earthstorage.partitioner.HexPartitioner</Partitioner>
     </SpatialPartitioners>
 
 </earthStroage>

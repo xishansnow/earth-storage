@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Copyright 2018 University of California, Riverside
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<earthstorage>
+  <Operations>
+    <Operation>cn.edu.pku.asic.earthstorage.cliwrapper.Cat</Operation>
+  </Operations>
+  <!-- Classes that implement the interface SpatialPartitioner
+    which are also annotated with class SpatialPartitioner.Metadata -->
+  <SpatialPartitioners>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.GridPartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.KDTreePartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.AbstractRTreeBBPartitioner$RTreeGuttmanBBPartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.AbstractRTreeBBPartitioner$RStarTreeBBPartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.AbstractRTreeBBPartitioner$RRStarTreeBBPartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.HCurvePartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.RGrovePartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.RSGrovePartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.RRSGrovePartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.STRPartitioner</Partitioner>
+    <Partitioner>cn.edu.pku.asic.earthstorage.indexing.ZCurvePartitioner</Partitioner>
+  </SpatialPartitioners>
+
+  <!-- Classes that implement the interface FeatureWriter
+  which are also annotated with class FeatureWriter.Metadata -->
+  <Writers>
+    <Writer>cn.edu.pku.asic.earthstorage.common.io.CSVFeatureWriter</Writer>
+    <Writer>cn.edu.pku.asic.earthstorage.common.io.shapefile.ShapefileFeatureWriter</Writer>
+    <Writer>cn.edu.pku.asic.earthstorage.common.io.shapefile.CompressedShapefileWriter</Writer>
+    <Writer>cn.edu.pku.asic.earthstorage.common.io.GeoJSONFeatureWriter</Writer>
+    <Writer>cn.edu.pku.asic.earthstorage.common.io.KMLFeatureWriter</Writer>
+    <Writer>cn.edu.pku.asic.earthstorage.common.io.KMZFeatureWriter</Writer>
+    <Writer>cn.edu.pku.asic.earthstorage.indexing.RTreeFeatureWriter</Writer>
+  </Writers>
+
+  <!-- Classes that implement the interface FeatureReader
+  which are also annotated with class FeatureReader.Metadata -->
+  <Readers>
+    <Reader>cn.edu.pku.asic.earthstorage.common.io.CSVFeatureReader</Reader>
+    <Reader>cn.edu.pku.asic.earthstorage.common.io.shapefile.ShapefileFeatureReader</Reader>
+    <Reader>cn.edu.pku.asic.earthstorage.common.io.GeoJSONFeatureReader</Reader>
+    <Reader>cn.edu.pku.asic.earthstorage.common.io.GPXReader</Reader>
+    <Reader>cn.edu.pku.asic.earthstorage.indexing.RTreeFeatureReader</Reader>
+  </Readers>
+</earthstorage>
