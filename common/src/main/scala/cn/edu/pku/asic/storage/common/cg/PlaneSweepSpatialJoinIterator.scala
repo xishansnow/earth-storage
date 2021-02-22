@@ -1,10 +1,9 @@
 package cn.edu.pku.asic.storage.common.cg
 
-import cn.edu.pku.asic.storage.common.geolite.IFeature
-import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite
-
+import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, IFeature}
 import org.apache.hadoop.util.{IndexedSortable, QuickSort}
 import org.apache.spark.util.LongAccumulator
+
 import java.awt.Rectangle
 
 /**

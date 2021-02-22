@@ -15,8 +15,8 @@
  */
 package cn.edu.pku.asic.storage.common.synopses
 
-import org.apache.spark.util.AccumulatorV2
 import cn.edu.pku.asic.storage.common.geolite.{GeometryHelper, IFeature}
+import org.apache.spark.util.AccumulatorV2
 
 /**
  * An accumulator that computes the MBR of a dataset, the number of features, and its total size.

@@ -17,9 +17,9 @@ package cn.edu.pku.asic.storage.common.cg
 
 import cn.edu.pku.asic.storage.common.cg.Reprojector.TransformationInfo
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.SpatialRDD
-import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, Feature, GeometryHelper, IFeature}
 import cn.edu.pku.asic.storage.common.synopses
-import cn.edu.pku.asic.storage.common.synopses._
+import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, Feature, GeometryHelper, IFeature}
+import cn.edu.pku.asic.storage.common.synopses.{AbstractHistogram, EulerHistogram2D, HistogramOP, Prefix2DHistogram, Summary, UniformHistogram}
 import org.apache.spark.beast.CRSServer
 import org.opengis.referencing.crs.CoordinateReferenceSystem
 

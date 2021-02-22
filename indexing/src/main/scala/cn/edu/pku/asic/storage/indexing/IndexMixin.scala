@@ -15,10 +15,10 @@
  */
 package cn.edu.pku.asic.storage.indexing
 
+import IndexHelper.NumPartitions
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{PartitionedSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartitioner}
 import cn.edu.pku.asic.storage.common.cli.AppOptions
-import IndexHelper.NumPartitions
 
 /**
  * Mixin to add IO operations to SpatialRDD

@@ -15,8 +15,8 @@
  */
 package cn.edu.pku.asic.storage.common.io
 
-import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{PartitionedSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartitioner}
+import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{PartitionedSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.generator.{DistributionType, RandomSpatialRDD}
 import cn.edu.pku.asic.storage.common.geolite.EnvelopeNDLite

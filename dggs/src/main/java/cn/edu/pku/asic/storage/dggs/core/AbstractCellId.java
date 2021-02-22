@@ -1,7 +1,5 @@
 package cn.edu.pku.asic.storage.dggs.core;
 
-import java.io.Externalizable;
-
 /**
  * =============================================================================================
  *

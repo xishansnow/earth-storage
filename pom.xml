@@ -2,6 +2,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <name>${project.groupId}:${project.artifactId}</name>
@@ -11,7 +12,7 @@
     <groupId>cn.edu.pku.asic.storage</groupId>
     <artifactId>EarthStorage</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <licenses>
         <license>
@@ -29,7 +30,8 @@
         <module>common</module>
         <module>dggs</module>
         <module>indexing</module>
-<!--        <module>produce-spark</module>               &lt;!&ndash;生成数据分区和索引&ndash;&gt;-->
+<!--        <module>commandline</module>-->
+        <!--        <module>produce-spark</module>               &lt;!&ndash;生成数据分区和索引&ndash;&gt;-->
 <!--        <module>index-manager</module>                  &lt;!&ndash;索引数据管理包&ndash;&gt;-->
 <!--        <module>query-spark</module>                    &lt;!&ndash;并行查询检索包&ndash;&gt;-->
 <!--        <module>analysis-spark</module>                 &lt;!&ndash;并行分析包&ndash;&gt;-->
@@ -64,7 +66,6 @@
         <jetty.version>6.1.26</jetty.version>
     </properties>
 
-
     <repositories>
         <repository>
             <id>nexus-aliyun</id>
@@ -87,17 +88,17 @@
         <tag>beast-${project.version}</tag>
     </scm>
 
-    <!--  本POM的部署参数声明                           -->
-    <distributionManagement>
-        <snapshotRepository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
+<!--    &lt;!&ndash;  本POM的部署参数声明                           &ndash;&gt;-->
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>oss</id>-->
+<!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--        </snapshotRepository>-->
+<!--        <repository>-->
+<!--            <id>oss</id>-->
+<!--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
 
     <!--  公共依赖声明，用于依赖的统一版本管理，当子模块有特殊版本需求时，在自己的POM中定义所需版本依赖以覆盖传递   -->
     <!--  使用方法： 子模块直接引用groupId和arcifactId引用该依赖，而忽略版本号，版本号由此处统一定义 -->
@@ -106,26 +107,66 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.scala-sbt</groupId>
-                <artifactId>test-interface</artifactId>
-                <version>1.0</version>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>28.0-jre</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.hadoop</groupId>
+                <artifactId>hadoop-common</artifactId>
+                <version>${hadoop.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_${scala.compat.version}</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_${scala.compat.version}</artifactId>
+                <version>${spark.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-catalyst_${scala.compat.version}</artifactId>
+                <version>${spark.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.locationtech.jts</groupId>
+                <artifactId>jts-core</artifactId>
+                <version>${jts.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.geotools</groupId>
+                <artifactId>gt-referencing</artifactId>
+                <version>${geotools.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.scala-lang</groupId>
+                <artifactId>scala-library</artifactId>
+                <version>${scala.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/net.alchim31.maven/scala-maven-plugin -->
+            <dependency>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>${scala.maven.plugin.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <type>maven-plugin</type>
+            </dependency>
+            <dependency>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty</artifactId>
+                <version>${jetty.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-
-
-
-    <!--    本模块的依赖，可以被子模块传递 -->
-    <!--    注意：本标签与dependencyManagement不同，前着只定义依赖，不使用依赖，此处为真正使用的依赖  -->
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
     <!--    本POM的build定义，可传递    -->
     <build>
@@ -152,13 +193,17 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>scala-test-compile</id>
+                        <id>compile</id>
                         <phase>process-test-resources</phase>
                         <goals>
+                            <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <scalaVersion>${scala.version}</scalaVersion>
+                </configuration>
             </plugin>
 
             <!-- the Maven compiler plugin will compile Java source files -->
@@ -187,6 +232,7 @@
                     </includes>
                 </configuration>
             </plugin>
+
             <!-- 所有模块支持源码打包插件         -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -201,26 +247,17 @@
                     </execution>
                 </executions>
             </plugin>
-            <!-- 依赖包一起打包插件          -->
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-shade-plugin</artifactId>-->
-<!--                <version>3.1.1</version>-->
-<!--                <configuration>-->
-<!--                    <finalName>earthStorage-uber-spark-${project.version}</finalName>-->
-<!--                    <outputDirectory>../target/</outputDirectory>-->
-<!--                </configuration>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>shade</goal>-->
-<!--                        </goals>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-        </plugins>
 
+<!--            版本控制-->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <!--POM包含plugin，每个plugin包含多个goal                                               -->
@@ -249,30 +286,26 @@
 
     <!--本POM的profile定义，可传递    -->
     <profiles>
+<!--        开发环境-->
         <profile>
-            <id>development</id>
+            <id>dev</id>
             <properties>
-                <profiles.active>development</profiles.active>
+                <profiles.active>dev</profiles.active>
             </properties>
-        </profile>
-        <profile>
-            <id>production</id>
-            <properties>
-                <profiles.active>production</profiles.active>
-            </properties>
-            <build>
-                <plugins>
-<!--                    <plugin>-->
-<!--                        <groupId>org.apache.maven.plugins</groupId>-->
-<!--                        <artifactId>maven-shade-plugin</artifactId>-->
-<!--                        <version>3.2.4</version>-->
-<!--                    </plugin>-->
-                </plugins>
-            </build>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+
+<!--        生产环境-->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+            </properties>
+        </profile>
+
+<!--        测试环境-->
         <profile>
             <id>test</id>
             <properties>

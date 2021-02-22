@@ -22,6 +22,7 @@ import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, IFeature, PointND
 import cn.edu.pku.asic.storage.common.io.SpatialOutputFormat
 import cn.edu.pku.asic.storage.common.synopses._
 import cn.edu.pku.asic.storage.common.utils.{IntArray, OperationHelper, OperationParam}
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, Path}
 import org.apache.hadoop.util.StringUtils
@@ -31,6 +32,7 @@ import org.apache.spark.internal.Logging
 import org.apache.spark.rdd.RDD
 
 import java.io.{IOException, ObjectInputStream, ObjectOutputStream}
+
 /**
  * A helper object for creating indexes and partitioning [[SpatialRDD]]s
  */
@@ -67,14 +69,14 @@ object IndexHelper extends Logging {
     description = "The size of the synopsis used to summarize the input, e.g., 1024, 10m, 1g",
     defaultValue = "10m"
   )
-  val SynopsisSize = "synopsissize";
+  val SynopsisSize = "synopsissize"
 
   /**A flag to increase the load balancing by using the histogram with the sample, if possible*/
   @OperationParam(
     description = "Set this option to combine the sample with a histogram for accurate load balancing",
     defaultValue = "true"
   )
-  val BalancedPartitioning = "balanced";
+  val BalancedPartitioning = "balanced"
 
   /**The criterion used to calculate the number of partitions*/
   @OperationParam(
@@ -85,7 +87,7 @@ object IndexHelper extends Logging {
 - Count(c): Create n partitions such that each partition contains around c records""",
     defaultValue = "Size(128m)"
   )
-  val PartitionCriterionThreshold = "pcriterion";
+  val PartitionCriterionThreshold = "pcriterion"
 
   // ---- The following set of functions help in creating a partitioner from a SpatialRDD and a partitioner class
 
@@ -223,8 +225,10 @@ object IndexHelper extends Logging {
                                       summarySize: Long, sizeFunction: IFeature=>Int, balancedPartitioning: Boolean)
       : (UniformHistogram, Array[Array[Double]], Summary) = {
     lazy val sc: SparkContext = features.sparkContext
+
     import cn.edu.pku.asic.storage.common.cg.CGOperationsMixin._
-    // The summary is always computed
+
+  // The summary is always computed
     val summary: Summary = features.summary
     var sampleCoordinates: Array[Array[Double]] = null
     var histogram: UniformHistogram = null

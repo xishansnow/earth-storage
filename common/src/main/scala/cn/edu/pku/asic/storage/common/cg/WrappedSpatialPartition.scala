@@ -16,8 +16,8 @@
 package cn.edu.pku.asic.storage.common.cg
 
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, GeometryType}
-import org.apache.spark.Partition
 import cn.edu.pku.asic.storage.common.synopses.Summary
+import org.apache.spark.Partition
 
 /**
  * A wrapper around any partition that adds [[SpatialPartition]] information to it

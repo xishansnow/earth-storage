@@ -15,10 +15,10 @@
  */
 package cn.edu.pku.asic.storage.common.generator
 
-import java.awt.geom.AffineTransform
-
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, Feature, IFeature, PointND}
 import cn.edu.pku.asic.storage.common.io.FeatureReader
+
+import java.awt.geom.AffineTransform
 import org.locationtech.jts.geom.{Geometry, GeometryFactory}
 
 import scala.util.Random

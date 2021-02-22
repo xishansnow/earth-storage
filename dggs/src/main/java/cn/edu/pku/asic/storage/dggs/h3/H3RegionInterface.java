@@ -1,7 +1,5 @@
 package cn.edu.pku.asic.storage.dggs.h3;
 
-import cn.edu.pku.asic.storage.dggs.s2geometry.S2Cell;
-
 public interface H3RegionInterface {
     /**
      * If this method returns true, the region completely contains the given cell.

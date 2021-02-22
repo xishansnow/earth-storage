@@ -16,13 +16,12 @@
 package cn.edu.pku.asic.storage.common.synopses
 
 import cn.edu.pku.asic.storage.common.cg.CGOperationsMixin._
+import cn.edu.pku.asic.storage.common.synopses
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{JavaSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeNDLite, IFeature, PointND}
-import cn.edu.pku.asic.storage.common.synopses
 import org.apache.spark.internal.Logging
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
-
 import scala.annotation.varargs
 
 /**
@@ -44,7 +43,7 @@ object HistogramOP extends Logging {
   /**
    * Compute the grid dimension from the given sequence of numbers. If the given sequence contains a single number,
    * it is treated as a total number of partitions and the number of partitions along each dimension is computed
-   * using the function [[synopses.UniformHistogram#computeNumPartitions(Envelope, int)]]
+   * using the function
    *
    * @param mbr the MBR of the input space. Used to compute square-like cells
    * @param numPartitions the desired number of partitions. Either a single number of a sequence of dimensions

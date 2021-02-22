@@ -15,7 +15,7 @@
  */
 package cn.edu.pku.asic.storage.common.io
 
-import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes._
+import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{JavaSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, IFeature}
 import org.apache.hadoop.conf.Configuration

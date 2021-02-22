@@ -15,9 +15,9 @@
  */
 package cn.edu.pku.asic.storage.common.cg
 
+import cn.edu.pku.asic.storage.common.geolite.IFeature
 import org.apache.spark.api.java.{JavaPairRDD, JavaRDD}
 import org.apache.spark.rdd.RDD
-import cn.edu.pku.asic.storage.common.geolite.IFeature
 
 trait SpatialDataTypesMixin {
 

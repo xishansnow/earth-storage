@@ -15,9 +15,9 @@
  */
 package cn.edu.pku.asic.storage.common.io
 
-import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes._
+import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{JavaSpatialRDD, PartitionedSpatialRDD, SpatialRDD}
 import cn.edu.pku.asic.storage.common.cli.AppOptions
-import cn.edu.pku.asic.storage.common.geolite._
+import cn.edu.pku.asic.storage.common.geolite.{EmptyGeometry, Feature, GeometryReader, IFeature, PointND}
 import org.apache.hadoop.io.Text
 import org.apache.spark.SparkContext
 import org.apache.spark.api.java.{JavaRDD, JavaSparkContext}

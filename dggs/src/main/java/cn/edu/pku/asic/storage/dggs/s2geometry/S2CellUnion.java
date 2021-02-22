@@ -16,7 +16,6 @@
 package cn.edu.pku.asic.storage.dggs.s2geometry;
 
 import cn.edu.pku.asic.storage.dggs.core.AbstractCellUnion;
-import com.google.common.collect.Lists;
 import cn.edu.pku.asic.storage.dggs.sphere.*;
 
 import java.util.ArrayList;

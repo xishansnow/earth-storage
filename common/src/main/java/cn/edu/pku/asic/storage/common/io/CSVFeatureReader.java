@@ -17,6 +17,9 @@ package cn.edu.pku.asic.storage.common.io;
 
 import cn.edu.pku.asic.storage.common.cli.AppOptions;
 import cn.edu.pku.asic.storage.common.geolite.*;
+import cn.edu.pku.asic.storage.common.geolite.EmptyGeometry;
+import cn.edu.pku.asic.storage.common.geolite.EnvelopeND;
+import cn.edu.pku.asic.storage.common.geolite.PointND;
 import cn.edu.pku.asic.storage.common.utils.OperationParam;
 import cn.edu.pku.asic.storage.common.utils.StringUtil;
 import org.apache.commons.logging.Log;
@@ -43,14 +46,14 @@ import java.util.*;
 /**
  * A record reader that reads CSV file with custom field delimiter
  */
-@FeatureReader.Metadata(
+@cn.edu.pku.asic.storage.common.io.FeatureReader.Metadata(
     description = "Parses comma- or tab-separated text files which contains either point coordinates," +
         "envelope boundaries or WKT-encoded geometries",
     shortName = "csv",
     extension = ".csv"
 )
 
-public class CSVFeatureReader extends FeatureReader {
+public class CSVFeatureReader extends cn.edu.pku.asic.storage.common.io.FeatureReader {
   private static final Log LOG = LogFactory.getLog(CSVFeatureReader.class);
 
   /**Default quote characters including single and double quote characters*/

@@ -21,6 +21,7 @@ import org.apache.spark.beast.sql.GeometryDataType
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.types.{StructField, StructType}
 import org.locationtech.jts.geom.{Envelope, Geometry}
+
 import scala.+:
 import scala.collection.mutable
 

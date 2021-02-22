@@ -15,10 +15,11 @@
  */
 package cn.edu.pku.asic.storage.common.synopses
 
-import com.fasterxml.jackson.core.JsonGenerator
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.{JavaSpatialRDD, SpatialRDD}
-import cn.edu.pku.asic.storage.common.cg.{SpatialPartition, WrappedSpatialPartition}
-import cn.edu.pku.asic.storage.common.geolite._
+import cn.edu.pku.asic.storage.common.cg.SpatialPartition
+//import cn.edu.pku.asic.storage.common.generator.PointBasedGenerator.GeometryType
+import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, EnvelopeNDLite, GeometryHelper, GeometryType, IFeature}
+import com.fasterxml.jackson.core.JsonGenerator
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{Partition, SparkContext}
 import org.locationtech.jts.geom.Geometry

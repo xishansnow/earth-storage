@@ -24,6 +24,7 @@ import org.geotools.referencing.CRS.AxisOrder
 import org.locationtech.jts.geom._
 import org.opengis.referencing.crs.CoordinateReferenceSystem
 import org.opengis.referencing.operation.{MathTransform, TransformException}
+
 object Reprojector extends Logging {
 
   /**

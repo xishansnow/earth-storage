@@ -20,6 +20,7 @@ import cn.edu.pku.asic.storage.common.geolite.PointND
 
 /**
  * Generates points or boxes that are uniformly distributed in the input space
+ *
  * @param partition
  */
 class DiagonalGenerator(partition: RandomSpatialPartition)

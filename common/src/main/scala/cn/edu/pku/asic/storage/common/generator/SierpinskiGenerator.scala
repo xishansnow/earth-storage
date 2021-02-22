@@ -19,6 +19,7 @@ import cn.edu.pku.asic.storage.common.geolite.PointND
 
 /**
  * Generates points or boxes that are distributed according to the Sierpinski distribution
+ *
  * @param partition
  */
 class SierpinskiGenerator(partition: RandomSpatialPartition)

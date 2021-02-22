@@ -1,6 +1,5 @@
 package cn.edu.pku.asic.storage.dggs.h3;
 
-import cn.edu.pku.asic.storage.dggs.core.AbstractCell;
 import cn.edu.pku.asic.storage.dggs.core.AbstractCellId;
 
 /**

@@ -15,8 +15,8 @@
  */
 package cn.edu.pku.asic.storage.common.io
 
-import com.sun.xml.internal.stream.XMLInputFactoryImpl
 import cn.edu.pku.asic.storage.common.geolite.{Feature, FieldType, IFeature}
+import com.sun.xml.internal.stream.XMLInputFactoryImpl
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FSDataInputStream, FileSystem, Path}
 import org.apache.hadoop.mapreduce.InputSplit

@@ -15,13 +15,13 @@
  */
 package cn.edu.pku.asic.storage.common.io
 
-import cn.edu.pku.asic.storage.common.cg.{SparkSpatialPartitioner, SpatialPartition}
+//import cn.edu.pku.asic.storage.indexing.indexing.CellPartitioner
+
 import cn.edu.pku.asic.storage.common.cg.SpatialDataTypes.SpatialRDD
+import cn.edu.pku.asic.storage.common.cg.SpatialPartition
 import cn.edu.pku.asic.storage.common.cli.AppOptions
 import cn.edu.pku.asic.storage.common.geolite.{EnvelopeND, EnvelopeNDLite, GeometryHelper, GeometryType, IFeature}
-//import cn.edu.pku.asic.storage.indexing.indexing.CellPartitioner
-import cn.edu.pku.asic.storage.common.io.SpatialFileRDD.SpatialFilePartition
-import cn.edu.pku.asic.storage.common.io.SpatialFileRDD.FilePartition
+import cn.edu.pku.asic.storage.common.io.SpatialFileRDD.{FilePartition, SpatialFilePartition}
 import cn.edu.pku.asic.storage.common.utils.{IConfigurable, OperationParam}
 import org.apache.commons.io.filefilter.WildcardFileFilter
 import org.apache.hadoop.conf.Configuration
