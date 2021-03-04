@@ -67,6 +67,7 @@
     </properties>
 
     <repositories>
+        <!--        Using aliyun to accelerate download of depended packages-->
         <repository>
             <id>nexus-aliyun</id>
             <name>nexus-aliyun</name>
@@ -82,9 +83,9 @@
 
     <!--  SCM configuration, integrated by maven -->
     <scm>
-        <connection>scm:git:https://github.com/shilang1220/EarthStorage.git</connection>
-        <developerConnection>scm:git:https://github.com/shilang1220/EarthStorage.git</developerConnection>
-        <url>scm:git:https://github.com/shilang1220</url>
+        <connection>scm:git:https://gitee.com/XiShanSnow/EarthStorage.git</connection>
+        <developerConnection>scm:git:https://gitee.com/XiShanSnow/EarthStorage.git</developerConnection>
+        <url>scm:git:https://gitee.com/XiShanSnow</url>
         <tag>beast-${project.version}</tag>
     </scm>
 

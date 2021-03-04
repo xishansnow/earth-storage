@@ -25,14 +25,14 @@
 earth-storage
     ├── README.md
     ├── analysis-spark          空间分析的库
-    ├── commandline             有关命令行的库
+    ├── cli-wrapper             有关命令行的库
     ├── common                  数据格式读写、地理信息模型、计算几何、数据统计、命令行、杂项工具等基础类库
     ├── compute-spark           空间计算的库
-    ├── dggs                    地球离散网格的库    
-    ├── indexing                有关索引的基础库
-    ├── pom.xml
-    ├── preparation-spark       有关数据预处理的库
-    └── query-spark             有关数据查询的库
+    ├── dggs                    地球离散网格的库        
+    ├── indexing                有关空间索引的基础库 （OLAP-Data Indexing to Optimize Data Access.
+    ├── pom.xml                 
+    ├── preparation-spark       有关数据预处理的库（OLAP-Data Preparation & Integretation）
+    └── query-spark             有关数据查询的库  （OLAP-Data Query ）
 ```
 ##Module 'common'
 
