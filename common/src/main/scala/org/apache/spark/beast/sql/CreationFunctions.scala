@@ -66,9 +66,9 @@ case class ST_CreatePoint(override val inputExpressions: Seq[Expression])
 
   override def performFunction(inputs: Seq[Any]): Geometry = {
     val coordinates: Array[Double] = inputs.map(x => x.asInstanceOf[Number].doubleValue()).toArray
-    if (coordinates == 2)
+    if (coordinates.length == 2)
       geometryFactory.createPoint(new CoordinateXY(coordinates(0), coordinates(1)))
-    else if (coordinates == 3)
+    else if (coordinates.length == 3)
       geometryFactory.createPoint(new CoordinateXYZM(coordinates(0), coordinates(1), coordinates(2), Double.NaN))
     else
       new PointND(geometryFactory, coordinates.length, coordinates:_*)
